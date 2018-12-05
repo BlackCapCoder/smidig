@@ -1,3 +1,3 @@
 # Agile projects
 
-lorem
+[Open website](https://blackcapcoder.github.io/smidig/frontend/)
