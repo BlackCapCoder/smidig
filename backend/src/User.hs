@@ -1,31 +1,36 @@
+{-# LANGUAGE OverloadedLabels #-}
 module User where
 
 import Utils
-import Numeric.Natural
-import Data.Map (Map)
-import qualified Data.Map as M
+import Control.Monad
 
 
 data User = User
-  { username :: Text
-  , age      :: Natural
+  { uid      :: ID User
+  , username :: Text
+  , age      :: Int
   }
   deriving (Eq, Show, Generic)
 
 instance ToJSON   User
 instance FromJSON User
+instance SqlRow   User
 
 type Api =
-  "user" :> QueryParam "username" Text :> Get '[JSON] (Maybe User)
+  "user" :> QueryParam "id" Int :> Get '[JSON] (Maybe User)
 
-users :: Map Text User
-users = M.fromList
-  [ ("bob", User "bob" 22)
-  , ("roy", User "roy" 25)
-  ]
+users :: Table User
+users = table "users" [#uid :- autoPrimary]
+
+db = liftIO . withSQLite "users.sqlite"
+
 
 server :: IO (Server Api)
-server = pure $ queryUser
-  where queryUser = pure . (flip M.lookup users =<<)
+server = do
+  db $ tryCreateTable users
+  pure $ queryUser
 
+  where queryUser (Just uid) = fmap listToMaybe . db $ query
+          [ u | u <- select users
+          , _ <- restrict (u ! #uid .== literal (toId uid)) ]
 

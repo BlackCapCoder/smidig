@@ -29,6 +29,8 @@ dependencies:
 - text
 - containers
 - template-haskell
+- selda >= 0.3.4.0
+- selda-sqlite
 
 library:
   source-dirs: src

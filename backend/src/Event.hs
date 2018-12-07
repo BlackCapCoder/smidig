@@ -6,7 +6,7 @@ import User hiding (Api, server)
 
 data Event = Event
   { title :: Text
-  , owner :: User
+  -- , owner :: User
   }
   deriving (Eq, Show, Generic)
 
@@ -16,10 +16,10 @@ instance FromJSON Event
 
 myEvents :: [Event]
 myEvents
-  = [ Event "Bowling night"   somebody
-    , Event "Romantic dinner" somebody
-    , Event "Opera training"  somebody
-    ] where somebody = User "somepony" 5
+  = [ Event "Bowling night"  
+    , Event "Romantic dinner"
+    , Event "Opera training" 
+    ]
 
 ----
 
