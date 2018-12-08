@@ -1,31 +1,31 @@
 module Event where
 
 import Utils
-import User hiding (Api, server)
+import User  (UserID)
 
+
+type EventID = ID Event
 
 data Event = Event
-  { title :: Text
-  -- , owner :: User
-  }
-  deriving (Eq, Show, Generic)
+  { eid   :: EventID
+  , owner :: UserID
+  , title :: Text
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
-instance ToJSON   Event
-instance FromJSON Event
-
-
-myEvents :: [Event]
-myEvents
-  = [ Event "Bowling night"  
-    , Event "Romantic dinner"
-    , Event "Opera training" 
-    ]
-
-----
 
 type Api =
   "list" :> Get '[JSON] [Event]
 
+events :: Table Event
+events = table "events" [#eid :- autoPrimary]
+
+db = liftIO . withSQLite "events.sqlite"
+
+
 server :: IO (Server Api)
-server = pure $ pure myEvents
+server = do
+  db $ tryCreateTable events
+  pure $ listEvents
+
+  where listEvents = db $ query $ select events
 
