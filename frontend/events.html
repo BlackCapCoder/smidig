@@ -2,6 +2,7 @@
 <script src="api.js"></script>
 <link rel="stylesheet" href="css/event.css" type="text/css" media="all" />
 
+
 <div id="toolbar">
   <input type="text"   id="tb-search"/>
   <input type="button" id="btn-search" value="search"/>
@@ -43,9 +44,10 @@
     return ev;
   }
 
-  getEvents (x => {
-    for (let e of x) {
-      addEvent ("", e.title, e.desc);
+  getEvents (evs => {
+    for (let e of evs) {
+      addEvent ("imgs/prof.png", e.title, e.desc);
     }
   });
 </script>
+
