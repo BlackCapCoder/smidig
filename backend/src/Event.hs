@@ -10,11 +10,12 @@ data Event = Event
   { eid   :: EventID
   , owner :: UserID
   , title :: Text
+  , desc  :: Text
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 
 type Api =
-  "list" :> Get '[JSON] [Event]
+  "events" :> Get '[JSON] [Event]
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
@@ -24,7 +25,13 @@ db = liftIO . withSQLite "events.sqlite"
 
 server :: IO (Server Api)
 server = do
-  db $ tryCreateTable events
+  db $ do
+    tryCreateTable events
+    -- insert_ events
+    --   [ Event def (toId 1) "Bowling night"   "Win a beer!"
+    --   , Event def (toId 2) "Romantic dinner" "Like a regular dinner, but with tea lights"
+    --   ]
+
   pure $ listEvents
 
   where listEvents = db $ query $ select events

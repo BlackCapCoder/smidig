@@ -1,0 +1,51 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="api.js"></script>
+<link rel="stylesheet" href="css/event.css" type="text/css" media="all" />
+
+<div id="toolbar">
+  <input type="text"   id="tb-search"/>
+  <input type="button" id="btn-search" value="search"/>
+  <input type="button" id="btn-new" value="+"/>
+</div>
+
+<div id="events"></div>
+
+
+<script>
+  function addEvent (pic, title, text) {
+    let evs    = document.querySelector ('#events')
+      , ev     = document.createElement ('div')
+      , lft    = document.createElement ('div')
+      , rgt    = document.createElement ('div')
+      , el_pic = document.createElement ('img')
+      , el_tit = document.createElement ('h2')
+      , el_txt = document.createElement ('p');
+
+    ev.classList.add  ('event');
+    lft.classList.add ('left');
+    rgt.classList.add ('right');
+    el_pic.classList.add ('profile');
+    el_tit.classList.add ('title');
+    el_txt.classList.add ('text');
+
+    el_pic.setAttribute ('src', pic);
+    el_tit.innerText = title;
+    el_txt.innerText = text;
+
+    ev.appendChild (lft);
+    ev.appendChild (rgt);
+    lft.appendChild (el_pic);
+    rgt.appendChild (el_tit);
+    rgt.appendChild (el_txt);
+
+    evs.appendChild (ev);
+
+    return ev;
+  }
+
+  getEvents (x => {
+    for (let e of x) {
+      addEvent ("", e.title, e.desc);
+    }
+  });
+</script>
