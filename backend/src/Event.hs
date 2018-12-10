@@ -6,6 +6,7 @@ import User  (UserID)
 
 type EventID        = ID Event
 type ParticipantsID = ID Participants
+type PicturesID     = ID Pictures
 
 data Event = Event
   { eid   :: EventID
@@ -21,17 +22,24 @@ data Participants = Participants
   , uid :: UserID
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
+data Pictures = Pictures
+  { evid  :: EventID
+  , pth   :: Text
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 type Api = "events" :> Get '[JSON] [Event]
       :<|> "event"  :> QueryParam "id" EventID :> Get '[JSON] (Maybe Event)
       :<|> "participants" :> QueryParam "id" ParticipantsID :> Get '[JSON] [Participants]
-
+      :<|> "pictures" :> QueryParam "id" EventID :> Get '[JSON] [Pictures]
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
 
 participants :: Table Participants
 participants = table "participants" [#pid :- autoPrimary]
+
+pictures :: Table Pictures
+pictures = table "pictures" []
 
 db = liftIO . withSQLite "events.sqlite"
 
@@ -42,10 +50,11 @@ server = do
     tryCreateTable events
     tryCreateTable participants
 
-  pure $ listEvents :<|> getEvent :<|> getParticipants
+  pure $ listEvents :<|> getEvent :<|> getParticipants :<|> getPictures
 
   where listEvents      = db . query $ select events
         getEvent        = getByIDM db events       #eid
         getParticipants = getByID  db participants #pid
+        getPictures     = getByID  db pictures     #evid
 
 
