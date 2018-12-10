@@ -1,50 +1,47 @@
 body {
   background-color: black
-      
 }
 
 #info{
   background-image: url("../imgs/bowlingleague.jpg");
-    background-repeat: no-repeat;
-    background-position: center;
-    
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-h1{
-   color: white;
-    text-align: center;
-    font-family: fantasy
+h1 {
+  color: white;
+  text-align: center;
+  font-family: Monospace;
+  font-size: 5em;
 }
-    
-
-
 
 #info p {
-    color: black;
-    text-align: center;
-    text-shadow: 1px 1px grey;
-    font-weight: bold;
-    font-family: sans-serif
-    
+  color:       black;
+  text-align:  center;
+  text-shadow: 1px 1px grey;
+  font-weight: bold;
+  font-family: sans-serif
 }
 
-#button{
-    display: flex;
-    justify-content: center;
+#button {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
 }
 
-
-.rad {
+#rad {
   display: flex;
   flex-wrap: wrap;
   padding: 0 2px;
+  margin-top: 20px;
 }
 
-.rad .image {
+#rad .image {
   margin-top: 4px;
-  width: 50%;
+  width: calc(50% - 10px);
   position: relative;
+  padding: 5px;
 }
-.rad .image img {
+#rad .image img {
   max-width: 100%;
 }
