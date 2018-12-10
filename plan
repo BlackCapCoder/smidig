@@ -1,7 +1,5 @@
 add event call               -> what, where, when, who's making
-arr's                        -> return the specified arr and all info in it (like what, where, when, who)
 "bli med"                    -> sends users name to arr page and adds to list of people who're going
-list of people who are going -> self explanatory
 get pics                     -> get the picture a user specified that they want for the arr
 
 add event   -> [string what], [string where], [string who], [int when]
