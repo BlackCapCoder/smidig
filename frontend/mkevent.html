@@ -1,0 +1,37 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="api.js"></script>
+
+<div>
+  Title <input type="text" id="title" /></br>
+  Desc  <input type="text" id="desc" /></br>
+  Place <input type="text" id="place" /></br>
+  Date  <input type="text" id="date" value="1970-01-01T00:00:00Z" /></br>
+  <input type="button" value="submit" onclick="submit()" />
+</div>
+
+<script>
+
+  function succ () {
+    alert("yay");
+  }
+
+  function err () {
+    alert("nay");
+  }
+
+  function submit () {
+    let title = document.querySelector("#title").value
+      , desc  = document.querySelector("#desc").value
+      , place = document.querySelector("#place").value
+      , date  = document.querySelector("#date").value
+      ;
+
+    postMkevent (
+      { req_title: title
+      , req_desc:  desc
+      , req_place: place
+      , req_date:  date
+      }
+      , succ, err);
+  }
+</script>

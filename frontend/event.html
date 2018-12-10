@@ -10,7 +10,7 @@
     <script>
       function addPart (u) {
         let cont = document.createElement('div')
-          , lft  = document.createElement('div')
+          , lft  = document.createElement('a')
           , rgt  = document.createElement('div')
           , pic  = document.createElement('img')
           , name = document.createElement('span')
@@ -33,6 +33,8 @@
         pic.setAttribute('src', 'imgs/prof.png');
         name.innerText = u.username;
         age.innerText = u.age;
+
+        lft.setAttribute('href', 'profile.html#' + u.uid);
 
         party.appendChild(cont);
       }
@@ -113,7 +115,7 @@
     </div>
 
     <section id="button">
-      <button type="button-1">Jeg kommer!</button>
+      <button type="button-1" onclick='alert("neato!")'>Jeg kommer!</button>
       <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
     </section>
 
