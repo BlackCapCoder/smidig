@@ -12,6 +12,7 @@
   padding: 5px;
   display: flex;
   text-decoration: none;
+  color: black;
 }
 .event {
   margin-bottom: 5px;
