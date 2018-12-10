@@ -32,11 +32,7 @@ server = do
   db $ tryCreateTable users
   pure $ queryUser :<|> login
 
-  where queryUser (Just uid) = fmap listToMaybe . db . query $ do
-          u <- select users
-          restrict (u ! #uid .== literal uid)
-          return u
-
+  where queryUser            = getByIDM db users #uid
         login (LoginReq u p) = error "Not Implemented"
 
 
