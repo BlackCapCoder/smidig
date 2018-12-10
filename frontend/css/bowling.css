@@ -1,0 +1,31 @@
+
+body{
+    
+    background-image: url("e3b22354-5665-418f-a0f3-7f0927e72a7a.jpeg");
+    
+}
+
+#info{
+    
+    background-image: url("e3b22354-5665-418f-a0f3-7f0927e72a7a.jpeg");
+    
+}
+
+
+.rad {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 2px;
+  flex: 50%;    
+}
+
+/* Create two equal columns that sits next to each other */
+.kolonne {
+  flex: 50%;
+  padding: 0 4px;
+}
+
+.kolonne img {
+  margin-top: 4px;
+  vertical-align: middle;
+}
