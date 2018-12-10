@@ -31,3 +31,11 @@ instance FromJSON (ID a) where
 instance FromHttpApiData (ID a) where
   parseQueryParam = fmap toId . parseQueryParam
 
+
+getByID db t sel (Just id) = db . query $ do
+  x <- select t
+  restrict (x ! sel .== literal id)
+  return x
+
+getByIDM db t sel = fmap listToMaybe . getByID db t sel
+
