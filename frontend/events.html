@@ -43,7 +43,7 @@
     el_tit.innerText   = title;
     el_txt.innerText   = text;
     el_place.innerText = place;
-    el_date.innerText  = date;
+    el_date.innerText  = new Date(date).toLocaleDateString();
 
     ev.appendChild (lft);
     ev.appendChild (rgt);
