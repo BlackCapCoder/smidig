@@ -4,7 +4,8 @@ import Utils
 import User  (UserID)
 
 
-type EventID = ID Event
+type EventID        = ID Event
+type ParticipantsID = ID Participants
 
 data Event = Event
   { eid   :: EventID
@@ -15,12 +16,29 @@ data Event = Event
   , date  :: UTCTime
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
+data Participants = Participants
+  { pid :: ParticipantsID
+  , uid :: UserID
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
-type Api =
-  "events" :> Get '[JSON] [Event]
+data Pictures = Pictures
+  { evid  :: EventID
+  , pth   :: Text
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+
+type Api = "events" :> Get '[JSON] [Event]
+      :<|> "event"  :> QueryParam "id" EventID :> Get '[JSON] (Maybe Event)
+      :<|> "participants" :> QueryParam "id" ParticipantsID :> Get '[JSON] [Participants]
+      :<|> "pictures" :> QueryParam "id" EventID :> Get '[JSON] [Pictures]
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
+
+participants :: Table Participants
+participants = table "participants" [#pid :- autoPrimary]
+
+pictures :: Table Pictures
+pictures = table "pictures" []
 
 db = liftIO . withSQLite "events.sqlite"
 
@@ -29,12 +47,14 @@ server :: IO (Server Api)
 server = do
   db $ do
     tryCreateTable events
-    -- insert_ events
-    --   [ Event def (toId 1) "Bowling night"   "Win a beer!" "Oslo" def
-    --   , Event def (toId 2) "Romantic dinner" "Like a regular dinner, but with tea lights" "Drammen" def
-    --   ]
+    tryCreateTable participants
+    tryCreateTable pictures
 
-  pure $ listEvents
+  pure $ listEvents :<|> getEvent :<|> getParticipants :<|> getPictures
 
-  where listEvents = db $ query $ select events
+  where listEvents      = db . query $ select events
+        getEvent        = getByIDM db events       #eid
+        getParticipants = getByID  db participants #pid
+        getPictures     = getByID  db pictures     #evid
+
 
