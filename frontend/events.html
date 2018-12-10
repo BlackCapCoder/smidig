@@ -9,25 +9,7 @@
   <input type="button" id="btn-new" value="+"/>
 </div>
 
-<div id="events">
-<!--
-  <div class="event">
-    <div class="left">
-      <img class="profile" src="imgs/prof.png" alt="" />
-    </div>
-    <div class="right">
-      <div class="left">
-        <h2 class="title">Bowling night</h2>
-        <p class="text">Win a free beer!</p>
-      </div>
-      <div class="right">
-        <p class="place">Oslo S</p>
-        <p class="date">10/11 12:00</p>
-      </div>
-    </div>
-  </div>
--->
-</div>
+<div id="events"></div>
 
 
 <script>
@@ -56,7 +38,7 @@
     el_place.classList.add ('place');
     el_date.classList.add ('date');
 
-    ev.setAttribute('href', 'event?id=' + eid);
+    ev.setAttribute('href', 'event.html#' + eid);
     el_pic.setAttribute ('src', pic);
     el_tit.innerText   = title;
     el_txt.innerText   = text;
@@ -80,7 +62,6 @@
 
   getEvents (evs => {
     for (let e of evs) {
-      console.log(e)
       addEvent ("imgs/prof.png", e.title, e.desc, e.place, e.date, e.eid);
     }
   });
