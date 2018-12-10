@@ -17,7 +17,7 @@ data LoginReq = LoginReq
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 
-type Api = "user"  :> QueryParam "id" Int :> Get '[JSON] (Maybe User)
+type Api = "user"  :> QueryParam "id" UserID :> Get '[JSON] (Maybe User)
       :<|> "login" :> ReqBody '[JSON] LoginReq :> Post '[JSON] ()
 
 
@@ -32,9 +32,10 @@ server = do
   db $ tryCreateTable users
   pure $ queryUser :<|> login
 
-  where queryUser (Just uid) = fmap listToMaybe . db $ query
-          [ u | u <- select users
-          , _ <- restrict (u ! #uid .== literal (toId uid)) ]
+  where queryUser (Just uid) = fmap listToMaybe . db . query $ do
+          u <- select users
+          restrict (u ! #uid .== literal uid)
+          return u
 
         login (LoginReq u p) = error "Not Implemented"
 
