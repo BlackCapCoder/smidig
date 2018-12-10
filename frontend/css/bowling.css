@@ -2,7 +2,7 @@ body {
   background-color: black
 }
 
-#info{
+#info {
   background-image: url("../imgs/bowlingleague.jpg");
   background-repeat: no-repeat;
   background-position: center;
@@ -15,12 +15,18 @@ h1 {
   font-size: 5em;
 }
 
-#info p {
+#info {
   color:       black;
-  text-align:  center;
+  text-align:  left;
   text-shadow: 1px 1px grey;
   font-weight: bold;
-  font-family: sans-serif
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+  width: 100%;
+  position: relative;
 }
 
 #button, #row-wrapper {
