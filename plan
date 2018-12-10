@@ -1,16 +1,12 @@
-add event call -> what, where, when, who's making
-pages -> what page is it a user is asking for
-arr's -> return the specified arr and all info in it (like what, where, when, who)
-"bli med" -> sends users name to arr page and adds to list of people who're going
+add event call               -> what, where, when, who's making
+arr's                        -> return the specified arr and all info in it (like what, where, when, who)
+"bli med"                    -> sends users name to arr page and adds to list of people who're going
 list of people who are going -> self explanatory
-get pics -> get the picture a user specified that they want for the arr
+get pics                     -> get the picture a user specified that they want for the arr
 
-
-add event ---> [string what], [string where], [string who], [int when]
-pages -------> get page.html -> return page.html
-arr's -------> get arr.html --> return arr.html
-"bli med" ---> send [usrnme] and set GOING to EVENT == true
+add event   -> [string what], [string where], [string who], [int when]
+arr's       -> get arr.html  -> return arr.html
+"bli med"   -> send [usrnme] and set GOING to EVENT        == true
 who's going -> return [string usrnme] where GOING to EVENT == true
-get pics ----> return [pic]
-get list ----> return array of events
+get pics    -> return [pic]
 

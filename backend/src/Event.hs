@@ -16,8 +16,8 @@ data Event = Event
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 
-type Api =
-  "events" :> Get '[JSON] [Event]
+type Api = "events" :> Get '[JSON] [Event]
+      :<|> "event"  :> QueryParam "id" EventID :> Get '[JSON] (Maybe Event)
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
@@ -29,12 +29,13 @@ server :: IO (Server Api)
 server = do
   db $ do
     tryCreateTable events
-    -- insert_ events
-    --   [ Event def (toId 1) "Bowling night"   "Win a beer!" "Oslo" def
-    --   , Event def (toId 2) "Romantic dinner" "Like a regular dinner, but with tea lights" "Drammen" def
-    --   ]
 
-  pure $ listEvents
+  pure $ listEvents :<|> getEvent
 
   where listEvents = db $ query $ select events
+
+        getEvent (Just eid) = fmap listToMaybe . db . query $ do
+          e <- select events
+          restrict (e ! #eid .== literal eid)
+          return e
 
