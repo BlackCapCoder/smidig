@@ -1,22 +1,17 @@
-body {
-  background-color: black
-}
-
 #info {
-  background-image: url("../imgs/bowlingleague.jpg");
+  background-image: url("../imgs/cropped-2013-11-14-23.32.53-1.jpg");
   background-repeat: no-repeat;
   background-position: center;
 }
 
 h1 {
-  color: white;
+  color: black;
   text-align: center;
   font-family: Monospace;
   font-size: 5em;
 }
 
 #info {
-  color:       black;
   text-align:  left;
   text-shadow: 1px 1px grey;
   font-weight: bold;

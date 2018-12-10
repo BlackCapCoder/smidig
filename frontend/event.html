@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bowling.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="api.js"></script>
+
+    <script>
+      window.onload = _ => {
+        let hash = window.location.hash.substr (1);
+        let evid = Number (hash);
+
+        getEvent (evid, ev => {
+          date = new Date (ev.date);
+
+          document.title = ev.title;
+          document.querySelector("#title").innerText   = ev.title;
+          document.querySelector("#desc").innerText    = ev.desc;
+          document.querySelector("#time").innerText    = date.toTimeString().split(' ')[0];
+          document.querySelector("#date").innerText    = date.toLocaleDateString();
+          document.querySelector("#place").innerText   = ev.place;
+
+          getUser (ev.owner, u => {
+            document.querySelector("#creator").innerText = u.username;
+          });
+        });
+
+        getPictures (evid, ps => {
+          let cont = document.querySelector("#rad");
+
+          for (let p of ps) {
+            let el_div = document.createElement('div');
+            let el_pic = document.createElement('img');
+
+            el_div.classList.add('image');
+            el_pic.setAttribute('src', p);
+            el_div.appendChild(el_pic);
+
+            cont.appendChild(el_div);
+          }
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1 id='title'></h1>
+
+    <div id="info">
+      <table>
+        <tr>
+          <td>Laget av</td>
+          <td id='creator'></td>
+        </tr>
+        <tr>
+          <td>Beskrivelse</td>
+          <td id='desc'></td>
+        </tr>
+        <tr>
+          <td>Tid</td>
+          <td id='time'></td>
+        </tr>
+        <tr>
+          <td>Sted</td>
+          <td id='place'></td>
+        </tr>
+        <tr>
+          <td>Dato</td>
+          <td id='date'></td>
+        </tr>
+      </table>
+    </div>
+
+    <section id="button">
+      <button type="button-1">Påmelding</button>
+      <button type="button-2">Oversikt på deltakere</button>
+    </section>
+
+    <div id="row-wrapper">
+      <div id="rad">
+      </div>
+    </div>
+
+  </body>
+</html>

@@ -4,8 +4,7 @@ import Utils
 import User  (UserID)
 
 
-type EventID        = ID Event
-type ParticipantsID = ID Participants
+type EventID = ID Event
 
 data Event = Event
   { eid   :: EventID
@@ -17,25 +16,25 @@ data Event = Event
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 data Participants = Participants
-  { pid :: ParticipantsID
+  { eid :: EventID
   , uid :: UserID
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 data Pictures = Pictures
-  { evid  :: EventID
-  , pth   :: Text
+  { eid  :: EventID
+  , pth  :: Text
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 type Api = "events" :> Get '[JSON] [Event]
       :<|> "event"  :> QueryParam "id" EventID :> Get '[JSON] (Maybe Event)
-      :<|> "participants" :> QueryParam "id" ParticipantsID :> Get '[JSON] [Participants]
+      :<|> "participants" :> QueryParam "id" EventID :> Get '[JSON] [Participants]
       :<|> "pictures" :> QueryParam "id" EventID :> Get '[JSON] [Pictures]
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
 
 participants :: Table Participants
-participants = table "participants" [#pid :- autoPrimary]
+participants = table "participants" []
 
 pictures :: Table Pictures
 pictures = table "pictures" []
@@ -54,7 +53,7 @@ server = do
 
   where listEvents      = db . query $ select events
         getEvent        = getByIDM db events       #eid
-        getParticipants = getByID  db participants #pid
-        getPictures     = getByID  db pictures     #evid
+        getParticipants = getByID  db participants #eid
+        getPictures     = getByID  db pictures     #eid
 
 
