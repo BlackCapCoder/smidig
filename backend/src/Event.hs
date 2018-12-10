@@ -6,7 +6,6 @@ import User  (UserID)
 
 type EventID        = ID Event
 type ParticipantsID = ID Participants
-type PicturesID     = ID Pictures
 
 data Event = Event
   { eid   :: EventID
@@ -49,6 +48,7 @@ server = do
   db $ do
     tryCreateTable events
     tryCreateTable participants
+    tryCreateTable pictures
 
   pure $ listEvents :<|> getEvent :<|> getParticipants :<|> getPictures
 

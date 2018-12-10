@@ -1,6 +1,5 @@
 add event call               -> what, where, when, who's making
 "bli med"                    -> sends users name to arr page and adds to list of people who're going
-get pics                     -> get the picture a user specified that they want for the arr
 
 add event   -> [string what], [string where], [string who], [int when]
 arr's       -> get arr.html  -> return arr.html
