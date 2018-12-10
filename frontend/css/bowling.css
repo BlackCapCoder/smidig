@@ -12,6 +12,7 @@ h1 {
 }
 
 #info {
+  color: white;
   text-align:  left;
   text-shadow: 1px 1px grey;
   font-weight: bold;
