@@ -8,9 +8,39 @@
     <script src="api.js"></script>
 
     <script>
+      function addPart (u) {
+        let cont = document.createElement('div')
+          , lft  = document.createElement('div')
+          , rgt  = document.createElement('div')
+          , pic  = document.createElement('img')
+          , name = document.createElement('span')
+          , age  = document.createElement('span')
+          ;
+
+        cont.classList.add ('person');
+        lft.classList.add  ('left');
+        rgt.classList.add  ('right');
+        pic.classList.add  ('profile');
+        name.classList.add ('name');
+        age.classList.add  ('age');
+
+        cont.appendChild(lft);
+        cont.appendChild(rgt);
+        lft.appendChild(pic);
+        rgt.appendChild(name);
+        rgt.appendChild(age);
+
+        pic.setAttribute('src', 'imgs/prof.png');
+        name.innerText = u.username;
+        age.innerText = u.age;
+
+        party.appendChild(cont);
+      }
+
       window.onload = _ => {
         let hash = window.location.hash.substr (1);
         let evid = Number (hash);
+        party = document.querySelector("#participants")
 
         getEvent (evid, ev => {
           date = new Date (ev.date);
@@ -24,6 +54,7 @@
 
           getUser (ev.owner, u => {
             document.querySelector("#creator").innerText = u.username;
+            addPart (u);
           });
         });
 
@@ -35,10 +66,18 @@
             let el_pic = document.createElement('img');
 
             el_div.classList.add('image');
-            el_pic.setAttribute('src', p);
+            el_pic.setAttribute('src', p.pth);
             el_div.appendChild(el_pic);
 
             cont.appendChild(el_div);
+          }
+        });
+
+        getParticipants (evid, ps => {
+          for (let p of ps) {
+            getUser (p.uid, u => {
+              addPart (u);
+            });
           }
         });
       }
@@ -74,14 +113,18 @@
     </div>
 
     <section id="button">
-      <button type="button-1">Påmelding</button>
-      <button type="button-2">Oversikt på deltakere</button>
+      <button type="button-1">Jeg kommer!</button>
+      <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
     </section>
+
+    <div class="parti-wrapper">
+      <section id="participants">
+      </section>
+    </div>
 
     <div id="row-wrapper">
       <div id="rad">
       </div>
     </div>
-
   </body>
 </html>

@@ -47,3 +47,38 @@ h1 {
 #rad .image img {
   max-width: 100%;
 }
+
+
+.parti-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+#participants {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.person {
+  display: flex;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 220px;
+}
+.person > .left {
+  margin-right: 10px;
+}
+.person > .left > .profile {
+  width: 80px;
+  border-radius: 100%;
+}
+.person > .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 20px;
+}
+.person > .right > .age {
+  font-size: 14px;
+}
