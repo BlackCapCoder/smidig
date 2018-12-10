@@ -9,35 +9,68 @@
   <input type="button" id="btn-new" value="+"/>
 </div>
 
-<div id="events"></div>
+<div id="events">
+<!--
+  <div class="event">
+    <div class="left">
+      <img class="profile" src="imgs/prof.png" alt="" />
+    </div>
+    <div class="right">
+      <div class="left">
+        <h2 class="title">Bowling night</h2>
+        <p class="text">Win a free beer!</p>
+      </div>
+      <div class="right">
+        <p class="place">Oslo S</p>
+        <p class="date">10/11 12:00</p>
+      </div>
+    </div>
+  </div>
+-->
+</div>
 
 
 <script>
-  function addEvent (pic, title, text) {
-    let evs    = document.querySelector ('#events')
-      , ev     = document.createElement ('div')
-      , lft    = document.createElement ('div')
-      , rgt    = document.createElement ('div')
-      , el_pic = document.createElement ('img')
-      , el_tit = document.createElement ('h2')
-      , el_txt = document.createElement ('p');
+  function addEvent (pic, title, text, place, date) {
+    let evs      = document.querySelector ('#events')
+      , ev       = document.createElement ('div')
+      , lft      = document.createElement ('div')
+      , rgt      = document.createElement ('div')
+      , lft2     = document.createElement ('div')
+      , rgt2     = document.createElement ('div')
+      , el_pic   = document.createElement ('img')
+      , el_tit   = document.createElement ('h2')
+      , el_txt   = document.createElement ('p')
+      , el_place = document.createElement ('p')
+      , el_date  = document.createElement ('p')
+      ;
 
     ev.classList.add  ('event');
     lft.classList.add ('left');
     rgt.classList.add ('right');
+    lft2.classList.add ('left');
+    rgt2.classList.add ('right');
     el_pic.classList.add ('profile');
     el_tit.classList.add ('title');
     el_txt.classList.add ('text');
+    el_place.classList.add ('place');
+    el_date.classList.add ('date');
 
     el_pic.setAttribute ('src', pic);
-    el_tit.innerText = title;
-    el_txt.innerText = text;
+    el_tit.innerText   = title;
+    el_txt.innerText   = text;
+    el_place.innerText = place;
+    el_date.innerText  = date;
 
     ev.appendChild (lft);
     ev.appendChild (rgt);
     lft.appendChild (el_pic);
-    rgt.appendChild (el_tit);
-    rgt.appendChild (el_txt);
+    rgt.appendChild (lft2);
+    rgt.appendChild (rgt2);
+    lft2.appendChild (el_tit);
+    lft2.appendChild (el_txt);
+    rgt2.appendChild (el_place);
+    rgt2.appendChild (el_date);
 
     evs.appendChild (ev);
 
@@ -46,7 +79,8 @@
 
   getEvents (evs => {
     for (let e of evs) {
-      addEvent ("imgs/prof.png", e.title, e.desc);
+      console.log(e)
+      addEvent ("imgs/prof.png", e.title, e.desc, e.place, e.date);
     }
   });
 </script>

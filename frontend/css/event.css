@@ -16,14 +16,30 @@
   margin-bottom: 5px;
 }
 
-.event .profile {
+.event > .left > .profile {
   width: 50px;
   height: 50px;
   border-radius: 50%;
   margin-right: 10px;
 }
-.event .left {
+.event > .left {
 }
-.event .right > * {
+.event > .right > .left > * {
   margin: 0;
+}
+.event > .right {
+  display: flex;
+  width: 100%;
+}
+.event > .right > .left {
+  flex: 1;
+}
+.event > .right > .right > * {
+  margin: 0;
+  text-align: right;
+}
+.event > .right > .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

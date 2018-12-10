@@ -28,3 +28,6 @@ instance ToJSON (ID a) where
 instance FromJSON (ID a) where
   parseJSON = fmap toId . parseJSON
 
+instance FromHttpApiData (ID a) where
+  parseQueryParam = fmap toId . parseQueryParam
+
