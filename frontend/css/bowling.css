@@ -1,10 +1,38 @@
 body {
-  background-image: url("../imgs/e3b22354-5665-418f-a0f3-7f0927e72a7a.jpeg");
+  background-color: black
+      
 }
 
 #info{
-  background-image: url("../imgs/e3b22354-5665-418f-a0f3-7f0927e72a7a.jpeg");
+  background-image: url("../imgs/bowlingleague.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    
 }
+
+h1{
+   color: white;
+    text-align: center;
+    font-family: fantasy
+}
+    
+
+
+
+#info p {
+    color: black;
+    text-align: center;
+    text-shadow: 1px 1px grey;
+    font-weight: bold;
+    font-family: sans-serif
+    
+}
+
+#button{
+    display: flex;
+    justify-content: center;
+}
+
 
 .rad {
   display: flex;
