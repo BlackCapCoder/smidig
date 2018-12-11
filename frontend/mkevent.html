@@ -58,7 +58,7 @@
 
   function onCalendarClick (btn) {
     let now = new Date();
-    let d = new Date(now.getFullYear(), now.getMonth()+1, Number(btn.innerText) -daysInThisMonth());
+    let d = new Date(now.getFullYear(), now.getMonth()+1, Number(btn.innerText) -daysInThisMonth() + 1);
     document.getElementById("date").value = d.toJSON();
   }
 
