@@ -7,36 +7,24 @@
   Place <input type="text" id="place" /></br>
   Date  <input type="text" id="date" value="1970-01-01T00:00:00Z" /></br>
   <input type="button" value="submit" onclick="submit()" />
-  
+
   <br>
-  <table border="1">
-  <tr>
-  <th colspan="7">December 2018</th>
-  </tr>
- 	 
-<tr>
-<th>Mon</th>
-<th>Tue</th>
-<th>Wed</th>
-<th>Thu</th>
-<th>Fri</th>
-<th>Sat</th>
-<th>Sun</th>
-</tr>
 
-<tr>
-<th><button onclick="button_1()">1</th>
-<th>2</th>
-<th>3</th>
-<th>4</th>
-<th>5</th>
-<th>6</th>
-<th>7</th>
-</tr>
+  <table border="1" id="calendar">
+    <tr>
+      <th colspan="7">December 2018</th>
+    </tr>
+    <tr>
+      <th>Mon</th>
+      <th>Tue</th>
+      <th>Wed</th>
+      <th>Thu</th>
+      <th>Fri</th>
+      <th>Sat</th>
+      <th>Sun</th>
+    </tr>
 
-</table>
-
-
+  </table>
 
 
   <input type="button" value="submit" onclick="submit()" />
@@ -68,8 +56,23 @@
       , succ, err);
   }
 
-function button_1() 
-{
-  document.getElementById("date").value = "2018-12-1";
-}
+  function onCalendarClick (btn) {
+    alert (btn.innerText);
+    document.getElementById("date").value = "2018-12-1";
+  }
+
+  window.onload = _ => {
+    let table = document.querySelector("#calendar");
+    for (let x = 1; x < 30; x+=7) {
+      let row = document.createElement("tr");
+      for (let i = 0; i < 7; i++) {
+        let btn = document.createElement("button");
+        btn.innerText = i+x;
+        btn.setAttribute('onclick', 'onCalendarClick (this)');
+        row.appendChild(btn);
+      }
+      table.appendChild(row);
+    }
+  }
+
 </script>
