@@ -83,7 +83,7 @@ server = do
 
         joinEvent evid = do
           db $ do
-            let uid = toId 2
+            let uid = toId 1
             x <- fmap listToMaybe . query $ do
               p <- select participants
               restrict (p ! #eid .== literal evid)
