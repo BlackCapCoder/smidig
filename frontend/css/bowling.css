@@ -1,18 +1,21 @@
-#info {
-  background-image: url("../imgs/cropped-2013-11-14-23.32.53-1.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
+html, body{
+    background-color: ghostwhite; 
 }
 
-h1 {
+#banner {
+    background-image: url("../imgs/cropped-2013-11-14-23.32.53-1.jpg");
+    background-size: cover; 
+    background-position: center;
+    color: #988; 
+    font-size: 2rem;
+    text-align: center; 
+    font-family: cursive; 
+    margin: auto; 
+}
+
+#info {
   color: black;
-  text-align: center;
-  font-family: Monospace;
-  font-size: 5em;
-}
-
-#info {
-  color: white;
+  background-color: #988;
   text-align:  left;
   text-shadow: 1px 1px grey;
   font-weight: bold;
@@ -23,6 +26,7 @@ h1 {
   min-height: 250px;
   width: 100%;
   position: relative;
+  margin-top: -30px;     
 }
 
 #button, #row-wrapper {
