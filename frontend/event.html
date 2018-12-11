@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bowling.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="api.js"></script>
+
+    <script>
+      function addPart (u) {
+        let cont = document.createElement('div')
+          , lft  = document.createElement('a')
+          , rgt  = document.createElement('div')
+          , pic  = document.createElement('img')
+          , name = document.createElement('span')
+          , age  = document.createElement('span')
+          ;
+
+        cont.classList.add ('person');
+        lft.classList.add  ('left');
+        rgt.classList.add  ('right');
+        pic.classList.add  ('profile');
+        name.classList.add ('name');
+        age.classList.add  ('age');
+
+        cont.appendChild(lft);
+        cont.appendChild(rgt);
+        lft.appendChild(pic);
+        rgt.appendChild(name);
+        rgt.appendChild(age);
+
+        pic.setAttribute('src', 'imgs/prof.png');
+        name.innerText = u.username;
+        age.innerText = u.age;
+
+        lft.setAttribute('href', 'profile.html#' + u.uid);
+
+        party.appendChild(cont);
+      }
+
+      window.onload = _ => {
+        let hash = window.location.hash.substr (1);
+        let evid = Number (hash);
+        party = document.querySelector("#participants")
+
+        getEvent (evid, ev => {
+          date = new Date (ev.date);
+
+          document.title = ev.title;
+          document.querySelector("#title").innerText   = ev.title;
+          document.querySelector("#desc").innerText    = ev.desc;
+          document.querySelector("#time").innerText    = date.toTimeString().split(' ')[0];
+          document.querySelector("#date").innerText    = date.toLocaleDateString();
+          document.querySelector("#place").innerText   = ev.place;
+
+          getUser (ev.owner, u => {
+            document.querySelector("#creator").innerText = u.username;
+            addPart (u);
+          });
+        });
+
+        getPictures (evid, ps => {
+          let cont = document.querySelector("#rad");
+
+          for (let p of ps) {
+            let el_div = document.createElement('div');
+            let el_pic = document.createElement('img');
+
+            el_div.classList.add('image');
+            el_pic.setAttribute('src', p.pth);
+            el_div.appendChild(el_pic);
+
+            cont.appendChild(el_div);
+          }
+        });
+
+        getParticipants (evid, ps => {
+          for (let p of ps) {
+            getUser (p.uid, u => {
+              addPart (u);
+            });
+          }
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <h1 id='title'></h1>
+
+    <div id="info">
+      <table>
+        <tr>
+          <td>Laget av</td>
+          <td id='creator'></td>
+        </tr>
+        <tr>
+          <td>Beskrivelse</td>
+          <td id='desc'></td>
+        </tr>
+        <tr>
+          <td>Tid</td>
+          <td id='time'></td>
+        </tr>
+        <tr>
+          <td>Sted</td>
+          <td id='place'></td>
+        </tr>
+        <tr>
+          <td>Dato</td>
+          <td id='date'></td>
+        </tr>
+      </table>
+    </div>
+
+    <section id="button">
+      <button type="button-1" onclick='alert("neato!")'>Jeg kommer!</button>
+      <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
+    </section>
+
+    <div class="parti-wrapper">
+      <section id="participants">
+      </section>
+    </div>
+
+    <div id="row-wrapper">
+      <div id="rad">
+      </div>
+    </div>
+  </body>
+</html>

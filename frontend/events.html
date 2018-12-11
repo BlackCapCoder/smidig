@@ -3,30 +3,16 @@
 <link rel="stylesheet" href="css/event.css" type="text/css" media="all" />
 
 
-<div id="toolbar">
-  <input type="text"   id="tb-search"/>
-  <input type="button" id="btn-search" value="search"/>
-  <input type="button" id="btn-new" value="+"/>
-</div>
+<div class="wrapper">
+  <div class="center-wrapper">
+    <div id="toolbar">
+      <input type="text"   id="tb-search"/>
+      <input type="button" id="btn-search" value="search"/>
+      <input type="button" id="btn-new" value="+" onclick="window.location = 'mkevent.html';"/>
+    </div>
 
-<div id="events">
-<!--
-  <div class="event">
-    <div class="left">
-      <img class="profile" src="imgs/prof.png" alt="" />
-    </div>
-    <div class="right">
-      <div class="left">
-        <h2 class="title">Bowling night</h2>
-        <p class="text">Win a free beer!</p>
-      </div>
-      <div class="right">
-        <p class="place">Oslo S</p>
-        <p class="date">10/11 12:00</p>
-      </div>
-    </div>
+    <div id="events"></div>
   </div>
--->
 </div>
 
 
@@ -56,12 +42,12 @@
     el_place.classList.add ('place');
     el_date.classList.add ('date');
 
-    ev.setAttribute('href', 'event?id=' + eid);
+    ev.setAttribute('href', 'event.html#' + eid);
     el_pic.setAttribute ('src', pic);
     el_tit.innerText   = title;
     el_txt.innerText   = text;
     el_place.innerText = place;
-    el_date.innerText  = date;
+    el_date.innerText  = new Date(date).toLocaleDateString();
 
     ev.appendChild (lft);
     ev.appendChild (rgt);
@@ -80,7 +66,6 @@
 
   getEvents (evs => {
     for (let e of evs) {
-      console.log(e)
       addEvent ("imgs/prof.png", e.title, e.desc, e.place, e.date, e.eid);
     }
   });

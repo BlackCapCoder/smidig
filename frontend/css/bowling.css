@@ -1,22 +1,84 @@
-body {
-  background-image: url("../imgs/e3b22354-5665-418f-a0f3-7f0927e72a7a.jpeg");
+#info {
+  background-image: url("../imgs/cropped-2013-11-14-23.32.53-1.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-#info{
-  background-image: url("../imgs/e3b22354-5665-418f-a0f3-7f0927e72a7a.jpeg");
+h1 {
+  color: black;
+  text-align: center;
+  font-family: Monospace;
+  font-size: 5em;
 }
 
-.rad {
+#info {
+  color: white;
+  text-align:  left;
+  text-shadow: 1px 1px grey;
+  font-weight: bold;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 250px;
+  width: 100%;
+  position: relative;
+}
+
+#button, #row-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+#rad {
   display: flex;
   flex-wrap: wrap;
   padding: 0 2px;
+  max-width: 900px;
 }
 
-.rad .image {
+#rad .image {
   margin-top: 4px;
-  width: 50%;
+  width: calc(50% - 10px);
   position: relative;
+  padding: 5px;
 }
-.rad .image img {
+#rad .image img {
   max-width: 100%;
+}
+
+
+.parti-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+#participants {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.person {
+  display: flex;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  width: 220px;
+}
+.person > .left {
+  margin-right: 10px;
+}
+.person > .left > .profile {
+  width: 80px;
+  border-radius: 100%;
+}
+.person > .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 20px;
+}
+.person > .right > .age {
+  font-size: 14px;
 }
