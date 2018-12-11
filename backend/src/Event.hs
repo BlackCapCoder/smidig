@@ -38,6 +38,7 @@ type Api = "events" :> Get '[JSON] [Event]
       :<|> "participants" :> QueryParam "id" EventID :> Get '[JSON] [Participants]
       :<|> "pictures" :> QueryParam "id" EventID :> Get '[JSON] [Pictures]
       :<|> "mkevent" :> ReqBody '[JSON] MkEventReq :> Post '[JSON] (Maybe EventID)
+      :<|> "joinEvent" :> ReqBody '[JSON] EventID :> Post '[JSON] Text
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
@@ -59,18 +60,36 @@ server = do
     tryCreateTable pictures
 
   pure $ listEvents :<|> getEvent :<|> getParticipants :<|> getPictures
-                    :<|> mkEvent
+                    :<|> mkEvent :<|> joinEvent
 
   where listEvents      = db . query $ select events
         getEvent        = getByIDM db events       #eid
         getParticipants = getByID  db participants #eid
         getPictures     = getByID  db pictures     #eid
         mkEvent     req = do
-          eid <- db $ do
+          let ownerID = toId 1
+
+          evid <- fmap (join . listToMaybe) . db $ do
             insert_ events
-              [Event def (toId 1) (req_title req) (req_desc req) (req_place req) (req_date req)]
+              [Event def ownerID (req_title req) (req_desc req) (req_place req) (req_date req)]
             query $ aggregate
               [ max_ (e ! #eid) | e <- select events ]
 
-          return $ listToMaybe eid >>= id
+          case evid of
+            Nothing -> pure Nothing
+            Just e -> do
+              db (insert_ participants [Participants e ownerID])
+              pure $ Just e
 
+        joinEvent evid = do
+          db $ do
+            let uid = toId 2
+            x <- fmap listToMaybe . query $ do
+              p <- select participants
+              restrict (p ! #eid .== literal evid)
+              restrict (p ! #uid .== literal uid)
+              return p
+            case x of
+              Just _ -> pure ()
+              Nothing -> insert_ participants [Participants evid uid]
+          return "OK"
