@@ -37,7 +37,7 @@ type Api = "events" :> Get '[JSON] [Event]
       :<|> "event"  :> QueryParam "id" EventID :> Get '[JSON] (Maybe Event)
       :<|> "participants" :> QueryParam "id" EventID :> Get '[JSON] [Participants]
       :<|> "pictures" :> QueryParam "id" EventID :> Get '[JSON] [Pictures]
-      :<|> "mkevent" :> ReqBody '[JSON] MkEventReq :> Post '[JSON] NoContent
+      :<|> "mkevent" :> ReqBody '[JSON] MkEventReq :> Post '[JSON] (Maybe EventID)
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
@@ -66,8 +66,11 @@ server = do
         getParticipants = getByID  db participants #eid
         getPictures     = getByID  db pictures     #eid
         mkEvent     req = do
-          liftIO $ print req
-          db $ insert_ events
-            [Event def (toId 1) (req_title req) (req_desc req) (req_place req) (req_date req)]
-          return NoContent
+          eid <- db $ do
+            insert_ events
+              [Event def (toId 1) (req_title req) (req_desc req) (req_place req) (req_date req)]
+            query $ aggregate
+              [ max_ (e ! #eid) | e <- select events ]
+
+          return $ listToMaybe eid >>= id
 
