@@ -1,16 +1,16 @@
 html, body{
-    background-color: ghostwhite; 
+  background-color: ghostwhite;
 }
 
 #banner {
-    background-image: url("../imgs/cropped-2013-11-14-23.32.53-1.jpg");
-    background-size: cover; 
-    background-position: center;
-    color: #988; 
-    font-size: 2rem;
-    text-align: center; 
-    font-family: cursive; 
-    margin: auto; 
+  background-image: url("../imgs/cropped-2013-11-14-23.32.53-1.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #988;
+  font-size: 2rem;
+  text-align: center;
+  font-family: cursive; /* NEI! Fy! */
+  margin: auto;
 }
 
 #info {
@@ -26,7 +26,7 @@ html, body{
   min-height: 250px;
   width: 100%;
   position: relative;
-  margin-top: -30px;     
+  margin-top: -30px;
 }
 
 #button, #row-wrapper {
