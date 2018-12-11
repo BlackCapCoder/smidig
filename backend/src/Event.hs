@@ -51,6 +51,7 @@ pictures = table "pictures" []
 
 db = liftIO . withSQLite "events.sqlite"
 
+bob = toId 1 :: UserID
 
 server :: IO (Server Api)
 server = do
@@ -67,7 +68,7 @@ server = do
         getParticipants = getByID  db participants #eid
         getPictures     = getByID  db pictures     #eid
         mkEvent     req = do
-          let ownerID = toId 1
+          let ownerID = bob
 
           evid <- fmap (join . listToMaybe) . db $ do
             insert_ events
@@ -83,7 +84,7 @@ server = do
 
         joinEvent evid = do
           db $ do
-            let uid = toId 1
+            let uid = bob
             x <- fmap listToMaybe . query $ do
               p <- select participants
               restrict (p ! #eid .== literal evid)
