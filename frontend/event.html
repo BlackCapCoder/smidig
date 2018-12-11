@@ -41,7 +41,7 @@
 
       window.onload = _ => {
         let hash = window.location.hash.substr (1);
-        let evid = Number (hash);
+        evid  = Number (hash);
         party = document.querySelector("#participants")
 
         getEvent (evid, ev => {
@@ -56,7 +56,7 @@
 
           getUser (ev.owner, u => {
             document.querySelector("#creator").innerText = u.username;
-            addPart (u);
+            // addPart (u);
           });
         });
 
@@ -82,6 +82,17 @@
             });
           }
         });
+      }
+
+      function joinEvent () {
+        function succ () {
+          alert("You are now signed up for this event, looking forwards to seeing you there!")
+        }
+        function fail () {
+          alert("You do NOT get to join this event! Asshole!");
+        }
+
+        postJoinEvent (evid, succ, fail);
       }
     </script>
   </head>
@@ -115,9 +126,10 @@
     </div>
 
     <section id="button">
-      <button type="button-1" onclick='alert("neato!")'>Jeg kommer!</button>
+      <button type="button-1" onclick='joinEvent()'>Jeg kommer!</button>
       <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
-    </section>
+      <button type="button-2" onclick='alert("Thank you for showing interest, hope to see you there!")'>Interessert</button>
+   </section>
 
     <div class="parti-wrapper">
       <section id="participants">
