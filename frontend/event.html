@@ -85,8 +85,12 @@
       }
 
       function joinEvent () {
-        function succ () { alert("S"); }
-        function fail () { alert("F"); }
+        function succ () {
+          alert("You are now signed up for this event, looking forwards to seeing you there!")
+        }
+        function fail () {
+          alert("You do NOT get to join this event! Asshole!");
+        }
 
         postJoinEvent (evid, succ, fail);
       }
@@ -122,11 +126,7 @@
     </div>
 
     <section id="button">
-<<<<<<< HEAD
-      <button type="button-1" onclick='alert("You are now signed up for this event, looking forwards to seeing you there!")'>Jeg kommer!</button>
-=======
       <button type="button-1" onclick='joinEvent()'>Jeg kommer!</button>
->>>>>>> f19d041bd5b4ea56948cb925d6e3b4c5b9b5a43b
       <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
       <button type="button-2" onclick='alert("Thank you for showing interest, hope to see you there!")'>Interessert</button>
    </section>
