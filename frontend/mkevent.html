@@ -57,22 +57,46 @@
   }
 
   function onCalendarClick (btn) {
-    alert (btn.innerText);
-    document.getElementById("date").value = "2018-12-1";
+    let now = new Date();
+    let d = new Date(now.getFullYear(), now.getMonth()+1, Number(btn.innerText) -daysInThisMonth());
+    document.getElementById("date").value = d.toJSON();
+  }
+
+  function daysInThisMonth() {
+    var now = new Date();
+    return new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  }
+  function firstDayInThisMonth() {
+    var now = new Date();
+    return new Date(now.getFullYear(), now.getMonth()+1, -daysInThisMonth()+1).getDay();
   }
 
   window.onload = _ => {
-    let table = document.querySelector("#calendar");
-    for (let x = 1; x < 30; x+=7) {
-      let row = document.createElement("tr");
-      for (let i = 0; i < 7; i++) {
-        let btn = document.createElement("button");
-        btn.innerText = i+x;
-        btn.setAttribute('onclick', 'onCalendarClick (this)');
-        row.appendChild(btn);
-      }
-      table.appendChild(row);
+    let table     = document.querySelector("#calendar");
+    let num_days  = daysInThisMonth();
+    let first_day = firstDayInThisMonth()-1;
+    let row       = document.createElement("tr");
+
+    for (let i = 0; i < first_day; i++) {
+      let col = document.createElement("td");
+      row.appendChild(col)
     }
+
+    for (let i = 0; i < num_days; i++) {
+      if ((i + first_day) % 7 == 0) {
+        table.appendChild(row);
+        row = document.createElement("tr");
+      }
+
+      let col = document.createElement("td");
+      let btn = document.createElement("button");
+      btn.innerText = i+1;
+      btn.setAttribute('onclick', 'onCalendarClick (this)');
+      row.appendChild(col)
+      col.appendChild(btn);
+    }
+
+    table.appendChild(row);
   }
 
 </script>
