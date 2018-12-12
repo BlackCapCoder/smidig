@@ -23,8 +23,14 @@
   </tr>
   <tr style="display: none;">
     <th>
-      <span>Date:</span>
+      <span>Date</span>
       <input type="text" id="date" value="1970-01-01T00:00:00Z" style="width: 250px;">
+    </th>
+  </tr>
+  <tr>
+    <th>
+      <span>Time</span>
+      <input type="text" id="time" value="00:00" style="width: 250px;" oninput="validateTime(this)">
     </th>
   </tr>
 </table>

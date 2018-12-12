@@ -69,3 +69,7 @@ function calNext () {
 
 }
 
+function validateTime (el) {
+  let txt = el.value;
+}
+
