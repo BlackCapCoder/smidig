@@ -1,6 +1,1 @@
-add event call               -> what, where, when, who's making
-"bli med"                    -> sends users name to arr page and adds to list of people who're going
-
-add event   -> [string what], [string where], [string who], [int when]
-"bli med"   -> send [usrnme] and set GOING to EVENT        == true
 

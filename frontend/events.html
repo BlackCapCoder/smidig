@@ -6,7 +6,7 @@
 <div class="wrapper">
   <div class="center-wrapper">
     <div id="toolbar">
-      <input type="text"   id="tb-search"/>
+      <input type="text"   id="tb-search" oninput="onQueryChanged(this.value)"/>
       <input type="button" id="btn-search" value="search"/>
       <input type="button" id="btn-new" value="+" onclick="window.location = 'mkevent.html';"/>
     </div>
@@ -69,5 +69,18 @@
       addEvent ("imgs/prof.png", e.title, e.desc, e.place, e.date, e.eid);
     }
   });
+
+  function onQueryChanged (txt) {
+    let evs = document.querySelectorAll ('.event');
+    let rx  = new RegExp (txt, 'i');
+
+    for (let e of evs) {
+      if (rx.test(e.innerText)) {
+        e.classList.remove ('hidden');
+      } else {
+        e.classList.add    ('hidden');
+      }
+    }
+  }
 </script>
 
