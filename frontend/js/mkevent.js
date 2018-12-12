@@ -71,5 +71,16 @@ function calNext () {
 
 function validateTime (el) {
   let txt = el.value;
+  var isValid = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/.test(el.value);
+  
+  if (isValid)
+  {
+  el.style.backgroundColor = '#bfa';
+  }
+  else
+  {
+  el.style.backgroundColor = '#fba';
+  }
+  return isValid;
 }
 
