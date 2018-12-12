@@ -103,3 +103,4 @@ function validateTime (el) {
 function calendarDropdown () {
   document.querySelector ('#calendar').classList.toggle('hidden');
 }
+
