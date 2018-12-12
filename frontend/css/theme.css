@@ -1,6 +1,5 @@
-
 :root {
-  --header-height: 23px;
+  --header-height: 30px;
   --footer-height: 20px;
   --side-panel-width: 150px;
 }
@@ -14,6 +13,7 @@ header {
   margin-bottom: var(--header-space);
   height: var(--header-height);
   background: lightblue;
+  padding: 0 5px;
 }
 header > .left {
   flex: 1;
@@ -31,7 +31,8 @@ header > .right {
 }
 .split > main {
   flex: 1;
-  padding: 10px;
+  padding: 20px 15px;
+  overflow-y: scroll;
 }
 
 footer {
@@ -40,17 +41,27 @@ footer {
   height: var(--footer-height);
 }
 
-#side-panel #items {
+.items {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-#side-panel #items a {
+.items a {
   text-decoration: none;
 }
-#side-panel #items > li:nth-of-type(odd) {
+.items > li:nth-of-type(odd) {
   background: rgba(255,255,255,0.3);
 }
-#side-panel #items > li {
+.items > li {
   padding: 5px;
 }
+
+#menu-settings {
+  position: fixed;
+  min-width: 300px;
+  background: aqua;
+  right: 0;
+  z-index: 99;
+}
+
+.hidden { display: none; }

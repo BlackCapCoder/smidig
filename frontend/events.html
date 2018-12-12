@@ -1,44 +1,14 @@
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="api.js"></script>
 <script src="js/events.js" charset="utf-8"></script>
-
 <link rel="stylesheet" href="css/event.css" type="text/css" media="all" />
-<link rel="stylesheet" href="css/theme.css" type="text/css" media="all" />
 
 
-<header>
-  <div class="left">
-    logo
-  </div>
-  <div class="right">
-    <a id="btn-settings" href='#'>Settings</a>
-  </div>
-</header>
-
-<div class="split">
-  <div id="side-panel">
-    <ul id="items">
-      <li><a href='#'>Skrivebord</a></li>
-      <li><a href='#'>Arrangemang</a></li>
-      <li><a href='#'>Meldinger</a></li>
-      <li><a href='#'>Venner</a></li>
-    </ul>
-  </div>
-  <main role="main">
-    <div class="wrapper">
-      <div class="center-wrapper">
-        <div id="toolbar">
-          <input type="text" id="tb-search" placeholder='search' oninput="onQueryChanged(this.value)"/>
-          <!-- <input type="button" id="btn&#45;search" value="search"/> -->
-          <input type="button" id="btn-new" value="+" onclick="window.location = 'mkevent.html';"/>
-        </div>
-
-        <div id="events"></div>
-      </div>
+<div class="wrapper">
+  <div class="center-wrapper">
+    <div id="toolbar">
+      <input type="text" id="tb-search" placeholder='search' oninput="onQueryChanged(this.value)"/>
+      <input type="button" id="btn-new" value="+" onclick="window.location = 'mkevent.html';"/>
     </div>
-  </main>
-</div>
 
-<footer>
-  face insta twitter snap (c) sutrekroken
-</footer>
+    <div id="events"></div>
+  </div>
+</div>

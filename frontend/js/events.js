@@ -47,7 +47,7 @@ function addEvent (pic, title, text, place, date, eid) {
 
 getEvents (evs => {
   for (let e of evs) {
-    addEvent ("imgs/prof.png", e.title, e.desc, e.place, e.date, e.eid);
+    addEvent ("imgs/her.jpeg", e.title, e.desc, e.place, e.date, e.eid);
   }
 });
 
