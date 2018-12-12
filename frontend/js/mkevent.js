@@ -83,7 +83,6 @@ window.onload = _ => {
   populateCalendar ();
 };
 
-
 function calPrev () {
   selection--;
   populateCalendar ();
