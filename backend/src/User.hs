@@ -9,6 +9,7 @@ data User = User
   { uid      :: UserID
   , username :: Text
   , age      :: Int
+  , pic      :: Maybe Text
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 data LoginReq = LoginReq

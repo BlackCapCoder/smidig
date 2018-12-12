@@ -14,6 +14,7 @@ import qualified File
 
 type GetJs = "api.js" :> Get '[PlainText, JSON] Text
 getJs = jsForAPI (Proxy :: Proxy Api) jquery
+-- getJs = jsForAPI (Proxy :: Proxy Api) vanillaJS
 
 type Api = Event.Api :<|> User.Api
 

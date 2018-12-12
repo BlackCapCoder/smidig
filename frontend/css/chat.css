@@ -1,0 +1,26 @@
+p { margin: 0; }
+
+main { display: flex; }
+main .split {
+  flex: 1;
+  display: flex;
+}
+
+main .split .left {
+  width: 150px;
+  background: lightblue;
+}
+
+#chat-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#chat {
+  flex: 1;
+}
+
+#chat-input > input {
+  width: 100%;
+}

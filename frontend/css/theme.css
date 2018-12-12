@@ -21,15 +21,15 @@ header > .left {
 header > .right {
 }
 
-.split {
+body > .split {
   display: flex;
   height: calc(100vh - var(--header-height) - var(--footer-height));
 }
-.split > #side-panel {
+body > .split > #side-panel {
   width: var(--side-panel-width);
   background: aqua;
 }
-.split > main {
+body > .split > main {
   flex: 1;
   padding: 20px 15px;
   overflow-y: scroll;
