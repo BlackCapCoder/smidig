@@ -1,6 +1,9 @@
 p { margin: 0; }
 
-main { display: flex; }
+main {
+  display: flex;
+  flex-direction: column;
+}
 main .split {
   flex: 1;
   display: flex;
@@ -23,4 +26,14 @@ main .split .left {
 
 #chat-input > input {
   width: 100%;
+}
+
+.tab:not(.active) { display: none; }
+
+.tab {
+  padding: 5px;
+}
+.tab > a {
+  display: block;
+  text-decoration: none;
 }

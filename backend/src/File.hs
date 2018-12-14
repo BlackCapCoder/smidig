@@ -28,7 +28,8 @@ server = do
 
 addTheme p1 p2 base req resp = base req $ resp . splice
   where splice r
-          | B.isSuffixOf ".html" $ rawPathInfo req
+          | B.isSuffixOf ".html" pth
+          , pth `notElem` ["/login.html"]
           , (status, headers, f) <- responseToStream r
           = responseStream status headers $ \write flush -> do
               write p1
@@ -36,5 +37,6 @@ addTheme p1 p2 base req resp = base req $ resp . splice
               write p2
               flush
           | otherwise = r
+        pth = rawPathInfo req
 
 

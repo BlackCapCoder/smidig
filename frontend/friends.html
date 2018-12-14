@@ -1,0 +1,85 @@
+<h1>Venner</h1>
+
+<!-- Copy pasted from event.html -->
+<link rel="stylesheet" href="css/bowling.css">
+<div class="parti-wrapper">
+  <section id="participants">
+  </section>
+</div>
+
+<script>
+  function addPart (u) {
+    let cont = document.createElement('div')
+      , lft  = document.createElement('a')
+      , rgt  = document.createElement('div')
+      , pic  = document.createElement('img')
+      , name = document.createElement('span')
+      , age  = document.createElement('span')
+      ;
+
+    cont.classList.add ('person');
+    lft.classList.add  ('left');
+    rgt.classList.add  ('right');
+    pic.classList.add  ('profile');
+    name.classList.add ('name');
+    age.classList.add  ('age');
+
+    cont.appendChild(lft);
+    cont.appendChild(rgt);
+    lft.appendChild(pic);
+    rgt.appendChild(name);
+    rgt.appendChild(age);
+
+    pic.setAttribute('src', 'imgs/' + u.pic);
+    name.innerText = u.username;
+    age.innerText = u.age;
+
+    lft.setAttribute('href', 'profile.html#' + u.uid);
+
+    party.appendChild(cont);
+  }
+
+  window.onload = _ => {
+    evid  = 1;
+    party = document.querySelector("#participants")
+
+    getEvent (evid, ev => {
+      date = new Date (ev.date);
+
+      document.title = ev.title;
+      document.querySelector("#title").innerText   = ev.title;
+      document.querySelector("#desc").innerText    = ev.desc;
+      document.querySelector("#time").innerText    = date.toTimeString().split(' ')[0];
+      document.querySelector("#date").innerText    = date.toLocaleDateString();
+      document.querySelector("#place").innerText   = ev.place;
+
+      getUser (ev.owner, u => {
+        document.querySelector("#creator").innerText = u.username;
+        // addPart (u);
+      });
+    });
+
+    getPictures (evid, ps => {
+      let cont = document.querySelector("#rad");
+
+      for (let p of ps) {
+        let el_div = document.createElement('div');
+        let el_pic = document.createElement('img');
+
+        el_div.classList.add('image');
+        el_pic.setAttribute('src', p.pth);
+        el_div.appendChild(el_pic);
+
+        cont.appendChild(el_div);
+      }
+    });
+
+    getParticipants (evid, ps => {
+      for (let p of ps) {
+        getUser (p.uid, u => {
+          addPart (u);
+        });
+      }
+    });
+  }
+</script>

@@ -1,0 +1,42 @@
+<img id="banner" src="" alt="banner" />
+
+<div class="split">
+  <div class="left">
+    <h1>Lorem</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  </div>
+
+  <div class="right">
+    <table id='login-form'>
+      <tr>
+        <td><span>Username</span></td>
+        <td><input type="text" id="username" value='Bob'></td>
+      </tr>
+      <tr>
+        <td><span>Password</span></td>
+        <td><input type="password" id="password" value='a'></td>
+      </tr>
+    </table>
+    <button onclick="loginPressed()">Login</button>
+  </div>
+</div>
+
+<script>
+  function loginPressed () {
+    window.location = "desktop.html";
+  }
+</script>
+
+<style>
+  .split { display: flex; }
+
+  #banner {
+    width: 100%;
+    height: 150px;
+    background: red;
+    margin-bottom: 20px;
+  }
+</style>
+

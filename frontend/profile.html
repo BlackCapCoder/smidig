@@ -4,7 +4,7 @@
     let uid  = Number (hash);
 
     getUser (uid, u => {
-      document.querySelector('#pic').setAttribute('src', 'imgs/prof.png');
+      document.querySelector('#pic').setAttribute('src', 'imgs/' + u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;
     });

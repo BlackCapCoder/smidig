@@ -1,9 +1,21 @@
 <link rel="stylesheet" href="css/chat.css" type="text/css" media="all" />
+<script src="js/chat.js" charset="utf-8"></script>
+
+<div class="tabs">
+  <button onclick='changeTab(1)'>Mine</button>
+  <button onclick='changeTab(2)'>Utforsk</button>
+</div>
 
 <div class="split">
   <div class="left">
-    <p>Bob</p>
-    <p>Roy</p>
+    <div class="tab active">
+      <a href='javascript:openChat(this)'>Bob</a>
+      <a href='javascript:openChat(this)'>Roy</a>
+    </div>
+    <div class="tab">
+      <a href='javascript:openChat(this)'>ponyclub</a>
+      <a href='javascript:openChat(this)'>fotball</a>
+    </div>
   </div>
   <div class="right" id="chat-view">
     <div id="chat">
