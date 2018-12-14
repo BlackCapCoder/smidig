@@ -48,7 +48,7 @@ function addEvent (pic, title, text, place, date, eid) {
 getEvents (evs => {
   for (let e of evs) {
     getUser (e.owner, u => {
-      addEvent ("imgs/" + u.pic, e.title, e.desc, e.place, e.date, e.eid);
+      addEvent (u.pic, e.title, e.desc, e.place, e.date, e.eid);
     });
   }
 });
