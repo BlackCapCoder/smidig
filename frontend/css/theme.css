@@ -104,6 +104,11 @@ footer {
   background: var(--colorB);
 }
 
-#logo{
-  height: 100%;
+#logo {
+  height: calc(100% - 6px);
+  margin-top: 3px;
+  filter: invert(1);
+}
+#logo:hover {
+  mix-blend-mode: soft-light;
 }
