@@ -1,5 +1,5 @@
 :root {
-  --header-height: 80px;
+  --header-height: 55px;
   --footer-height: 20px;
   --side-panel-width: 150px;
 
@@ -29,7 +29,6 @@ header > .left {
 }
 header > .right {
 }
-
 body > .split {
   display: flex;
   height: calc(100vh - var(--header-height) - var(--footer-height));
@@ -103,6 +102,11 @@ footer {
   height: 300px;
   transform: translateY(-100%);
   background: var(--colorB);
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-color: black;
 }
 
 #logo {
@@ -116,16 +120,16 @@ footer {
 }*/
 
 #settings {
-  height: calc(100% - 30px);
+  height: calc(100% - 25px);
   margin-top: 3px;
 }
 
 #user-icon {
-  height: calc(100% - 30px);
+  height: calc(100% - 25px);
   margin-top: 3px;
 }
 
 #chat-icon {
-  height: calc(100% - 50px);
-  margin-bottom: 3px;
+  height: calc(100% - 2px);
+  margin-bottom: 1px;
 }
