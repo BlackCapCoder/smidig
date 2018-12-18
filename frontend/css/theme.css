@@ -178,3 +178,8 @@ footer {
   font-weight: bold;
   font-family: 'Roboto Condensed', sans-serif;
 }
+
+#chat-bubble > .top-row {
+  display: flex;
+  justify-content: space-between;
+}

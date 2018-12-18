@@ -95,34 +95,34 @@
   </head>
 
   <body>
-    <div id="banner">
-      <h1 id='title'></h1>
-      <img src="imgs/bowling%20(1).jpg">
-   </div>
+    <img id="top-img" src="imgs/Banner1.png">
 
-    <div id="info">
-      <table>
-        <tr>
-          <td>Laget av</td>
-          <td id='creator'></td>
-        </tr>
-        <tr>
-          <td>Beskrivelse</td>
-          <td id='desc'></td>
-        </tr>
-        <tr>
-          <td>Tid</td>
-          <td id='time'></td>
-        </tr>
-        <tr>
-          <td>Sted</td>
-          <td id='place'></td>
-        </tr>
-        <tr>
-          <td>Dato</td>
-          <td id='date'></td>
-        </tr>
-      </table>
+    <div id="info-wrapper">
+      <div id="info">
+        <h1 id='title'></h1>
+        <table>
+          <tr>
+            <td><span>Laget av</span></td>
+            <td><span id='creator'></span></td>
+          </tr>
+          <tr>
+            <td><span>Tid</span></td>
+            <td><span id='time'></span></td>
+          </tr>
+          <tr>
+            <td><span>Sted</span></td>
+            <td><span id='place'></span></td>
+          </tr>
+          <tr>
+            <td><span>Dato</span></td>
+            <td><span id='date'></span></td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="desc-wrapper">
+      <span id='desc'></span>
     </div>
 
     <section id="button">
@@ -137,14 +137,15 @@
       </section>
     </div>
 
+    <section id="comment-section">
+      <h2>Skiv en kommentar</h2>
+      <textarea id="comment-box" rows="8" cols="40"></textarea>
+    </section>
+
     <div id="row-wrapper">
       <div id="rad">
       </div>
     </div>
-
-    <section id="kommende">
-      <h2>Kommende Events</h2>
-    </section>
 
   </body>
 </html>
