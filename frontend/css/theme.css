@@ -179,7 +179,18 @@ footer {
   font-family: 'Roboto Condensed', sans-serif;
 }
 
+<<<<<<< HEAD
 #chat-bubble > .top-row {
   display: flex;
   justify-content: space-between;
+=======
+#language {
+  color: black;
+  text-decoration: none;
+  text-size: 20px;
+}
+
+#acc-controll {
+  color: blue;
+>>>>>>> c745fcf7b6d9f92731df657dccdfef5a5c085796
 }
