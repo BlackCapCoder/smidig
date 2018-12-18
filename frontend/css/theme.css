@@ -91,7 +91,16 @@ footer {
   padding:0;
 }
 .items > li > a:hover {
-  background: linear-gradient(to right, var(--colorA), var(--colorB));
+  background: linear-gradient(45deg, var(--colorA), var(--colorB));
+}
+.items > li:nth-child(2) > a:hover {
+  background: linear-gradient(60deg, var(--colorA), var(--colorB));
+}
+.items > li:nth-child(3) > a:hover {
+  background: linear-gradient(80deg, var(--colorA), var(--colorB));
+}
+.items > li:nth-child(4) > a:hover {
+  background: linear-gradient(100deg, var(--colorA), var(--colorB));
 }
 
 #menu-settings {
@@ -162,4 +171,10 @@ footer {
 
 #links {
   text-decoration: none;
+}
+
+#main-title {
+  font-size: 30px;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
 }
