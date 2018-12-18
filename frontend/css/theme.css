@@ -74,7 +74,7 @@ footer {
   padding: 5px;
 }
 
-.items > li > a {
+#side-panel .items > li > a {
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -85,21 +85,21 @@ footer {
   display: block;
   padding: 11px 0px;
 }
-.items > li {
+#side-panel .items > li {
   margin-bottom: 5px;
   margin-left: 10px;
   padding:0;
 }
-.items > li > a:hover {
+#side-panel .items > li > a:hover {
   background: linear-gradient(45deg, var(--colorA), var(--colorB));
 }
-.items > li:nth-child(2) > a:hover {
+#side-panel .items > li:nth-child(2) > a:hover {
   background: linear-gradient(60deg, var(--colorA), var(--colorB));
 }
-.items > li:nth-child(3) > a:hover {
+#side-panel .items > li:nth-child(3) > a:hover {
   background: linear-gradient(80deg, var(--colorA), var(--colorB));
 }
-.items > li:nth-child(4) > a:hover {
+#side-panel .items > li:nth-child(4) > a:hover {
   background: linear-gradient(100deg, var(--colorA), var(--colorB));
 }
 
