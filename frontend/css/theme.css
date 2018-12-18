@@ -133,3 +133,7 @@ footer {
   height: calc(100% - 2px);
   margin-bottom: 1px;
 }
+
+#links {
+  text-decoration: none;
+}
