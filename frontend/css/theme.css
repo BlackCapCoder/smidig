@@ -1,7 +1,7 @@
 :root {
   --header-height: 55px;
   --footer-height: 20px;
-  --side-panel-width: 150px;
+  --side-panel-width: 145px;
 
   --colorA: rgb(118, 061, 161);
   --colorB: rgb(185, 114, 238);
@@ -23,9 +23,10 @@ header {
   background: white;
   padding: 0 5px;
   color: black;
+  justify-content: space-between;
 }
 header > .left {
-  flex: 1;
+  /* flex: 1; */
 }
 header > .right {
 }
@@ -35,7 +36,8 @@ body > .split {
 }
 body > .split > #side-panel {
   width: var(--side-panel-width);
-  background: var(--colorB);
+  background: white;
+  margin-top: 20px;
 }
 body > .split > main {
   flex: 1;
@@ -70,10 +72,26 @@ footer {
 }
 .items > li {
   padding: 5px;
-  color: white;
 }
-.items > li:hover {
-  filter: hue-rotate(35deg);
+
+.items > li > a {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
+  background: rgb(28,28,28);
+  border-radius: 5px;
+  text-align: center;
+  display: block;
+  padding: 11px 0px;
+}
+.items > li {
+  margin-bottom: 5px;
+  margin-left: 10px;
+  padding:0;
+}
+.items > li > a:hover {
+  background: linear-gradient(to right, var(--colorA), var(--colorB));
 }
 
 #menu-settings {
@@ -87,9 +105,17 @@ footer {
 .hidden { display: none; }
 
 #chat-btn {
+  --size: 42px;
+  --space: 20px;
   position: absolute;
-  right: 5px;
+  right: var(--space);
   text-decoration: none;
+  top: calc(var(--size) * -1 - var(--space));
+}
+#chat-btn > img {
+  width: var(--size);
+  height: var(--size);
+  border-radius: 5px;
 }
 
 #chat-bubble {
