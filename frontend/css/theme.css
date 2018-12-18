@@ -1,5 +1,5 @@
 :root {
-  --header-height: 30px;
+  --header-height: 80px;
   --footer-height: 20px;
   --side-panel-width: 150px;
 
@@ -20,9 +20,9 @@ header {
   display: flex;
   margin-bottom: var(--header-space);
   height: var(--header-height);
-  background: var(--colorA);
+  background: white;
   padding: 0 5px;
-  color: white;
+  color: black;
 }
 header > .left {
   flex: 1;
@@ -50,6 +50,7 @@ footer {
   height: var(--footer-height);
   position: relative;
   color: white;
+  text-decoration: none;
 }
 
 #btn-settings
@@ -64,13 +65,13 @@ footer {
 }
 .items a {
   text-decoration: none;
-  color: white;
 }
 .items > li:nth-of-type(odd) {
-  background: rgba(255,255,255,0.2);
+  /* background: rgba(255,255,255,0.2); */
 }
 .items > li {
   padding: 5px;
+  color: white;
 }
 .items > li:hover {
   filter: hue-rotate(35deg);
@@ -107,8 +108,24 @@ footer {
 #logo {
   height: calc(100% - 6px);
   margin-top: 3px;
-  filter: invert(1);
+ /* filter: invert(1);*/
 }
-#logo:hover {
+
+/*#logo:hover {
   mix-blend-mode: soft-light;
+}*/
+
+#settings {
+  height: calc(100% - 30px);
+  margin-top: 3px;
+}
+
+#user-icon {
+  height: calc(100% - 30px);
+  margin-top: 3px;
+}
+
+#chat-icon {
+  height: calc(100% - 50px);
+  margin-bottom: 3px;
 }

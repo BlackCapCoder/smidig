@@ -5,10 +5,11 @@
 
 <header>
   <div class="left">
-    <a href="desktop.html"><img id="logo" src="imgs/Logo-black.png" /></a>
+    <a href="desktop.html"><img id="logo" src="imgs/Logo.png" /></a>
   </div>
   <div class="right">
-    <a id="btn-settings" href='javascript:document.querySelector("#menu-settings").classList.toggle("hidden");'>Settings</a>
+    <a id="user-icon" href="profile.html"><img id="user-icon" src="imgs/Brukerikon.png"></a> 
+    <a id="btn-settings" href='javascript:document.querySelector("#menu-settings").classList.toggle("hidden");'><img id="settings" src="imgs/Innstillinger.png"></a>
     <div id="menu-settings" class='items hidden'>
       <li><a href='profile.html#1'>Profil</a></li>
       <li><a href='login.html'>Logg ut</a></li>
@@ -19,7 +20,7 @@
 <div class="split">
   <div id="side-panel">
     <ul class="items">
-      <!-- <li><a href='desktop.html'>Skrivebord</a></li> -->
+      <li><a href='desktop.html'>Skrivebord</a></li>
       <li><a href='events.html'>Arrangement</a></li>
       <li><a href='messages.html'>Meldinger</a></li>
       <li><a href='friends.html'>Venner</a></li>
@@ -31,8 +32,8 @@
 </div>
 
 <footer>
-  <span>face insta twitter snap (c) sutrekroken</span>
-  <a href='javascript:document.querySelector("#chat-bubble").classList.toggle("hidden");' id='chat-btn'>Chat</a>
+  <span><a href="https://www.facebook.com/No-Isolation-1879722742276441/?brand_redir=1506338499679882"target="_blank">Facebook</a> Instagram Twitter Snapchat (c) [name]</span>
+  <a href='javascript:document.querySelector("#chat-bubble").classList.toggle("hidden");' id='chat-btn'><!-- <img id="chat-icon" src="imgs/Chatikon.png">-->Chat</a>
   <div id="chat-bubble" class='hidden'>
     this is a chat
   </div>
