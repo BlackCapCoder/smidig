@@ -178,3 +178,13 @@ footer {
   font-weight: bold;
   font-family: 'Roboto Condensed', sans-serif;
 }
+
+#language {
+  color: black;
+  text-decoration: none;
+  text-size: 20px;
+}
+
+#acc-controll {
+  color: blue;
+}
