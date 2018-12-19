@@ -130,3 +130,12 @@ html, body{
 #comment-box {
   height: 90px;
 }
+
+#language {
+  color: black;
+  text-decoration: none;
+}
+
+#acc-control {
+  color: blue;
+}

@@ -6,11 +6,68 @@
 
 <body>
 <h2>Språk</h2>
+<p>Hvis du vil bytte språk, trykk på språket du vil bytte til under:</p> </br>
 <a id="language" href="#">Norsk</a> </br>
 <a id="language" href="#">Engelsk</a> </br>
 <a id="language" href="#">[andre]</a>
 
 <h2>Slett konto</h2>
-For å deaktivere konto, trykk <a id="acc-controll" href="login.html">her</a>. </br>
-For å slette konto helt, trykk <a id="acc-controll" href="login.html">her</a>.
+For å deaktivere konto, trykk <a id="acc-control" href="login.html">her</a>. </br>
+For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
 </body>
+
+<h2>Bytt passord</h2>
+<table id="passtable">
+  <tr>
+    <td><span>Skriv gammelt passord her</span></td>
+    <td><input type="password" class="changepass" id="oldone"></td>
+  </tr>
+  <tr>
+    <td><span>Skriv nytt passord her</span></td>
+    <td><input type="password" class="changepass" id="newone"></td>
+  </tr>
+  <tr>
+    <td><span>Gjenta nytt passord her</span></td>
+    <td><input type="password" class="changepass" id="newtwo"></td>
+  </tr>
+  <tr>
+  <td><button type="submit" onclick="passPressed()">Bytt</button>
+
+</table>
+
+
+<script>
+  function passPressed() {
+    var firstInput = document.getElementById("newone").value;
+    var secondInput = document.getElementById("newtwo").value;
+    var oldInput = document.getElementById("oldone").value;
+    if (firstInput === secondInput && firstInput !== "" && secondInput !== "" && oldInput !== "")
+    {
+      window.alert("Passord er byttet");
+    }
+    else if (oldInput === "" && firstInput === "" && secondInput === "")
+    {
+      window.alert("Alle felter er tomme");
+    }
+    else if (firstInput === "" && secondInput === "")
+    {
+      window.alert("Begge input feltene er tomme");
+    }
+    else if (oldInput === "")
+    {
+      window.alert("Input felt for gammelt passord er tom");
+    }
+    else if (firstInput === "") 
+    {
+      window.alert("Input felt en er tom");
+    }
+    else if (secondInput === "")
+    {
+      window.alert("Input felt to er tom");
+    }
+    else
+    {
+      window.alert("Passordene er ikke like");
+    }
+  }
+</script>
