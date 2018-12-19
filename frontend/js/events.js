@@ -24,7 +24,7 @@ function addEvent (pic, title, text, place, date, eid) {
   el_date.classList.add  ('date');
 
   if (text.length > 256) {
-    text = text.substr(0, 256) + "...";
+    text = text.substr(0, 256) + "…";
   }
 
   ev.setAttribute     ('href', 'event.html#' + eid);
