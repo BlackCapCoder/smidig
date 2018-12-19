@@ -179,18 +179,40 @@ footer {
   font-family: 'Roboto Condensed', sans-serif;
 }
 
-<<<<<<< HEAD
 #chat-bubble > .top-row {
   display: flex;
   justify-content: space-between;
-=======
+}
+
+#acc-controll {
+  color: blue;
+}
+
 #language {
   color: black;
   text-decoration: none;
   text-size: 20px;
 }
 
-#acc-controll {
-  color: blue;
->>>>>>> c745fcf7b6d9f92731df657dccdfef5a5c085796
+.grad::before {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(45deg,var(--colorA) 0,var(--colorB) 50%,var(--colorC)0%);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  box-sizing: border-box;
+}
+.grad {
+  display: inline-block;
+  position: relative;
+  color: #000;
+  background: #fff;
+  mix-blend-mode: multiply;
+  margin-top: 0;
+  font-family: 'Roboto Condensed', sans-serif;
 }
