@@ -4,6 +4,8 @@
 }
 #toolbar > #tb-search {
   flex: 1;
+  font-size: 16px;
+  padding: 0 10px;
 }
 
 .event {

@@ -1,6 +1,6 @@
 :root {
   --header-height: 55px;
-  --footer-height: 20px;
+  --footer-height: 30px;
   --side-panel-width: 145px;
 
   --colorA: rgb(118, 061, 161);
@@ -54,6 +54,8 @@ footer {
   position: relative;
   color: white;
   text-decoration: none;
+  font-size: 18px;
+  padding: 4px;
 }
 
 #btn-settings
@@ -76,7 +78,7 @@ footer {
   padding: 5px;
 }
 
-#side-panel .items > li > a {
+.fancy-button {
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -85,14 +87,15 @@ footer {
   border-radius: 5px;
   text-align: center;
   display: block;
-  padding: 11px 0px;
+  padding: 11px 10px;
+  text-decoration: none;
 }
 #side-panel .items > li {
   margin-bottom: 15px;
   margin-left: 10px;
   padding:0;
 }
-#side-panel .items > li > a:hover {
+.fancy-button:hover {
   background: linear-gradient(45deg, var(--colorA), var(--colorB));
 }
 #side-panel .items > li:nth-child(2) > a:hover {

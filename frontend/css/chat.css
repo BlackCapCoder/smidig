@@ -37,3 +37,7 @@ main .split .left {
   display: block;
   text-decoration: none;
 }
+
+#chat-btn {
+  display: none !important;
+}
