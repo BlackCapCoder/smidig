@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <link rel="stylesheet" href="css/bowling.css"> 
-</head>
+<link rel="stylesheet" href="css/bowling.css">
 
-<body>
 <h2>Språk</h2>
 <p>Hvis du vil bytte språk, trykk på språket du vil bytte til under:</p> </br>
 <a id="language" href="#">Norsk</a> </br>
@@ -14,7 +9,6 @@
 <h2>Slett konto</h2>
 For å deaktivere konto, trykk <a id="acc-control" href="login.html">her</a>. </br>
 For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
-</body>
 
 <h2>Bytt passord</h2>
 <table id="passtable">
@@ -32,12 +26,11 @@ For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
   </tr>
   <tr>
   <td><button type="submit" onclick="passPressed()">Bytt</button>
-
 </table>
 
 
 <script>
-  function passPressed() {
+  function passPressed () {
     var firstInput = document.getElementById("newone").value;
     var secondInput = document.getElementById("newtwo").value;
     var oldInput = document.getElementById("oldone").value;
