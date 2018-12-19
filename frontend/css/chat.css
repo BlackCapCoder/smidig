@@ -11,7 +11,7 @@ main .split {
 
 main .split .left {
   width: 150px;
-  background: lightblue;
+  background: var(--colorC);
 }
 
 #chat-view {

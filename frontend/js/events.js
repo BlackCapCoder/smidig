@@ -12,23 +12,27 @@ function addEvent (pic, title, text, place, date, eid) {
     , el_date  = document.createElement ('p')
     ;
 
-  ev.classList.add  ('event');
-  lft.classList.add ('left');
-  rgt.classList.add ('right');
-  lft2.classList.add ('left');
-  rgt2.classList.add ('right');
-  el_pic.classList.add ('profile');
-  el_tit.classList.add ('title');
-  el_txt.classList.add ('text');
+  ev.classList.add       ('event');
+  lft.classList.add      ('left');
+  rgt.classList.add      ('right');
+  lft2.classList.add     ('left');
+  rgt2.classList.add     ('right');
+  el_pic.classList.add   ('profile');
+  el_tit.classList.add   ('title');
+  el_txt.classList.add   ('text');
   el_place.classList.add ('place');
-  el_date.classList.add ('date');
+  el_date.classList.add  ('date');
 
-  ev.setAttribute('href', 'event.html#' + eid);
+  if (text.length > 256) {
+    text = text.substr(0, 256) + "...";
+  }
+
+  ev.setAttribute     ('href', 'event.html#' + eid);
   el_pic.setAttribute ('src', pic);
-  el_tit.innerText   = title;
-  el_txt.innerText   = text;
-  el_place.innerText = place;
-  el_date.innerText  = new Date(date).toLocaleDateString();
+  el_tit.innerText    = title;
+  el_txt.innerText    = text;
+  el_place.innerText  = place;
+  el_date.innerText   = new Date(date).toLocaleDateString();
 
   ev.appendChild   (lft);
   ev.appendChild   (rgt);

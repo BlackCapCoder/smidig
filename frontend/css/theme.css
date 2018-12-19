@@ -38,6 +38,8 @@ body > .split > #side-panel {
   width: var(--side-panel-width);
   background: white;
   margin-top: 20px;
+  border-right: 1px solid rgba(0,0,0,0.1);
+  padding-right: 10px;
 }
 body > .split > main {
   flex: 1;
@@ -86,7 +88,7 @@ footer {
   padding: 11px 0px;
 }
 #side-panel .items > li {
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   margin-left: 10px;
   padding:0;
 }
