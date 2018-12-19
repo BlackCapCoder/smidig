@@ -31,9 +31,10 @@ For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
 
 <script>
   function passPressed () {
-    var firstInput = document.getElementById("newone").value;
+    var firstInput  = document.getElementById("newone").value;
     var secondInput = document.getElementById("newtwo").value;
-    var oldInput = document.getElementById("oldone").value;
+    var oldInput    = document.getElementById("oldone").value;
+
     if (firstInput === secondInput && firstInput !== "" && secondInput !== "" && oldInput !== "")
     {
       window.alert("Passord er byttet");
