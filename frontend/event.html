@@ -83,10 +83,10 @@
 
       function joinEvent () {
         function succ () {
-          alert("You are now signed up for this event, looking forwards to seeing you there!")
+          alert("Du er nå satt opp på dette arrangementet, håper jeg ser deg der!")
         }
         function fail () {
-          alert("You do NOT get to join this event! Asshole!");
+          alert("Noe gikk galt, prøv igjen senere");
         }
 
         postJoinEvent (evid, succ, fail);
@@ -128,8 +128,8 @@
     <section id="button">
       <button type="button-1" onclick='joinEvent()'>Jeg kommer!</button>
       <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
-      <button type="button-2" onclick='alert("Thank you for showing interest, hope to see you there!")'>Interessert</button>
-      <button type="button-3" onclick='alert("Added to favorites!")'>Add to favorites</button>
+      <button type="button-2" onclick='alert("Takk for at du viser interess, håper på å se deg der!")'>Interessert</button>
+      <button type="button-3" onclick='alert("Lagt til i favoritter")'>Add to favorites</button>
    </section>
 
     <div class="parti-wrapper">
@@ -140,6 +140,7 @@
     <section id="comment-section">
       <h2>Skriv en kommentar</h2>
       <textarea id="comment-box" rows="8" cols="40" placeholder="Skriv her"></textarea>
+      <button type="submit" onclick='alert("Kommentar mottatt")'>Legg til kommentar</button>
     </section>
 
     <div id="row-wrapper">
