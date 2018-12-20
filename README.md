@@ -34,7 +34,7 @@ To clone this project, run
 git clone https://github.com/BlackCapCoder/smidig
 ```
 
-You only need to do this once, next time you can just run `git clone` from within the `smidig` folder to download the latest version.
+You only need to do this once, next time you can just run `git pull` from within the `smidig` folder to download the latest version.
 
 
 To upload your changes you need to make a commit:
