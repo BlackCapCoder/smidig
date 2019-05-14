@@ -7,10 +7,18 @@
   <div class="center-wrapper">
     <div id="toolbar">
       <input type="text" id="tb-search" placeholder='søk' oninput="onQueryChanged(this.value)"/>
-      <a class="fancy-button" href="javascript:window.location = 'mkevent.html';">+</a> <!-- filler solution until picture -->
+      <a class="fancy-button" href="javascript:window.location = 'mkevent.html';"><img class="new_eve" src="imgs/plus_sign_two.png" /></a> <!-- filler solution until picture -->
       <!-- <input type="button" id="btn&#45;new" value="+" onclick="window.location = 'mkevent.html';"/> --> 
     </div>
 
     <div id="events"></div>
   </div>
 </div>
+
+<style>
+  .new_eve
+  {
+    display: inline;
+    height: 2em;
+  }
+</style>
