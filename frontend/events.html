@@ -1,16 +1,33 @@
 <script src="js/events.js" charset="utf-8"></script>
 <link rel="stylesheet" href="css/event.css" type="text/css" media="all" />
+<title>Arrangementer</title>
 
 <h1 class="grad">Arrangement</h1>
 
 <div class="wrapper">
   <div class="center-wrapper">
     <div id="toolbar">
+      <select name="tag-select" id="tag-options">
+        <option>Tag søk</option>
+        <option>Sport</option>
+        <option>Spill</option>
+        <option>Musikk</option>
+        <option>Fest</option>
+        <option>Annet</option>
+      </select>
       <input type="text" id="tb-search" placeholder='søk' oninput="onQueryChanged(this.value)"/>
-      <a class="fancy-button" href="javascript:window.location = 'mkevent.html';">Opprett Arrangement</a>
-      <!-- <input type="button" id="btn&#45;new" value="+" onclick="window.location = 'mkevent.html';"/> -->
+      <a class="fancy-button" href="javascript:window.location = 'mkevent.html';"><img class="new-eve" src="imgs/plus_sign_two.png" /></a> <!-- filler solution until picture -->
+      <!-- <input type="button" id="btn&#45;new" value="+" onclick="window.location = 'mkevent.html';"/> --> 
     </div>
 
     <div id="events"></div>
   </div>
 </div>
+
+<style>
+  .new-eve
+  {
+    display: inline;
+    height: 2em;
+  }
+</style>

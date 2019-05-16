@@ -1,5 +1,7 @@
 <img id="banner" src="bowling.png" alt="banner" />
 
+<title>Logg inn</title>
+
 <div class="split">
   <div class="left">
     <h1>Lorem</h1>
@@ -17,8 +19,10 @@
         <td><input type="password" id="password" value=''></td>
       </tr>
     </table>
-    <button onclick="loginPressed()">Logg inn</button>
-    <button onclick="registerPressed()">Registrer</button>
+    <button onclick="loginPressed()">Login</button>
+    <br>
+    <br>
+    <button onclick="newUserPressed()">Ny bruker</button>
   </div>
 </div>
 
@@ -56,9 +60,14 @@
   }
 
   function err (res) {
-  }
     altert("Check your internet connection");
     console.log(res);
+  }
+
+  function newUserPressed ()
+  {
+    window.location = "register.html";
+  }
 </script>
 
 <style>

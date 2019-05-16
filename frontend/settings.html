@@ -1,5 +1,6 @@
 <link rel="stylesheet" href="css/bowling.css">
-
+<meta charset="utf-8">
+<title>Instillinger</title>
 <h2>Språk</h2>
 <p>Hvis du vil bytte språk, trykk på språket du vil bytte til under:</p> </br>
 <a id="language" href="#">Norsk</a> </br>
@@ -7,8 +8,8 @@
 <a id="language" href="#">[andre]</a>
 
 <h2>Slett konto</h2>
-For å deaktivere konto, trykk <a id="acc-control" href="login.html">her</a>. </br>
-For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
+For å deaktivere kontoen <button type="submit" onclick="deactivateClicked()">Deaktiver Konto</button> </br>
+For å slette kontoen helt <button type="submit" onclick="deleteClicked()">Slett konto</button>
 
 <h2>Bytt passord</h2>
 <table id="passtable">
@@ -25,12 +26,13 @@ For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
     <td><input type="password" class="changepass" id="newtwo"></td>
   </tr>
   <tr>
-  <td><button type="submit" onclick="passPressed()">Bytt</button>
+  <td><button type="submit" onclick="passClicked()">Bytt</button>
 </table>
 
 
 <script>
-  function passPressed () {
+
+  function passClicked () {
     var firstInput  = document.getElementById("newone").value;
     var secondInput = document.getElementById("newtwo").value;
     var oldInput    = document.getElementById("oldone").value;
@@ -64,4 +66,35 @@ For å slette konto helt, trykk <a id="acc-control" href="login.html">her</a>.
       window.alert("Passordene er ikke like");
     }
   }
+
+function deactivateClicked () {
+
+  if(window.confirm('Din konto er nå deaktivert'))
+	  {
+		  window.location = "login.html";
+	  }
+  else
+  {
+    window.alert("Konto deaktivering avbrutt");
+    window.location = "settings.html";
+  }
+}
+
+/*
+function deactivateClicked () {
+  window.location = "login.html";
+  window.alert("Kontoen din er nå deaktivert");
+}*/
+function deleteClicked () {
+
+  if(window.confirm('Din konto er nå slettet'))
+	  {
+		  window.location = "login.html";
+	  }
+  else
+  {
+    window.alert("konto sletting avbrutt");
+    window.location = "settings.html";
+  }
+}
 </script>

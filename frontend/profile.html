@@ -11,6 +11,8 @@
   };
 </script>
 
+<title>Profil</title> <!-- persons navn her -->
+
 <body>
   <table>
     <tr>
@@ -19,19 +21,27 @@
         <div id="status" class="online"></div>
       </td>
       <td>
-        <h1 id="name"></h1>
-        <h2 id="age"></h1>
+        <p id="name"></p>
+        <p id="age"></p>
+        <p id="self-info">something something something something something something</p>
       </td>
     </tr>
   </table>
-
   </br>
-  <input type="button" name="" id="" value="Send message" />
-  <input type="button" name="" id="" value="Find friends" />
-  <input type="button" name="" id="" value="Find events" />
+  <p id="self_info">
+    </p>
+  <input type="button" name="" id="" value="Send Melding" />
+  <input type="button" name="" id="find-events" value="Finn arrangementer" />
   </br></br>
-  <input type="button" onclick='alert("Friend added")' name="" id="" value="Friend" />
-  <input type="button" onclick='alert("Foe added")' name="" id="" value="Foe" />
+  <input type="button" onclick='alert("Venneforespørsel sendt")' name="" id="" value="Legg til som venn" />
+  </br></br>
+  <input type="button" name="" id="" value="Gjør endringer" />
+
+  <section id="friends">
+  </section>
+  <p id="self_info">
+  binding of isaac
+  </p>
 </body>
 
 <style>
@@ -54,4 +64,16 @@
     box-shadow: 0 0 5px 2px rgba(255,0,0,0.4);
   }
   #pic { width: 300px; }
+  #name
+  {
+  font-size: 30px; 
+  }
+  #age
+  {
+  font-size: 30px; 
+  }
+  #self-info
+  {
+    text-indent-left 50px;
+  }
 </style>
