@@ -7,7 +7,8 @@ function submit () {
       desc  = document.querySelector("#desc").value,
       place = document.querySelector("#place").value,
       date  = document.querySelector("#date").value,
-      time  = document.querySelector("#time").value
+      time  = document.querySelector("#time").value,
+   /*   tag   = document.querySelector("#tag").value for tags*/
       ;
 
   postMkevent (
