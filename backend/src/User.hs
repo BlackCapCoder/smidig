@@ -1,39 +1,42 @@
+{-# LANGUAGE DuplicateRecordFields, RecordWildCards, MultiWayIf #-}
 module User where
 
 import Utils
+import AppM
 
+data UserB
 
-type UserID = ID User
+instance Backend UserB where
+  type Acc UserB = Public -- Private
+  type API UserB
+      = "user"     :> QueryParam "id" UserID :> Get '[JSON] (Maybe User)
+   :<|> "register" :> ReqBody '[JSON] RegisterReq :> Post '[JSON] RegisterResult
 
-data User = User
-  { uid      :: UserID
-  , username :: Text
-  , age      :: Int
-  , pic      :: Maybe Text
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+  server = do
+    queryUser :<|> register
+
+    where queryUser = getByIDM users #uid
+          register RegisterReq{..} = do
+            us <- query do
+              u <- #username `from` select users
+              restrict (u .== literal username)
+              pure u
+
+            if | not $ null us -> pure $ Left "There is already a user with that name!"
+               | otherwise -> do
+                  uid <- insertWithPK users [User def username password age Nothing]
+                  return $ Right uid
+
 
 data LoginReq = LoginReq
   { username :: Text
   , password :: Text
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
+data RegisterReq = RegisterReq 
+  { username :: Text
+  , password :: Text
+  , age      :: Int
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
-type Api = "user"  :> QueryParam "id" UserID :> Get '[JSON] (Maybe User)
-      :<|> "login" :> ReqBody '[JSON] LoginReq :> Post '[JSON] ()
-
-
-users :: Table User
-users = table "users" [#uid :- autoPrimary]
-
-db = liftIO . withSQLite "users.sqlite"
-
-
-server :: IO (Server Api)
-server = do
-  db $ tryCreateTable users
-  pure $ queryUser :<|> login
-
-  where queryUser            = getByIDM db users #uid
-        login (LoginReq u p) = error "Not Implemented"
-
-
+type RegisterResult = Either Text UserID

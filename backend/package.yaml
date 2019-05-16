@@ -22,84 +22,27 @@ dependencies:
 - servant
 - servant-server
 - servant-js
+- servant-auth-server
 - transformers
 - aeson
 - wai
+- wai-app-static
 - warp
+- warp-tls
 - text
 - containers
 - template-haskell
 - selda >= 0.3.4.0
 - selda-sqlite
 - bytestring
+- filepath
+- http-media
+- mtl
+- http-types
 
 library:
   source-dirs: src
   dependencies: []
-  default-extensions:
-  - Arrows
-  - BinaryLiterals
-  - ConstraintKinds
-  - DataKinds
-  - DefaultSignatures
-  - DeriveFoldable
-  - DeriveFunctor
-  - DeriveGeneric
-  - DeriveLift
-  - DeriveTraversable
-  - DisambiguateRecordFields
-  - DoAndIfThenElse
-  - DuplicateRecordFields
-  - EmptyCase
-  - EmptyDataDecls
-  - EmptyDataDeriving
-  - ExistentialQuantification
-  - ExplicitNamespaces
-  - ExtendedDefaultRules
-  - FlexibleContexts
-  - FlexibleInstances
-  - FunctionalDependencies
-  - GADTSyntax
-  - GADTs
-  - ImplicitParams
-  - ImpredicativeTypes
-  - TypeFamilyDependencies
-  - InstanceSigs
-  - ApplicativeDo
-  - KindSignatures
-  - LambdaCase
-  - LiberalTypeSynonyms
-  - MonadComprehensions
-  - MonadFailDesugaring
-  - NoMonomorphismRestriction
-  - MultiParamTypeClasses
-  - MultiWayIf
-  - NamedFieldPuns
-  - HexFloatLiterals
-  - NondecreasingIndentation
-  - OverloadedLabels
-  - OverloadedLists
-  - OverloadedStrings
-  - PackageImports
-  - ParallelListComp
-  - PartialTypeSignatures
-  - PatternGuards
-  - PatternSynonyms
-  - ScopedTypeVariables
-  - PostfixOperators
-  - Rank2Types
-  - RankNTypes
-  - RecordWildCards
-  - RecursiveDo
-  - StandaloneDeriving
-  - TransformListComp
-  - TupleSections
-  - TypeApplications
-  - TypeFamilies
-  - TypeOperators
-  - TypeSynonymInstances
-  - ViewPatterns
-  - DeriveAnyClass
 
 executables:
   backend-exe:
@@ -111,66 +54,70 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - backend
-    default-extensions:
-    - Arrows
-    - BinaryLiterals
-    - ConstraintKinds
-    - DataKinds
-    - DefaultSignatures
-    - DeriveFoldable
-    - DeriveFunctor
-    - DeriveGeneric
-    - DeriveLift
-    - DeriveTraversable
-    - DisambiguateRecordFields
-    - DoAndIfThenElse
-    - DuplicateRecordFields
-    - EmptyCase
-    - EmptyDataDecls
-    - EmptyDataDeriving
-    - ExistentialQuantification
-    - ExplicitNamespaces
-    - ExtendedDefaultRules
-    - FlexibleContexts
-    - FlexibleInstances
-    - FunctionalDependencies
-    - GADTSyntax
-    - GADTs
-    - ImplicitParams
-    - ImpredicativeTypes
-    - TypeFamilyDependencies
-    - InstanceSigs
-    - ApplicativeDo
-    - KindSignatures
-    - LambdaCase
-    - LiberalTypeSynonyms
-    - MonadComprehensions
-    - MonadFailDesugaring
-    - NoMonomorphismRestriction
-    - MultiParamTypeClasses
-    - MultiWayIf
-    - NamedFieldPuns
-    - HexFloatLiterals
-    - NondecreasingIndentation
-    - OverloadedLabels
-    - OverloadedLists
-    - OverloadedStrings
-    - PackageImports
-    - ParallelListComp
-    - PartialTypeSignatures
-    - PatternGuards
-    - PatternSynonyms
-    - ScopedTypeVariables
-    - PostfixOperators
-    - Rank2Types
-    - RankNTypes
-    - RecordWildCards
-    - RecursiveDo
-    - StandaloneDeriving
-    - TransformListComp
-    - TupleSections
-    - TypeApplications
-    - TypeFamilies
-    - TypeOperators
-    - TypeSynonymInstances
-    - ViewPatterns
+
+default-extensions:
+- Arrows
+- BinaryLiterals
+- ConstraintKinds
+- DataKinds
+- DefaultSignatures
+- DeriveFoldable
+- DeriveFunctor
+- DeriveGeneric
+- DeriveLift
+- DeriveTraversable
+- DisambiguateRecordFields
+- DoAndIfThenElse
+- DuplicateRecordFields
+- EmptyCase
+- EmptyDataDecls
+- ExistentialQuantification
+- ExplicitNamespaces
+- ExtendedDefaultRules
+- FlexibleContexts
+- FlexibleInstances
+- FunctionalDependencies
+- GADTSyntax
+- GADTs
+- ImplicitParams
+- ImpredicativeTypes
+- TypeFamilyDependencies
+- InstanceSigs
+- ApplicativeDo
+- KindSignatures
+- LambdaCase
+- LiberalTypeSynonyms
+- MonadComprehensions
+- MonadFailDesugaring
+- NoMonomorphismRestriction
+- MultiParamTypeClasses
+- MultiWayIf
+- NamedFieldPuns
+- HexFloatLiterals
+- NondecreasingIndentation
+- OverloadedLabels
+- OverloadedLists
+- OverloadedStrings
+- PackageImports
+- ParallelListComp
+- PartialTypeSignatures
+- PatternGuards
+- PatternSynonyms
+- ScopedTypeVariables
+- PostfixOperators
+- Rank2Types
+- RankNTypes
+- RecordWildCards
+- RecursiveDo
+- StandaloneDeriving
+- TransformListComp
+- TupleSections
+- TypeApplications
+- TypeFamilies
+- TypeOperators
+- TypeSynonymInstances
+- ViewPatterns
+- DeriveAnyClass
+- DerivingVia
+- AllowAmbiguousTypes
+- BlockArguments

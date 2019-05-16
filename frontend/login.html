@@ -3,30 +3,62 @@
 <div class="split">
   <div class="left">
     <h1>Lorem</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>Ikke latin</p>
   </div>
 
   <div class="right">
     <table id='login-form'>
       <tr>
         <td><span>Username</span></td>
-        <td><input type="text" id="username" value='Bob'></td>
+        <td><input type="text" id="username" value='jon'></td>
       </tr>
       <tr>
         <td><span>Password</span></td>
-        <td><input type="password" id="password" value='a'></td>
+        <td><input type="password" id="password" value=''></td>
       </tr>
     </table>
-    <button onclick="loginPressed()">Login</button>
+    <button onclick="loginPressed()">Logg inn</button>
+    <button onclick="registerPressed()">Registrer</button>
   </div>
 </div>
 
+<script src="js/jquery.min.js"></script>
+<script src="api.js"></script>
+
 <script>
+
+  function getInfo () {
+    return { username: document.querySelector('#username').value
+      , password: document.querySelector('#password').value
+      };
+  }
+
   function loginPressed () {
+    postLogin (
+      getInfo(), login, err);
+  }
+
+  function registerPressed () {
+    postRegister (
+      { username: "jon"
+      , password:  ""
+      , age:       11
+      }, succ, err);
+  }
+
+  function login (res) {
     window.location = "desktop.html";
   }
+
+  function succ (res) {
+    if (res !== undefined && res.Left !== undefined)
+      return alert (res.Left);
+  }
+
+  function err (res) {
+  }
+    altert("Check your internet connection");
+    console.log(res);
 </script>
 
 <style>

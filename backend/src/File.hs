@@ -1,29 +1,79 @@
+{-# LANGUAGE UndecidableInstances #-}
 module File where
 
 import Utils
 import Servant.Server.StaticFiles
 import Network.Wai
-import Control.Exception (bracket_)
 import qualified Data.ByteString as B
+import qualified Data.ByteString.Lazy as BL
 import Data.ByteString.Builder (byteString)
+import GHC.TypeLits
+import qualified Network.HTTP.Media as M
+import Network.HTTP.Media ((//), (/:))
+
+import Servant.JS
+import Servant.JS.Internal
+
+import AppM
+import Login
 
 
-type Api = Raw
+data HTML
 
-folder :: FilePath
-folder = "../frontend"
+instance Accept HTML where
+   contentType _ = "text" // "html" /: ("charset", "utf-8")
+
+instance MimeRender HTML BL.ByteString where
+  mimeRender = const id
 
 
--- Serves files from `folder`
--- If html file, splice it into theme.html by replacing the % character
-server :: IO (Server Api)
-server = do
-  (p1,p2) <- B.span (/=37) <$> B.readFile (folder ++ "/theme.html")
+-- Single file
+data File (pth :: Symbol) (name :: Symbol) (acc :: Access)
 
-  let p1' = byteString p1
-      p2' = byteString $ B.tail p2
+instance (KnownSymbol pth, MonadIO (AppM acc)) => Backend (File pth n acc) where
+  type Acc (File pth n acc) = acc
+  type API (File pth n acc) = n :> Get '[HTML] BL.ByteString
+  server = liftIO do
+    (p1,p2) <- BL.span (/=37) <$> BL.readFile "../frontend/theme.html"
+    c <- BL.readFile . symbolVal $ Proxy @pth
+    pure $ p1 <> c <> BL.tail p2
 
-  pure . (>>= pure . addTheme p1' p2') $ serveDirectoryWebApp folder
+
+data File' (pth :: Symbol) (acc :: Access)
+instance (KnownSymbol pth, MonadIO (AppM acc)) => Backend (File' pth acc) where
+  type Acc (File' pth acc) = acc
+  type API (File' pth acc) = Get '[HTML] BL.ByteString
+  server = liftIO . BL.readFile . symbolVal $ Proxy @pth
+
+
+-- Serve static files from some folder
+data Folder (pth :: Symbol) (name :: Symbol) (acc :: Access)
+
+instance KnownSymbol pth => Backend (Folder pth n acc) where
+  type Acc (Folder pth n acc) = acc
+  type API (Folder pth n acc) = n :> Raw
+  server = serveDirectoryWebApp . symbolVal $ Proxy @pth
+
+
+-- Wrap responses in a theme
+data Themed b (pth :: Symbol)
+
+instance ( KnownSymbol pth
+         , Backend b
+         , MonadIO (AppM (Acc b))
+         , Raw ~ API b
+         ) => Backend (Themed b pth) where
+  type Acc (Themed b pth) = Acc b
+  type API (Themed b pth) = Raw
+
+  server = do
+    (p1,p2) <- liftIO $ B.span (/=37) <$> B.readFile (symbolVal $ Proxy @pth)
+
+    let p1' = byteString p1
+        p2' = byteString $ B.tail p2
+
+    addTheme p1' p2' <$> server @b
+
 
 
 addTheme p1 p2 base req resp = base req $ resp . splice
@@ -38,5 +88,4 @@ addTheme p1 p2 base req resp = base req $ resp . splice
               flush
           | otherwise = r
         pth = rawPathInfo req
-
 

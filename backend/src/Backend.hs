@@ -1,30 +1,56 @@
 module Backend
   ( app
+  , Full
   )
   where
 
-import Servant
-import Servant.JS
-import Data.Text (Text)
-import qualified Event
-import qualified User
-import qualified File
+import Utils
+
+import Event
+import User
+import File
+import JsApi
+import Login
+
+import AppM hiding (app)
 
 
+-- Things that we should generate a javascript API for
+type REST = Flatten (:<|>)
+  [ UserB
+  , JsApi "api.js" Public (API UserB :<|> API EventB :<|> Login)
+  ]
 
-type GetJs = "api.js" :> Get '[PlainText, JSON] Text
-getJs = jsForAPI (Proxy :: Proxy Api) jquery
--- getJs = jsForAPI (Proxy :: Proxy Api) vanillaJS
+-- Things that should be public
+type Pub = Flatten (:<|>)
+  [ Folder "../frontend/css/"       "css"        Public
+  , Folder "../frontend/js/"        "js"         Public
+  , Folder "../frontend/imgs/"      "imgs"       Public
+  , File'  "../frontend/login.html" Public
+  ]
 
-type Api = Event.Api :<|> User.Api
+-- Things that should be private
+type Priv = Flatten (:<|>)
+  [ File "../frontend/desktop.html"  "desktop.html"  Private
+  , File "../frontend/event.html"    "event.html"    Private
+  , File "../frontend/events.html"   "events.html"   Private
+  , File "../frontend/friends.html"  "friends.html"  Private
+  , File "../frontend/messages.html" "messages.html" Private
+  , File "../frontend/mkevent.html"  "mkevent.html"  Private
+  , File "../frontend/profile.html"  "profile.html"  Private
+  , File "../frontend/register.html" "register.html" Private
+  , File "../frontend/settings.html" "settings.html" Private
+  ]
 
-type FullApi = Api :<|> GetJs :<|> File.Api
+-- The entire backend
+type Full = REST :<|> Pub :<|> Priv :<|> EventB
 
-app :: IO Application
-app = do
-  e <- Event.server
-  u <- User.server
-  f <- File.server
-  pure . serve (Proxy :: Proxy FullApi) $
-    (e :<|> u) :<|> pure getJs :<|> f
 
+initDb :: IO ()
+initDb =
+  database do tryCreateTable users
+              tryCreateTable events
+              tryCreateTable participants
+              tryCreateTable pictures
+
+app = initDb >> toApp @Full

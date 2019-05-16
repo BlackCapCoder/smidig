@@ -25,11 +25,7 @@ header {
   color: black;
   justify-content: space-between;
 }
-header > .left {
-  /* flex: 1; */
-}
-header > .right {
-}
+
 body > .split {
   display: flex;
   height: calc(100vh - var(--header-height) - var(--footer-height));
@@ -165,11 +161,13 @@ footer {
 }
 
 #user-icon {
+  width: 30px;
   height: calc(100% - 25px);
   margin-top: 3px;
 }
 
 #chat-icon {
+  width: 30px;
   height: calc(100% - 2px);
   margin-bottom: 1px;
 }
@@ -220,4 +218,21 @@ footer {
   mix-blend-mode: multiply;
   margin-top: 0;
   font-family: 'Roboto Condensed', sans-serif;
+}
+
+
+header > .left {
+  flex: 0;
+  max-width: var(--header-height);
+}
+header > .middle {
+  flex: 1;
+  text-align: center;
+  widht: 100%;
+}
+header > .right {
+  /* flex: 0; */
+  width: 64px;
+  display: inline-block;
+  padding-right: 10px;
 }
