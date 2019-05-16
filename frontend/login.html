@@ -42,25 +42,13 @@
       getInfo(), login, err);
   }
 
-  function registerPressed () {
-    postRegister (
-      { username: "jon"
-      , password:  ""
-      , age:       11
-      }, succ, err);
-  }
 
   function login (res) {
     window.location = "desktop.html";
   }
 
-  function succ (res) {
-    if (res !== undefined && res.Left !== undefined)
-      return alert (res.Left);
-  }
-
   function err (res) {
-    altert("Check your internet connection");
+    alert("Check your internet connection");
     console.log(res);
   }
 

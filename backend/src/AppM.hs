@@ -7,9 +7,11 @@ module AppM
   where
 
 import Control.Monad.Reader
+import Control.Monad.Fail
 import Data.Aeson hiding (Result)
 import Database.Selda
 import Database.Selda.SQLite
+import Database.Selda.Backend
 import Servant
 import Servant.Auth.Server
 
@@ -19,6 +21,12 @@ data Access = Public | Private
 type family AppM (a :: Access) where
   AppM Public  = SeldaT Handler
   AppM Private = ReaderT User (AppM Public)
+
+instance MonadSelda (ReaderT User (SeldaT Handler)) where
+  seldaConnection = lift seldaConnection
+
+instance MonadFail (SeldaT Handler) where
+  fail _ = lift $ throwError err501
 
 
 database = withSQLite "db.sqlite"

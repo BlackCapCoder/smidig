@@ -27,12 +27,6 @@ instance Backend UserB where
                   uid <- insertWithPK users [User def username password age Nothing]
                   return $ Right uid
 
-
-data LoginReq = LoginReq
-  { username :: Text
-  , password :: Text
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
-
 data RegisterReq = RegisterReq 
   { username :: Text
   , password :: Text
@@ -40,3 +34,13 @@ data RegisterReq = RegisterReq
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
 type RegisterResult = Either Text UserID
+
+
+
+data WhoAmI
+instance Backend WhoAmI where
+  type Acc WhoAmI = Private
+  type API WhoAmI = "whoami" :> Get '[JSON] User
+
+  server = ask
+

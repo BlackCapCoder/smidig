@@ -1,9 +1,6 @@
 <script>
   window.onload = _ => {
-    let hash = window.location.hash.substr (1);
-    let uid  = Number (hash);
-
-    getUser (uid, u => {
+    getWhoami (u => {
       document.querySelector('#pic').setAttribute('src', u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;

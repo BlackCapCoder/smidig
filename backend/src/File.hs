@@ -47,11 +47,11 @@ instance (KnownSymbol pth, MonadIO (AppM acc)) => Backend (File' pth acc) where
 
 
 -- Serve static files from some folder
-data Folder (pth :: Symbol) (name :: Symbol) (acc :: Access)
+data Folder (pth :: Symbol) (acc :: Access)
 
-instance KnownSymbol pth => Backend (Folder pth n acc) where
-  type Acc (Folder pth n acc) = acc
-  type API (Folder pth n acc) = n :> Raw
+instance KnownSymbol pth => Backend (Folder pth acc) where
+  type Acc (Folder pth acc) = acc
+  type API (Folder pth acc) = Raw
   server = serveDirectoryWebApp . symbolVal $ Proxy @pth
 
 

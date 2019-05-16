@@ -16,6 +16,7 @@ import Data.Aeson hiding (Result)
 import Servant.Auth.Server
 import Control.Monad.Trans
 import System.IO.Unsafe
+import Servant.Server.StaticFiles
 
 import Control.Monad
 import Data.Maybe
@@ -28,10 +29,16 @@ type family Flatten f (a :: [k]) :: k where
   Flatten f (x ': xs) = x `f` Flatten f xs
 
 
-getByID t sel (Just id) = query $ do
+getByID' t sel id = query do
   x <- select t
   restrict (x ! sel .== literal id)
   return x
+
+getByID t sel (Just id) = query do
+  x <- select t
+  restrict (x ! sel .== literal id)
+  return x
+
 
 getByIDM t sel = fmap listToMaybe . getByID t sel
 
@@ -81,7 +88,9 @@ toApp :: forall b. ( Backend b
                    , AuthServer (Acc b) (API b)
                    , HasServer (API' b) '[CookieSettings, JWTSettings]
                    ) => IO Application
-toApp = app @(API' b :<|> Login) s'
+toApp = app @(API' b :<|> Login :<|> Raw) s'
   where s  = authServer @(Acc b) @(API b) (server @b)
-        s' a b = s :<|> login a b
+        s' a b = s
+            :<|> login a b
+            :<|> serveDirectoryWebApp "../frontend"
 

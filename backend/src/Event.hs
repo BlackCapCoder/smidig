@@ -52,8 +52,8 @@ instance Backend EventB where
     :<|> "event"        :> QueryParam "id" EventID    :> Get  '[JSON] (Maybe Event)
     :<|> "participants" :> QueryParam "id" EventID    :> Get  '[JSON] [Participants]
     :<|> "pictures"     :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
-    :<|> "mkevent"      :> ReqBody '[JSON] MkEventReq :> Post '[JSON] (Maybe EventID)
-    :<|> "joinEvent"    :> ReqBody '[JSON] EventID    :> Post '[JSON] Text
+    :<|> "mkevent"      :> ReqBody '[JSON] MkEventReq :> Post '[JSON] EventID
+    :<|> "joinEvent"    :> ReqBody '[JSON] EventID    :> Post '[JSON] NoContent
 
   server = listEvents
       :<|> getEvent
@@ -62,34 +62,39 @@ instance Backend EventB where
       :<|> mkEvent
       :<|> joinEvent
 
-    where listEvents      = lift . query $ select events
-          getEvent        = lift . getByIDM events #eid
-          getParticipants = lift . getByID  participants  #eid
-          getPictures     = lift . getByID  pictures      #eid
-          mkEvent     MkEventReq {..} = do
+    where listEvents      = query $ select events
+          getEvent        = getByIDM events        #eid
+          getParticipants = getByID  participants  #eid
+          getPictures     = getByID  pictures      #eid
+          mkEvent MkEventReq {..} = do
             ownerID <- asks AppM.uid
-            evid    <- lift $ fmap (join . listToMaybe) do
-              insert_ events
-                [ Event def ownerID req_title req_desc req_place req_date ]
-              query $ aggregate
-                [ max_ (e ! #eid) | e <- select events ]
+            evid    <- insertWithPK events
+              [Event def ownerID req_title req_desc req_place req_date]
 
-            case evid of
-              Nothing -> pure Nothing
-              Just e -> do
-                lift $ insert_ participants [Participants e ownerID]
-                pure $ Just e
+            insert_ participants
+              [Participants evid ownerID]
+
+            pure evid
 
           joinEvent evid = do
             uid <- asks AppM.uid
 
-            lift $ do
-              x <- fmap listToMaybe $ query do
-                p <- select participants
-                restrict (p ! #eid .== literal evid)
-                restrict (p ! #uid .== literal uid)
-                return p
-              case x of
-                Just  _ -> pure ()
-                Nothing -> insert_ participants [Participants evid uid]
-            return "OK"
+            -- Does the event exist?
+            Just _ <- get1 events #eid evid
+
+            -- Already a participant?
+            [] <- query do
+              p <- select participants
+              restrict (p ! #eid .== literal evid)
+              restrict (p ! #uid .== literal uid)
+              pure p
+
+            insert_ participants [Participants evid uid]
+
+            pure NoContent
+
+
+get1 table sel needle = listToMaybe <$> query do
+  x <- sel `from` select table
+  restrict $ x .== literal needle
+  pure x

@@ -8,7 +8,7 @@
       <span>Navn: </span>
     </td>
     <td>
-      <input type="text" id="navn">
+      <input type="text" id="username">
     </td>
   </tr>
   <tr>
@@ -16,7 +16,7 @@
       <span>Alder: </span>
     </td>
     <td>
-      <input type ="text" id="alder">
+      <input type="text" id="age">
     </td>
   </tr>
   <tr>
@@ -24,13 +24,14 @@
       <span>Passord: </span>
     </td>
     <td>
-      <input type="password" id="passord">
+      <input type="password" id="password">
     </td>
   </tr>
 </table>
 </br>
-<input type="button" value="Bekreft" onclick="confirmation()" />
+<input type="button" value="Bekreft" onclick="registerPressed()" />
 
+<script src="api.js" charset="utf-8"></script>
 <script>
 
 	/*
@@ -40,6 +41,46 @@
 	most likely wrong, but rough estimate
 	
 	*/
+  function registerPressed () {
+    const username = document.querySelector('#username').value
+        , password = document.querySelector('#password').value
+        , age      = document.querySelector('#age').value
+
+    postRegister (
+      { username: username
+      , password: password
+      , age:      Number(age)
+      }, succ, err);
+  }
+
+
+  function succ (res) {
+    if (res !== undefined && res.Left !== undefined)
+      return alert (res.Left);
+    loginPressed();
+  }
+
+  function err (res) {
+    alert("Check your internet connection");
+    console.log(res);
+  }
+
+  // c/p from login.html
+  function loginPressed () {
+    postLogin (
+      getInfo(), login, err);
+  }
+
+
+  function login (res) {
+    window.location = "desktop.html";
+  }
+
+  function getInfo () {
+    return { username: document.querySelector('#username').value
+      , password: document.querySelector('#password').value
+      };
+  }
 
 </script>
 </body>

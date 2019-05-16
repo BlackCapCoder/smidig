@@ -3,13 +3,12 @@ function succ (eid) { window.location = "event.html#" + eid; }
 function err () { alert ("Something went wrong"); }
 
 function submit () {
-  let title = document.querySelector("#title").value,
-      desc  = document.querySelector("#desc").value,
-      place = document.querySelector("#place").value,
-      date  = document.querySelector("#date").value,
-      time  = document.querySelector("#time").value,
-   /*   tag   = document.querySelector("#tag").value for tags*/
-      ;
+  let title = document.querySelector("#title").value
+    , desc  = document.querySelector("#desc").value
+    , place = document.querySelector("#place").value
+    , date  = document.querySelector("#date").value
+    , time  = document.querySelector("#time").value
+    // , tag   = document.querySelector("#tag").value //for tags
 
   postMkevent (
       { req_title: title
