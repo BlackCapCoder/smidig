@@ -29,17 +29,21 @@ tables =
   , SomeTable C.participants
   , SomeTable chatMessages
   , SomeTable comments
+  , SomeTable favorites
+  , SomeTable friends
   ]
 
 
 -- Things that we should generate a javascript API for
 type REST = Flatten (:<|>)
   [ User
+  , LoggedUser
   , Event
   , Chat
   , WhoAmI
   , JsApi "api.js" Public
       ( API User
+   :<|> API LoggedUser
    :<|> API Event
    :<|> API WhoAmI
    :<|> API Chat

@@ -4,3 +4,34 @@
 </br>
 <h2>Favoritter</h2>
 <img class="icon" src="imgs/Blyant.png" />
+
+<div id="fav-box">
+</div>
+
+<script>
+  window.addEventListener("load", _ => {
+    getMyfavorites(fs => {
+      for (let f of fs)
+        getGetevent(f.eid, ev => {
+          addFavElem(ev);
+        });
+    });
+  });
+
+  function addFavElem (ev) {
+    const cont = document.querySelector("#fav-box");
+    let fav = document.createElement("a");
+    fav.classList.add("favorite");
+    let title = document.createElement("span");
+    title.innerText = ev.title;
+    fav.href = "event#" + ev.eid;
+    fav.appendChild(title);
+    cont.appendChild(fav);
+  }
+</script>
+
+<style type="text/css" media="all">
+  #fav-box span {
+    color: black;
+  }
+</style>

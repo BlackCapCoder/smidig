@@ -47,14 +47,20 @@ instance Backend Chat where
     :<|> "mkChat"   :> (Bool, Set UserID) ~> ChatID
     :<|> "putChat"  :> (ChatID, Text)     ~> ChatMessageID
     :<|> "readChat" :> ChatID             ~> [ChatMessage]
+    :<|> "readChatSince" :> (ChatID, ChatMessageID) ~> [ChatMessage]
 
   server = myChats
       :<|> mkChat
       :<|> putChat
       :<|> readChat
+      :<|> readChatSince
 
 
 chid = cid :: Chat -> ChatID
+
+readChatSince :: (ChatID, ChatMessageID) -> AppM Private [ChatMessage]
+readChatSince (chat, since) = filter f <$> readChat chat
+  where f msg = mid msg > since
 
 readChat :: ChatID -> AppM Private [ChatMessage]
 readChat chat = do

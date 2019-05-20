@@ -106,6 +106,7 @@ data User = User
   , password :: Text
   , age      :: Int
   , pic      :: Maybe Text
+  , desc     :: Text
   } deriving ( Eq, Show, Generic, ToJSON, FromJSON
              , ToJWT, FromJWT, SqlRow
              )
