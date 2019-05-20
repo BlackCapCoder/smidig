@@ -30,6 +30,7 @@ tables =
   , SomeTable chatMessages
   , SomeTable comments
   , SomeTable favorites
+  , SomeTable friends
   ]
 
 
