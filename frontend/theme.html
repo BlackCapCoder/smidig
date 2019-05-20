@@ -44,8 +44,12 @@
   <a href='javascript:document.querySelector("#chat-bubble").classList.toggle("hidden");' id='chat-btn'><img id="chat-icon" src="imgs/Chatikon.png"></a>
   <div id="chat-bubble" class='hidden'>
     <div class="top-row">
-      <span>Give me tabs</span>
-      <a href='javascript:document.querySelector("#chat-bubble").classList.toggle("hidden");'>x</a>
+      <div class="tabs-popup-chat">
+      <button onclick='changeTab(1)'>Bob</button>
+      <button onclick='changeTab(2)'>Bowlingkveld</button>
+      <button onclick='changeTab(3)'>Gruppechat#1</button>
+        <a href='javascript:document.querySelector("#chat-bubble").classList.toggle("hidden");'>x</a>
+      </div>
     </div>
   </div>
 </footer>
