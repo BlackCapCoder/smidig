@@ -1,4 +1,4 @@
-function succ (eid) { window.location = "event.html#" + eid; }
+function succ (eid) { window.location = "event#" + eid; }
 
 function err () { alert ("Something went wrong"); }
 

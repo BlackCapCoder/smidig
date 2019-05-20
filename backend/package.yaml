@@ -39,6 +39,7 @@ dependencies:
 - http-media
 - mtl
 - http-types
+- exceptions
 
 library:
   source-dirs: src

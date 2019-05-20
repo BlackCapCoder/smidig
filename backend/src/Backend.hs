@@ -1,6 +1,5 @@
 module Backend
   ( app
-  , Full
   )
   where
 
@@ -16,49 +15,63 @@ import Chat  as C
 import AppM hiding (app)
 
 
+-- Dereference generic variable
+data SomeTable where SomeTable :: Table a -> SomeTable
+
+-- All tables in the databases
+tables :: [SomeTable]
+tables =
+  [ SomeTable users
+  , SomeTable events
+  , SomeTable E.participants
+  , SomeTable pictures
+  , SomeTable chats
+  , SomeTable C.participants
+  , SomeTable chatMessages
+  , SomeTable comments
+  ]
+
+
 -- Things that we should generate a javascript API for
 type REST = Flatten (:<|>)
-  [ UserB, WhoAmI, ChatB
+  [ User
+  , Event
+  , Chat
+  , WhoAmI
   , JsApi "api.js" Public
-      ( API UserB
-   :<|> API EventB
+      ( API User
+   :<|> API Event
    :<|> API WhoAmI
-   :<|> API ChatB
+   :<|> API Chat
    :<|> Login
       )
   ]
 
 -- Things that should be private
 type Priv = Flatten (:<|>)
-  [ File "../frontend/desktop.html"  "desktop.html"  Private
-  , File "../frontend/event.html"    "event.html"    Private
-  , File "../frontend/events.html"   "events.html"   Private
-  , File "../frontend/friends.html"  "friends.html"  Private
-  , File "../frontend/messages.html" "messages.html" Private
-  , File "../frontend/mkevent.html"  "mkevent.html"  Private
-  , File "../frontend/profile.html"  "profile.html"  Private
-  , File "../frontend/settings.html" "settings.html" Private
+  [ File "../frontend/desktop.html"  "desktop"  Private
+  , File "../frontend/event.html"    "event"    Private
+  , File "../frontend/events.html"   "events"   Private
+  , File "../frontend/friends.html"  "friends"  Private
+  , File "../frontend/messages.html" "messages" Private
+  , File "../frontend/mkevent.html"  "mkevent"  Private
+  , File "../frontend/profile.html"  "profile"  Private
+  , File "../frontend/settings.html" "settings" Private
   ]
 
 -- Things that should be public
-type Pub = Flatten (:<|>)
-  [ EventB
-  , File' "../frontend/login.html" Public
-  ]
-
+type Pub = File' "../frontend/login.html" Public
 
 -- The entire backend
 type Full = REST :<|> Priv :<|> Pub
 
 
-initDb :: IO ()
-initDb =
-  database do tryCreateTable users
-              tryCreateTable events
-              tryCreateTable E.participants
-              tryCreateTable pictures
-              tryCreateTable chats
-              tryCreateTable E.participants
-              tryCreateTable chatMessages
+-- Entry point
+app :: IO Application
+app = do
 
-app = initDb >> toApp @Full
+  -- Initialize database
+  database $
+    forM_ tables \(SomeTable t) -> tryCreateTable t
+
+  toApp @Full

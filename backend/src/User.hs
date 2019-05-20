@@ -4,13 +4,12 @@ module User where
 import Utils
 import AppM
 
-data UserB
 
-instance Backend UserB where
-  type Acc UserB = Public -- Private
-  type API UserB
+instance Backend User where
+  type Acc User = Public -- Private
+  type API User
       = "user"     :> QueryParam "id" UserID :> Get '[JSON] (Maybe User)
-   :<|> "register" :> ReqBody '[JSON] RegisterReq :> Post '[JSON] RegisterResult
+   :<|> "register" :> RegisterReq ~> RegisterResult
 
   server = do
     queryUser :<|> register

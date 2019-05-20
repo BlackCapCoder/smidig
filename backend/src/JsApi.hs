@@ -9,26 +9,6 @@ import Utils
 import AppM
 
 
--- data JsFor (uri :: Symbol) a
---
--- instance ( Backend a
---          , api ~ API a
---          , Applicative (AppM (Acc a))
---          , HasForeign NoTypes NoContent api
---          , GenerateList NoContent (Foreign NoContent api)
---          ) => Backend (JsFor uri a) where
---   type API (JsFor uri a) = uri :> Get '[PlainText, JSON] Text
---   type Acc (JsFor uri a) = Public
---
---   server = pure $ jsForAPI (Proxy @api) jquery
---
---
--- type family Js uri l where
---   Js uri '[x]      = x :<|> JsFor uri x
---   Js uri (x ': xs) = x :<|> JsFor uri x :<|> Js uri xs
-
-
-
 data JsApi (uri :: Symbol) (acc :: Access) api
 
 instance ( HasForeign NoTypes NoContent api

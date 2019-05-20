@@ -34,18 +34,12 @@ getByID' t sel id = query do
   restrict (x ! sel .== literal id)
   return x
 
-getByID t sel (Just id) = query do
-  x <- select t
-  restrict (x ! sel .== literal id)
-  return x
+getByID t sel (Just id)
+  = getByID' t sel id
 
+getByIDM t sel
+  = fmap listToMaybe . getByID t sel
 
-getByIDM t sel = fmap listToMaybe . getByID t sel
-
-
-
-taggedLiftIO :: MonadIO m => IO a -> Tagged t (m a)
-taggedLiftIO = Tagged . liftIO
 
 instance MonadIO (Tagged t) where
   liftIO = Tagged . unsafePerformIO
@@ -78,11 +72,9 @@ instance ( Backend a, Backend b
          ) => Backend (a :<|> b) where
   type API (a :<|> b) = API' a :<|> API' b
   type Acc (a :<|> b) = Public
-  server = a' :<|> b'
-    where a = server @a
-          b = server @b
-          a' = authServer @(Acc a) @(API a) a
-          b' = authServer @(Acc b) @(API b) b
+  server = a :<|> b
+    where a = authServer @(Acc a) @(API a) $ server @a
+          b = authServer @(Acc b) @(API b) $ server @b
 
 toApp :: forall b. ( Backend b
                    , AuthServer (Acc b) (API b)
@@ -94,3 +86,5 @@ toApp = app @(API' b :<|> Login :<|> Raw) s'
             :<|> login a b
             :<|> serveDirectoryWebApp "../frontend"
 
+
+type a ~> b = ReqBody '[JSON] a :> Post '[JSON] b
