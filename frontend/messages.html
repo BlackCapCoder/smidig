@@ -4,7 +4,7 @@
 <h1 class="grad">Meldinger</h1>
 
 <div class="tabs">
-  <button onclick='changeTab(1)'>Mine</button>
+  <button id="mychat" onclick='changeTab(1)'>Mine</button>
   <button onclick='changeTab(2)'>grupper</button>
   <button onclick='changeTab(3)'>Utforsk</button>
 </div>
@@ -12,8 +12,6 @@
 <div class="split">
   <div class="left">
     <div class="tab active">
-      <a href='javascript:openChat(this)'>Bob</a>
-      <a href='javascript:openChat(this)'>Roy</a>
     </div>
     <div class="tab">
       <a href='javascript:openChat(this)'>Bowlingkveld</a>
@@ -25,14 +23,32 @@
   </div>
   <div class="right" id="chat-view">
     <div id="chat">
-    
-      <p>Bob: Hello</p>
-      <p>Roy: Hi!</p>
-      <p>Bob: What's up?</p>
-      <p>Roy: The roof, then the universe</p>
     </div>
     <div id="chat-input">
       <input type="text" placeholder='Skriv meldinger her' id="chatbox" />
     </div>
   </div>
 </div>
+
+<script>
+ window.addEventListener('load', loadChats)
+ function loadChats () {
+  getMyChats(chats => {
+    for (c of chats) {
+      addChat(c);
+    }
+  });
+ }
+ function addChat (chat)
+ {
+  chatElem = document.createElement('a')
+  chatElem.innerText = "chat #" + chat.cid
+  chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
+  document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem)
+ }
+
+ function onChatClicked (cid) {
+  alert(cid + "clicked!");
+  
+ }
+</script>
