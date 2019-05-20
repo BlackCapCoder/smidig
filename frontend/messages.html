@@ -25,7 +25,7 @@
     <div id="chat">
     </div>
     <div id="chat-input">
-      <input type="text" placeholder='Skriv meldinger her' id="chatbox" />
+      <input type="text" placeholder='Skriv melding her' id="chatbox" /> <button>Send</button>
     </div>
   </div>
 </div>
@@ -38,17 +38,59 @@
       addChat(c);
     }
   });
+
+  document.querySelector("#chatbox").onkeypress
+    = onChatBoxKeyDown;
  }
  function addChat (chat)
  {
-  chatElem = document.createElement('a')
+  let chatElem = document.createElement('a')
   chatElem.innerText = "chat #" + chat.cid
   chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
   document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem)
  }
 
  function onChatClicked (cid) {
-  alert(cid + "clicked!");
-  
+  window.activeChat = cid;
+  postReadChat(cid, openChat);
+ }
+
+ function openChat (messages) {
+  for (let msg of messages) {
+    getUser(msg.sender, usr => {
+      addChatMsgElem(usr.username, msg.content);
+    });
+  }
+ }
+
+ function addChatMsgElem (username, m) {
+  const cont = document.querySelector('#chat');
+  let el = document.createElement('div');
+  el.classList.add("message");
+  let msg = document.createElement('span');
+  let usr = document.createElement('span');
+  usr.innerText = username + ": ";
+  msg.innerText = m;
+  el.appendChild(usr);
+  el.appendChild(msg);
+  cont.appendChild(el);
+ }
+
+ setInterval(postChatRead(activeChat), 3000);
+
+ function onChatBoxKeyDown (e) {
+   if (window.activeChat === undefined) {
+    return false
+   }
+   if (e.which !== 13) return;
+   const msg = document.querySelector("#chatbox").value;
+   if (msg.length === 0) return;
+
+   postPutChat([activeChat, msg], _ => {
+     document.querySelector("#chatbox").value = "";
+     getWhoami(usr => {
+       addChatMsgElem(usr.username, msg);
+     });
+   });
  }
 </script>
