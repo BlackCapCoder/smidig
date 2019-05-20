@@ -71,7 +71,7 @@ instance Backend Event where
     :<|> "pictures"     :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
     :<|> "mkevent"      :> ReqBody '[JSON] MkEventReq :> Post '[JSON] EventID
     :<|> "joinEvent"    :> ReqBody '[JSON] (EventID, LevelOfParticipation)    :> Post '[JSON] NoContent
-    :<|> "addComment" :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
+    :<|> "addComment"   :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
     :<|> "eventcomments" :> ReqBody '[JSON] (EventID) :> Post '[JSON] [Comments]
 
   server = listEvents

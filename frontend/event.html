@@ -79,6 +79,20 @@
             });
           }
         });
+
+        function loadComments () {
+          postEventcomments (evid, cs => {
+            const cont = document.querySelector('#comment-section');
+
+            for (let c of cs) {
+              getUser(c.owner, u => {
+                addCommentElem(u.username, c.content);
+              });
+            }
+          });
+        };
+
+        loadComments ();
       }
 
       function joinEvent () {
@@ -92,8 +106,28 @@
         postJoinEvent (evid, succ, fail);
       }
 
+      function addCommentElem (username, message) {
+        const cont = document.querySelector('#comment-section');
+        let el = document.createElement('div');
+        el.classList.add("comment");
+        let msg = document.createElement('span');
+        let usr = document.createElement('span');
+        usr.innerText = username + " said: ";
+        msg.innerText = message;
+        el.appendChild(usr);
+        el.appendChild(msg);
+        cont.appendChild(el);
+      }
+
       function onCommentClicked () {
-        alert ("Kommentar mottatt");
+        const msg = document.querySelector("#comment-box").value;
+        if (msg.length < 2) return alert ("A bit short if you ask me!");
+        if (msg.length > 400) return alert ("Way too long!");
+        postAddComment([evid, msg], _ => {
+          getWhoami(who => {
+            addCommentElem(who.username, msg);
+          });
+        });
       }
     </script>
   </head>
