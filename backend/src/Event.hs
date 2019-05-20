@@ -26,12 +26,31 @@ data MkEventReq = MkEventReq
 data Participants = Participants
   { eid :: EventID
   , uid :: UserID
+  , lop :: LevelOfParticipation
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+
+data LevelOfParticipation
+  = Interested | Going
+  deriving ( Eq, Show, Generic, ToJSON, FromJSON, SqlType
+           , Bounded, Enum, Read
+           )
 
 data Pictures = Pictures
   { eid  :: EventID
   , pth  :: Text
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+
+type CommentID = ID Comments
+
+data Comments = Comments
+  { cid     :: CommentID
+  , eid     :: EventID
+  , owner   :: UserID
+  , content :: Text
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+
+comments :: Table Comments
+comments = table "comments" [#cid :- autoPrimary]
 
 events :: Table Event
 events = table "events" [#eid :- autoPrimary]
@@ -43,17 +62,17 @@ pictures :: Table Pictures
 pictures = table "pictures" []
 
 
-data EventB
-
-instance Backend EventB where
-  type Acc EventB = Private
-  type API EventB
-      =  "events"       :> Get '[JSON] [Event]
-    :<|> "event"        :> QueryParam "id" EventID    :> Get  '[JSON] (Maybe Event)
+instance Backend Event where
+  type Acc Event = Private
+  type API Event
+      =  "listevents"   :> Get '[JSON] [Event]
+    :<|> "getevent"        :> QueryParam "id" EventID    :> Get  '[JSON] (Maybe Event)
     :<|> "participants" :> QueryParam "id" EventID    :> Get  '[JSON] [Participants]
     :<|> "pictures"     :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
     :<|> "mkevent"      :> ReqBody '[JSON] MkEventReq :> Post '[JSON] EventID
-    :<|> "joinEvent"    :> ReqBody '[JSON] EventID    :> Post '[JSON] NoContent
+    :<|> "joinEvent"    :> ReqBody '[JSON] (EventID, LevelOfParticipation)    :> Post '[JSON] NoContent
+    :<|> "addComment" :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
+    :<|> "eventcomments" :> ReqBody '[JSON] (EventID) :> Post '[JSON] [Comments]
 
   server = listEvents
       :<|> getEvent
@@ -61,6 +80,8 @@ instance Backend EventB where
       :<|> getPictures
       :<|> mkEvent
       :<|> joinEvent
+      :<|> postComment
+      :<|> getcomments
 
     where listEvents      = query $ select events
           getEvent        = getByIDM events        #eid
@@ -70,13 +91,14 @@ instance Backend EventB where
             ownerID <- asks AppM.uid
             evid    <- insertWithPK events
               [Event def ownerID req_title req_desc req_place req_date]
+            liftIO $ print evid
 
             insert_ participants
-              [Participants evid ownerID]
+              [Participants evid ownerID Going]
 
             pure evid
 
-          joinEvent evid = do
+          joinEvent (evid, lop) = do
             uid <- asks AppM.uid
 
             -- Does the event exist?
@@ -89,9 +111,21 @@ instance Backend EventB where
               restrict (p ! #uid .== literal uid)
               pure p
 
-            insert_ participants [Participants evid uid]
+            insert_ participants [Participants evid uid lop]
 
             pure NoContent
+
+          postComment (eid, txt) = do
+            ownerID <- asks AppM.uid
+            cid <- insertWithPK comments
+              [ Comments def eid ownerID txt ]
+            pure cid
+
+          getcomments (eid) = query do
+            e <- select comments
+            restrict $ e ! #eid .== literal eid
+            pure e
+
 
 
 get1 table sel needle = listToMaybe <$> query do

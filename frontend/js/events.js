@@ -27,7 +27,7 @@ function addEvent (pic, title, text, place, date, eid) {
     text = text.substr(0, 256) + "…";
   }
 
-  ev.setAttribute     ('href', 'event.html#' + eid);
+  ev.setAttribute     ('href', 'event#' + eid);
   el_pic.setAttribute ('src', pic);
   el_tit.innerText    = title;
   el_txt.innerText    = text;
@@ -49,7 +49,7 @@ function addEvent (pic, title, text, place, date, eid) {
   return ev;
 }
 
-getEvents (evs => {
+getListevents (evs => {
   for (let e of evs) {
     getUser (e.owner, u => {
       addEvent (u.pic, e.title, e.desc, e.place, e.date, e.eid);

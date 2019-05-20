@@ -8,6 +8,7 @@ module AppM
 
 import Control.Monad.Reader
 import Control.Monad.Fail
+import Control.Monad.Catch hiding (Handler)
 import Data.Aeson hiding (Result)
 import Database.Selda
 import Database.Selda.SQLite
@@ -22,6 +23,41 @@ type family AppM (a :: Access) where
   AppM Public  = SeldaT Handler
   AppM Private = ReaderT User (AppM Public)
 
+
+
+data family AppM' (a :: Access) :: * -> *
+
+newtype instance AppM' Public v = Pub (SeldaT Handler v)
+  deriving ( Functor
+           , Applicative
+           , Monad
+           , MonadIO
+           , MonadSelda
+           , MonadThrow
+           , MonadCatch
+           , MonadMask
+           , MonadFail
+           ) via (SeldaT Handler)
+
+newtype instance AppM' Private v = Pri (ReaderT User (AppM' Public) v)
+  deriving ( Functor
+           , Applicative
+           , Monad
+           , MonadIO
+           , MonadReader User
+           , MonadThrow
+           , MonadCatch
+           , MonadMask
+           , MonadFail
+           ) via (ReaderT User (AppM' Public))
+
+
+nt' :: AppM' a v -> v
+nt' = undefined
+
+
+
+
 instance MonadSelda (ReaderT User (SeldaT Handler)) where
   seldaConnection = lift seldaConnection
 
@@ -32,8 +68,7 @@ instance MonadFail (SeldaT Handler) where
 database = withSQLite "db.sqlite"
 
 
-nt :: AppM Public a -> Handler a
-nt = database
+nt = database :: AppM Public a -> Handler a
 
 appWithContext
   :: forall api ctx

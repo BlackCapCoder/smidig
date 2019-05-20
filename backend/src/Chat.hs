@@ -40,18 +40,13 @@ chatMessages :: Table ChatMessage
 chatMessages = table "chatmessages" [#mid :- autoPrimary]
 
 
-
-data ChatB
-
-instance Backend ChatB where
-  type Acc ChatB = Private
-  type API ChatB = "myChats"  :> Get '[JSON] [Chat]
-              :<|> "mkChat"   :> ReqBody '[JSON] (Bool, Set UserID)
-                              :> Post '[JSON] ChatID
-              :<|> "putChat"  :> ReqBody '[JSON] (ChatID, Text)
-                              :> Post '[JSON] ChatMessageID
-              :<|> "readChat" :> ReqBody '[JSON] ChatID
-                              :> Post '[JSON] [ChatMessage]
+instance Backend Chat where
+  type Acc Chat = Private
+  type API Chat
+       = "myChats"  :> Get '[JSON] [Chat]
+    :<|> "mkChat"   :> (Bool, Set UserID) ~> ChatID
+    :<|> "putChat"  :> (ChatID, Text)     ~> ChatMessageID
+    :<|> "readChat" :> ChatID             ~> [ChatMessage]
 
   server = myChats
       :<|> mkChat

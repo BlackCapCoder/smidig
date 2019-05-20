@@ -31,7 +31,7 @@
         name.innerText = u.username;
         age.innerText = u.age;
 
-        lft.setAttribute('href', 'profile.html#' + u.uid);
+        lft.setAttribute('href', 'profile#' + u.uid);
 
         party.appendChild(cont);
       }
@@ -41,7 +41,7 @@
         evid  = Number (hash);
         party = document.querySelector("#participants")
 
-        getEvent (evid, ev => {
+        getGetevent (evid, ev => {
           date = new Date (ev.date);
 
           document.title = ev.title;
@@ -90,6 +90,10 @@
         }
 
         postJoinEvent (evid, succ, fail);
+      }
+
+      function onCommentClicked () {
+        alert ("Kommentar mottatt");
       }
     </script>
   </head>
@@ -145,7 +149,7 @@
     <section id="comment-section">
       <textarea id="comment-box" rows="8" cols="40" placeholder="Skriv din kommentar her"></textarea>
       </br>
-      <button type="submit" onclick='alert("Kommentar mottatt")'>Legg til kommentar</button>
+      <button type="submit" onclick='onCommentClicked();'>Legg til kommentar</button>
     </section>
 
     <div id="row-wrapper">
