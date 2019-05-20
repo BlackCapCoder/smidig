@@ -3,6 +3,7 @@ module User where
 
 import Utils
 import AppM
+import Event
 
 
 instance Backend User where
@@ -11,8 +12,9 @@ instance Backend User where
       = "user"     :> QueryParam "id" UserID :> Get '[JSON] (Maybe User)
    :<|> "register" :> RegisterReq ~> RegisterResult
 
-  server = do
-    queryUser :<|> register
+
+  server = queryUser
+      :<|> register
 
     where queryUser = getByIDM users #uid
           register RegisterReq{..} = do
@@ -26,6 +28,45 @@ instance Backend User where
                   uid <- insertWithPK users [User def username password age Nothing]
                   return $ Right uid
 
+
+data LoggedUser
+instance Backend LoggedUser where
+  type Acc LoggedUser = Private
+  type API LoggedUser
+       = "myfavorites" :> Get '[JSON] [Favorite]
+    :<|> "addFavorite" :> (EventID) ~> FavoriteID
+
+  server = myfavorites
+      :<|> addFavorite
+
+
+myfavorites = do
+  myid <- asks AppM.uid
+  query do
+    f <- select favorites
+    restrict $ f ! #uid .== literal myid
+    pure f
+
+addFavorite eid = do
+  myid <- asks AppM.uid
+
+  -- Does the event exist?
+  [_] <- query do
+    ev <- select events
+    restrict $ ev ! #eid .== literal eid
+    pure ev
+
+  -- Already a favorite?
+  [] <- query do
+    f <- select favorites
+    restrict $ f ! #eid .== literal eid
+    pure f
+
+  insertWithPK favorites
+    [ Favorite def eid myid ]
+
+
+
 data RegisterReq = RegisterReq 
   { username :: Text
   , password :: Text
@@ -34,6 +75,17 @@ data RegisterReq = RegisterReq
 
 type RegisterResult = Either Text UserID
 
+
+type FavoriteID = ID Favorite
+
+data Favorite = Favorite
+  { fid :: FavoriteID
+  , eid :: EventID
+  , uid :: UserID
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+
+favorites :: Table Favorite
+favorites = table "favorites" [#fid :- autoPrimary]
 
 
 data WhoAmI

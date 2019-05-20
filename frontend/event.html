@@ -129,6 +129,12 @@
           });
         });
       }
+
+      function onAddToFavoritesClicked () {
+        postAddFavorite(evid, _ => {
+          alert ("Added!");
+        });
+      }
     </script>
   </head>
 
@@ -171,7 +177,7 @@
       <button type="button-1" onclick='joinEvent()'>Jeg kommer!</button>
       <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
       <button type="button-2" onclick='alert("Takk for at du viser interess, håper på å se deg der!")'>Interessert</button>
-      <button type="button-3" onclick='alert("Lagt til i favoritter")'><img class="star-eve" src="imgs/favourit-star.png"/></button>
+      <button type="button-3" onclick='onAddToFavoritesClicked()'><img class="star-eve" src="imgs/favourit-star.png"/></button>
    </section>
 
     <div class="parti-wrapper">
