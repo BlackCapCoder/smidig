@@ -239,7 +239,7 @@ header > .middle {
 }
 header > .right {
   /* flex: 0; */
-  width: 64px;
+  width: 98px;
   display: inline-block;
   padding-right: 10px;
 }
