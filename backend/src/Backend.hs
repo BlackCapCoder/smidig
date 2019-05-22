@@ -61,6 +61,7 @@ type Priv = Flatten (:<|>)
   , File "../frontend/mkevent.html"  "mkevent"  Private
   , File "../frontend/profile.html"  "profile"  Private
   , File "../frontend/settings.html" "settings" Private
+  , File "../frontend/changes.html"  "changes"  Private
   ]
 
 -- Things that should be public

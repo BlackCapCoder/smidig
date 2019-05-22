@@ -1,0 +1,72 @@
+<title>Endringer</title>
+
+<table>
+  <tr>
+    <td>
+      <span>Navn: </span>
+    </td>
+    <td>
+      <input type="text" id="nameChange" value=""><br>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <span>Alder: </span>
+    </td>
+    <td>
+      <select id="ageChange">
+        <option>1970</option>
+        <option>1971</option>
+        <option>1972</option>
+        <option>1973</option>
+        <option>1974</option>
+        <option>1975</option>
+        <option>1976</option>
+        <option>1977</option>
+        <option>1978</option>
+        <option>1979</option>
+        <option>1980</option>
+        <option>1981</option>
+        <option>1982</option>
+        <option>1983</option>
+        <option>1984</option>
+        <option>1985</option>
+        <option>1986</option>
+        <option>1987</option>
+        <option>1988</option>
+        <option>1989</option>
+        <option>1990</option>
+        <option>1991</option>
+        <option>1992</option>
+        <option>1993</option>
+        <option>1994</option>
+        <option>1995</option>
+        <option>1996</option>
+        <option>1997</option>
+        <option>1998</option>
+        <option>1999</option>
+        <option>2000</option>
+        <option>2001</option>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    <span>Beskrivelse</span>
+    </td>
+    <td>
+      <textarea id="descChange" rows="3" cols="17"></textarea>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <button id="submitChange" onclick="submitChanges()">Bekreft endringer</button>
+</table>
+
+<script>
+  function submitChanges() {
+    window.location = "profile.html";
+  /*  const nameChange = document.querySelector('#username').value
+        , ageChange  = document.querySelector('#age').value
+        , descChange = document.querySelector('#desc').value uncomment when correct */
+  }
+</script>

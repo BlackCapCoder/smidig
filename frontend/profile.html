@@ -4,8 +4,14 @@
       document.querySelector('#pic').setAttribute('src', u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;
+      document.querySelector('#desc').innerText = u.desc;
     });
   };
+
+  function changesPressed()
+  {
+    window.location = "changes"
+  }
 </script>
 
 <title>Profil</title> <!-- persons navn her -->
@@ -32,7 +38,7 @@
   </br></br>
   <input type="button" onclick='alert("Venneforespørsel sendt")' name="" id="" value="Legg til som venn" />
   </br></br>
-  <input type="button" name="" id="" value="Gjør endringer" />
+  <input type="button" onClick="changesPressed()" name="" id="changes" value="Gjør endringer" />
 
   <section id="friends">
   </section>

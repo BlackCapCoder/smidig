@@ -161,6 +161,12 @@ footer {
   margin-top: 3px;
 }
 
+#bell-icon {
+  width: 30px;
+  height: calc(100% - 25px);
+  margin-top: 3px;
+}
+
 #user-icon {
   width: 30px;
   height: calc(100% - 25px);
