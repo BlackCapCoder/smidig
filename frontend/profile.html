@@ -1,11 +1,116 @@
+<link rel="stylesheet" href="css/bowling.css">
+
 <script>
+  uid  = Number(window.location.hash.substr(1));
+  isMe = undefined;
+
   window.onload = _ => {
-    getWhoami (u => {
+    getUser (uid, u => {
       document.querySelector('#pic').setAttribute('src', u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;
     });
+
+    getWhoami(u => {
+      isMe = u.uid == uid;
+      checkFriendship();
+    });
+
+    function checkFriendship(){
+      if (isMe) return setFriendButton (0);
+
+      postFriendshipStatus(uid, s => {
+        switch (s.tag) {
+          case ("NotFriends"):
+            setFriendButton (1);
+            break;
+          case ("Friends"):
+            setFriendButton (0);
+            break;
+          case ("PendingAccept"):
+            if (s.contents)
+              setFriendButton(2);
+            else
+              setFriendButton(3);
+            break;
+        }
+      });
+    }
+
+    postListfriends(uid, fs => {
+      for (let f of fs)
+        getUser (f, usr => {
+          addFriendElem (usr);
+        });
+    });
   };
+
+  // c/p from event.html
+  function addFriendElem (u) {
+    let cont = document.createElement('div')
+      , lft  = document.createElement('a')
+      , rgt  = document.createElement('div')
+      , pic  = document.createElement('img')
+      , name = document.createElement('span')
+      , age  = document.createElement('span')
+      ;
+
+    cont.classList.add ('person');
+    lft.classList.add  ('left');
+    rgt.classList.add  ('right');
+    pic.classList.add  ('profile');
+    name.classList.add ('name');
+    age.classList.add  ('age');
+
+    cont.appendChild(lft);
+    cont.appendChild(rgt);
+    lft.appendChild(pic);
+    rgt.appendChild(name);
+    rgt.appendChild(age);
+
+    pic.setAttribute('src', u.pic);
+    name.innerText = u.username;
+    age.innerText = u.age;
+
+    lft.setAttribute('href', 'profile#' + u.uid);
+
+    const party = document.querySelector("#friends");
+    party.appendChild(cont);
+  }
+
+  function onBefriendClicked () {
+    console.log(uid)
+    postBefriend (uid, e => {
+      alert ("Friend request sent!")
+    })
+  }
+
+  function setFriendButton (s) {
+    const btn = document.querySelector('#befriend');
+
+    if (s == 0) {
+      btn.disabled = true;
+      btn.value    = "Friends!"
+    } else
+    if (s == 1) {
+      btn.disabled = false;
+      btn.value    = "Add friend"
+    } else
+    if (s == 2) {
+      btn.disabled = false;
+      btn.value    = "Accept as friend"
+    } else
+    if (s == 3) {
+      btn.disabled = true;
+      btn.value    = "Friend request pending"
+    }
+  }
+
+  function onSendMessageClicked () {
+    postChatWithUser (uid, cid => {
+      window.location = "messages#" + cid;
+    });
+  }
 </script>
 
 <title>Profil</title> <!-- persons navn her -->
@@ -27,10 +132,10 @@
   </br>
   <p id="self_info">
     </p>
-  <input type="button" name="" id="" value="Send Melding" />
+  <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send Melding" />
   <input type="button" name="" id="find-events" value="Finn arrangementer" />
   </br></br>
-  <input type="button" onclick='alert("Venneforespørsel sendt")' name="" id="" value="Legg til som venn" />
+  <input type="button" onclick='onBefriendClicked()' name="" id="befriend" value="Legg til som venn" />
   </br></br>
   <input type="button" name="" id="" value="Gjør endringer" />
 

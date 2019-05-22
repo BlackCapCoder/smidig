@@ -39,13 +39,40 @@ instance Backend LoggedUser where
     :<|> "setUserInfo" :> User ~> NoContent
     :<|> "myfriends"   :> Get '[JSON] [Friend]
     :<|> "befriend"    :> UserID ~> NoContent
+    :<|> "listfriends" :> UserID ~> [UserID]
+    :<|> "friendshipStatus" :> UserID ~> FriendshipStatus
 
   server = myfavorites
       :<|> addFavorite
       :<|> setUserInfo
       :<|> myFriends
       :<|> befriend
+      :<|> listFriends
+      :<|> friendshipStatus
 
+
+friendshipStatus :: UserID -> AppM Private FriendshipStatus
+friendshipStatus uid = do
+  fs <- filter (\f -> user1 f == uid || user2 f == uid) <$> myFriends
+
+  pure if
+    | null fs -> NotFriends
+    | [f] <- fs -> if
+      | accepted f -> Friends
+      | otherwise  -> PendingAccept $ user1 f == uid
+
+
+listFriends :: UserID -> AppM Private [UserID]
+listFriends uid = do
+  fs <- query do
+    f <- select friends
+    restrict $ f ! #user1 .== literal uid
+           .|| f ! #user2 .== literal uid
+    pure f
+  pure $ flip fmap fs \f ->
+    if user1 f == uid
+       then user2 f
+       else user1 f
 
 setUserInfo usr = do
   myid <- asks AppM.uid
@@ -97,24 +124,39 @@ myFriends = do
 befriend uid = do
   myid <- asks AppM.uid
 
-  -- Already friends?
-  [] <- query do
-    f <- select friends
-    restrict $ f ! #user1 .== literal myid
-           .|| f ! #user2 .== literal myid
-    restrict $ f ! #user1 .== literal uid
-           .|| f ! #user2 .== literal uid
-    pure f
+  -- You can't become friends with yourself
+  False <- pure $ myid == uid
 
-  insert friends
-    [ Friend myid uid False ]
+  -- Pending request?
+  -- TODO: upsert
+  cnt <- update friends
+        (\f -> (f ! #user1 .== literal myid
+            .|| f ! #user2 .== literal myid)
+            .&&(f ! #user1 .== literal uid
+            .|| f ! #user2 .== literal uid)
+            .&&(f ! #accepted .== literal False)
+        ) $ flip with
+        [ #accepted := literal True ]
 
-  -- TODO: Send notification to friendee
+  when (cnt == 0) $ void do
+
+    -- Already friends?
+    [] <- query do
+      f <- select friends
+      restrict $ f ! #user1 .== literal myid
+            .|| f ! #user2 .== literal myid
+      restrict $ f ! #user1 .== literal uid
+            .|| f ! #user2 .== literal uid
+      pure f
+
+    insert friends
+      [ Friend myid uid False ]
+
+    -- TODO: Send notification to friendee
+
+  liftIO $ putStrLn "befriended!"
 
   pure NoContent
-
-
-
 
 
 data RegisterReq = RegisterReq 
@@ -148,6 +190,12 @@ data Friend = Friend
 
 friends :: Table Friend
 friends = table "friends" []
+
+data FriendshipStatus
+  = Friends
+  | NotFriends
+  | PendingAccept Bool -- True if we can accept
+  deriving (Generic, ToJSON)
 
 
 data WhoAmI
