@@ -48,12 +48,29 @@ instance Backend Chat where
     :<|> "putChat"  :> (ChatID, Text)     ~> ChatMessageID
     :<|> "readChat" :> ChatID             ~> [ChatMessage]
     :<|> "readChatSince" :> (ChatID, ChatMessageID) ~> [ChatMessage]
+    :<|> "chatWithUser"  :> (UserID) ~> ChatID
 
   server = myChats
       :<|> mkChat
       :<|> putChat
       :<|> readChat
       :<|> readChatSince
+      :<|> chatWithUser
+
+
+chatWithUser :: UserID -> AppM Private ChatID
+chatWithUser uid = do
+
+  -- TODO: Use aggregate
+  cs <- myChats >>= filterM \c -> do
+    (==1) . length <$> query do
+      p <- select participants
+      restrict $ p ! #cid .== literal (chid c)
+             .&& p ! #uid .== literal uid
+      pure p
+
+  if | null cs   -> mkChat (False, S.fromList [uid])
+     | [c] <- cs -> pure $ chid c
 
 
 chid = cid :: Chat -> ChatID
