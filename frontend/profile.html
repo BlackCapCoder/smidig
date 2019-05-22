@@ -87,7 +87,7 @@
   function onBefriendClicked () {
     console.log(uid)
     postBefriend (uid, e => {
-      alert ("Friend request sent!")
+      alert ("Venneforespørsel er sent")
     })
   }
 
@@ -96,19 +96,19 @@
 
     if (s == 0) {
       btn.disabled = true;
-      btn.value    = "Friends!"
+      btn.value    = "Dere er venner"
     } else
     if (s == 1) {
       btn.disabled = false;
-      btn.value    = "Add friend"
+      btn.value    = "Legg til som venn"
     } else
     if (s == 2) {
       btn.disabled = false;
-      btn.value    = "Accept as friend"
+      btn.value    = "Aksepter venneforespørsel"
     } else
     if (s == 3) {
       btn.disabled = true;
-      btn.value    = "Friend request pending"
+      btn.value    = "Venneforespørsel er sendt"
     }
   }
 
