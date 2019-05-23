@@ -65,12 +65,15 @@ footer {
   padding: 0;
   margin: 0;
 }
+
 .items a {
   text-decoration: none;
 }
+
 .items > li:nth-of-type(odd) {
   /* background: rgba(255,255,255,0.2); */
 }
+
 .items > li {
   padding: 5px;
 }
@@ -87,25 +90,38 @@ footer {
   padding: 11px 10px;
   text-decoration: none;
 }
+
 #side-panel .items > li {
   margin-bottom: 15px;
   margin-left: 10px;
   padding:0;
 }
+
 .fancy-button:hover {
   background: linear-gradient(45deg, var(--colorA), var(--colorB));
 }
+
 #side-panel .items > li:nth-child(2) > a:hover {
   background: linear-gradient(60deg, var(--colorA), var(--colorB));
 }
+
 #side-panel .items > li:nth-child(3) > a:hover {
   background: linear-gradient(80deg, var(--colorA), var(--colorB));
 }
+
 #side-panel .items > li:nth-child(4) > a:hover {
   background: linear-gradient(100deg, var(--colorA), var(--colorB));
 }
 
 #menu-settings {
+  position: fixed;
+  min-width: 300px;
+  background: var(--colorB);
+  right: 0;
+  z-index: 99;
+}
+
+#notifications-settings {
   position: fixed;
   min-width: 300px;
   background: var(--colorB);
@@ -123,6 +139,7 @@ footer {
   text-decoration: none;
   top: calc(var(--size) * -1 - var(--space));
 }
+
 #chat-btn > img {
   width: var(--size);
   height: var(--size);

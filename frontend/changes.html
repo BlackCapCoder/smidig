@@ -6,7 +6,7 @@
       <span>Navn: </span>
     </td>
     <td>
-      <input type="text" id="nameChange" value=""><br>
+      <input type="text" id="nameChange" placeholder="Gammelt navn"/><br>
     </td>
   </tr>
   <tr>
@@ -54,7 +54,7 @@
     <span>Beskrivelse</span>
     </td>
     <td>
-      <textarea id="descChange" rows="3" cols="17"></textarea>
+      <textarea id="descChange" rows="3" cols="20" placeholder="Gammel beskrivelse"></textarea>
     </td>
   </tr>
   <tr>
@@ -63,10 +63,17 @@
 </table>
 
 <script>
+  /*   GET name FROM users WHERE uid = profile page id
+       GET age FROM users WHERE uid = profile page id
+       GET desc FROM users WHERE uid = profile page id
+       SET name FROM users WHERE uid = profile page id (something something sudo code something something)
+       SET age FROM users WHERE uid = profile page id (something something sudo code something something)
+       SET desc FROM users WHERE uid = profile page id (something something sudo code something something)
+  */
   function submitChanges() {
-    window.location = "profile.html";
-  /*  const nameChange = document.querySelector('#username').value
+    window.location = "profile#" + uid;
+    const nameChange = document.querySelector('#username').value
         , ageChange  = document.querySelector('#age').value
-        , descChange = document.querySelector('#desc').value uncomment when correct */
+        , descChange = document.querySelector('#desc').value
   }
 </script>

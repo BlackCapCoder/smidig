@@ -14,7 +14,7 @@
     <h1 id='main-title'>Navn her</h1>
   </div>
   <div class="right">
-    <a id="bell-icon"><img id="bell-icon" src="imgs/bell_icon.png"></a>
+    <a id="bell-icon" href='javascript:document.querySelector("#notifications-settings").classList.toggle("hidden");'><img id="bell-icon" src="imgs/bell_icon.png"></a>
     <a id="user-icon" href="profile#1"><img id="user-icon" src="imgs/Brukerikon.png"></a> 
     <a id="btn-settings" href='javascript:document.querySelector("#menu-settings").classList.toggle("hidden");'><img id="settings" src="imgs/Innstillinger.png"></a>
     <div id="menu-settings" class='items hidden'>
@@ -22,6 +22,13 @@
       <li><a href='settings'>Instillinger</a></li>
       <li><a href='javascript:window.location = "logout"'>Logg ut</a></li>
     </div>
+    <div id="notifications-settings" class='items hidden'>
+      <li><span>Notifikasjon#1</span></li>
+      <li><span>Notifikasjon#2</span></li>
+      <li><span>Notifikasjon#3</span></li>
+      <li><span>Notifikasjon#4</span></li>
+      <li><span>Notifikasjon#5</span></li>
+      <li><span>Notifikasjon#6</span></li>
   </div>
 </header>
 

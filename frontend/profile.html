@@ -87,7 +87,7 @@
   function onBefriendClicked () {
     console.log(uid)
     postBefriend (uid, e => {
-      alert ("Venneforespørsel er sent")
+      alert ("Venneforespørsel er sendt")
     })
   }
 
@@ -119,7 +119,7 @@
   }
 </script>
 
-<title>Profil</title> <!-- persons navn her -->
+<title>Profil</title> <!-- persons name here -->
 
 <body>
   <table>
@@ -131,14 +131,14 @@
       <td>
         <p id="name"></p>
         <p id="age"></p>
-        <p id="self-info">something something something something something something</p>
+        <p id="desc"></p>
       </td>
     </tr>
   </table>
   </br>
   <p id="self_info">
     </p>
-  <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send Melding" />
+  <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send melding" />
   <input type="button" name="" id="find-events" value="Finn arrangementer" />
   </br></br>
   <input type="button" onclick='onBefriendClicked()' name="" id="befriend" value="Legg til som venn" />
