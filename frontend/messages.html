@@ -37,6 +37,11 @@
     for (c of chats) {
       addChat(c);
     }
+
+    let h = window.location.hash.substr(1);
+    if (h == "") return;
+    h = Number(h);
+    onChatClicked(h);
   });
 
   document.querySelector("#chatbox").onkeypress

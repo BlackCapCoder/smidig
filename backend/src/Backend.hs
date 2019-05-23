@@ -64,7 +64,8 @@ type Priv = Flatten (:<|>)
   ]
 
 -- Things that should be public
-type Pub = File' "../frontend/login.html" Public
+type Pub = File' "../frontend/login.html"    Public
+      :<|> File' "../frontend/register.html" Public
 
 -- The entire backend
 type Full = REST :<|> Priv :<|> Pub
