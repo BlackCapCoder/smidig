@@ -1,21 +1,55 @@
 <link rel="stylesheet" href="css/bowling.css">
 
 <script>
-  uid  = Number(window.location.hash.substr(1));
+  uid  = window.location.hash.substr(1);
   isMe = undefined;
 
   window.onload = _ => {
-    getUser (uid, u => {
+
+    if (uid != "") {
+      uid = Number(uid);
+
+      getWhoami(u => {
+        isMe = u.uid == uid;
+        getUser (uid, onGotUser);
+      });
+    } else {
+      isMe = true;
+      getWhoami(u => {
+        uid = u.uid;
+        onGotUser(u);
+      });
+    }
+
+    function onGotUser (u) {
       document.querySelector('#pic').setAttribute('src', u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;
       document.querySelector('#desc').innerText = u.desc;
-    });
+      document.querySelector('#btnEdit').disabled = !isMe;
 
-    getWhoami(u => {
-      isMe = u.uid == uid;
+      checkOnline(u);
       checkFriendship();
-    });
+
+      postListfriends(uid, fs => {
+        for (let f of fs)
+          getUser (f, usr => {
+            addFriendElem (usr);
+          });
+      });
+    }
+
+    function checkOnline (usr) {
+      if (isMe) {
+        document.querySelector('#status').classList.add('hidden');
+        return;
+      }
+
+      now  = new Date();
+      then = new Date(usr.lastSeen);
+      setOnlineStatus (now - then <= 15 * 60 * 1000);
+    }
+
 
     function checkFriendship(){
       if (isMe) return setFriendButton (0);
@@ -37,14 +71,21 @@
         }
       });
     }
-
-    postListfriends(uid, fs => {
-      for (let f of fs)
-        getUser (f, usr => {
-          addFriendElem (usr);
-        });
-    });
   };
+
+  function setOnlineStatus (b) {
+    const stEl = document.querySelector('#status');
+
+    stEl.classList.remove('hidden');
+
+    if (b) {
+      stEl.classList.remove('offline');
+      stEl.classList.add('online');
+    } else {
+      stEl.classList.remove('online');
+      stEl.classList.add('offline');
+    }
+  }
 
   function changesPressed()
   {
@@ -117,6 +158,9 @@
       window.location = "messages#" + cid;
     });
   }
+  function onFindEventsClicked () {
+    window.location = "events#user:" + uid;
+  }
 </script>
 
 <title>Profil</title> <!-- persons name here -->
@@ -126,7 +170,7 @@
     <tr>
       <td>
         <img id="pic"/>
-        <div id="status" class="online"></div>
+        <div id="status" class="hidden"></div>
       </td>
       <td>
         <p id="name"></p>
@@ -139,11 +183,11 @@
   <p id="self_info">
     </p>
   <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send melding" />
-  <input type="button" name="" id="find-events" value="Finn arrangementer" />
+  <input type="button" onclick="onFindEventsClicked()" name="" id="find-events" value="Finn arrangementer" />
   </br></br>
   <input type="button" onclick='onBefriendClicked()' name="" id="befriend" value="Legg til som venn" />
   </br></br>
-  <input type="button" onClick="changesPressed()" name="" id="changes" value="Gjør endringer" />
+  <input type="button" onClick="changesPressed()" name="" id="btnEdit" value="Gjør endringer" />
 
   <section id="friends">
   </section>

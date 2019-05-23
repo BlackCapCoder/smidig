@@ -2,6 +2,8 @@ module Event where
 
 import Utils
 import AppM
+import qualified Data.Text as T
+import Data.Char
 
 
 type EventID = ID Event
@@ -73,6 +75,7 @@ instance Backend Event where
     :<|> "joinEvent"     :> ReqBody '[JSON] (EventID, LevelOfParticipation) :> Post '[JSON] NoContent
     :<|> "addComment"    :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
     :<|> "eventcomments" :> ReqBody '[JSON] (EventID) :> Post '[JSON] [Comments]
+    :<|> "searchevents"  :> ReqBody '[JSON] Text :> Post '[JSON] [Event]
 
   server = listEvents
       :<|> getEvent
@@ -82,13 +85,14 @@ instance Backend Event where
       :<|> joinEvent
       :<|> postComment
       :<|> getcomments
+      :<|> searchevents
 
     where listEvents      = query $ select events
           getEvent        = getByIDM events        #eid
           getParticipants = getByID  participants  #eid
           getPictures     = getByID  pictures      #eid
           mkEvent MkEventReq {..} = do
-            ownerID <- asks AppM.uid
+            ownerID <- gets AppM.uid
             evid    <- insertWithPK events
               [Event def ownerID req_title req_desc req_place req_date]
             liftIO $ print evid
@@ -99,7 +103,7 @@ instance Backend Event where
             pure evid
 
           joinEvent (evid, lop) = do
-            uid <- asks AppM.uid
+            uid <- gets AppM.uid
 
             -- Does the event exist?
             Just _ <- get1 events #eid evid
@@ -112,7 +116,7 @@ instance Backend Event where
             pure NoContent
 
           postComment (eid, txt) = do
-            ownerID <- asks AppM.uid
+            ownerID <- gets AppM.uid
             cid <- insertWithPK comments
               [ Comments def eid ownerID txt ]
             pure cid
@@ -121,6 +125,41 @@ instance Backend Event where
             e <- select comments
             restrict $ e ! #eid .== literal eid
             pure e
+
+
+
+
+data EventQuery
+  = ByUser UserID
+  | ByText Text
+  deriving Show
+
+parseQuery :: Text -> EventQuery
+parseQuery str = fromMaybe (ByText $ "%" <> str <> "%") byUser where
+  byUser = do
+    guard $ T.isPrefixOf "user:" str
+    let (d, _) = T.span isDigit . T.stripStart $ T.drop 5 str
+    guard . not $ T.null d
+    pure . ByUser . toId . read $ T.unpack d
+
+
+searchevents :: Text -> AppM Private [Event]
+searchevents (parseQuery->q) = liftIO (print q) >> case q of
+  ByUser uid -> eventsByOwner uid
+  ByText txt -> query do
+    e <- select events
+    restrict $ e ! #desc  `like` literal txt
+           .|| e ! #desc  `like` literal txt
+           .|| e ! #place `like` literal txt
+    pure e
+
+
+
+eventsByOwner :: UserID -> AppM Private [Event]
+eventsByOwner uid = query do
+  e <- select events
+  restrict $ e ! #owner .== literal uid
+  pure e
 
 
 

@@ -11,6 +11,7 @@ import JsApi
 import Login
 import Event as E
 import Chat  as C
+import Notifications
 
 import AppM hiding (app)
 
@@ -31,6 +32,7 @@ tables =
   , SomeTable comments
   , SomeTable favorites
   , SomeTable friends
+  , SomeTable notifications
   ]
 
 
@@ -40,6 +42,7 @@ type REST = Flatten (:<|>)
   , LoggedUser
   , Event
   , Chat
+  , Notification
   , WhoAmI
   , JsApi "api.js" Public
       ( API User
@@ -47,6 +50,7 @@ type REST = Flatten (:<|>)
    :<|> API Event
    :<|> API WhoAmI
    :<|> API Chat
+   :<|> API Notification
    :<|> Login
       )
   ]
@@ -65,8 +69,8 @@ type Priv = Flatten (:<|>)
   ]
 
 -- Things that should be public
-type Pub = File' "../frontend/login.html"    Public
-      :<|> File' "../frontend/register.html" Public
+type Pub = File' "../frontend/login.html"              Public
+      :<|> File "../frontend/register.html" "register" Public
 
 -- The entire backend
 type Full = REST :<|> Priv :<|> Pub

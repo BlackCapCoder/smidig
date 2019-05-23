@@ -86,7 +86,7 @@ readChat chat = do
 
 putChat :: (ChatID, Text) -> AppM Private ChatMessageID
 putChat (chat, msg) = do
-  myID <- asks AppM.uid
+  myID <- gets AppM.uid
   _:_  <- query do
     c <- select chats
     restrict $ c ! #cid .== literal chat
@@ -101,7 +101,7 @@ putChat (chat, msg) = do
 
 mkChat :: (Bool, Set UserID) -> AppM Private ChatID
 mkChat (isPub, uids') = do
-  myID <- asks AppM.uid
+  myID <- gets AppM.uid
   let uids = S.delete myID uids'
   False <- pure $ null uids
 
@@ -123,7 +123,7 @@ mkChat (isPub, uids') = do
 
 myChats :: AppM Private [Chat]
 myChats = do
-  myID <- asks AppM.uid
+  myID <- gets AppM.uid
   query do
     p <- select participants
     restrict $ p ! #uid .== literal myID

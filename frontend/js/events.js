@@ -49,23 +49,51 @@ function addEvent (pic, title, text, place, date, eid) {
   return ev;
 }
 
-getListevents (evs => {
+function addEvents (evs) {
   for (let e of evs) {
     getUser (e.owner, u => {
       addEvent (u.pic, e.title, e.desc, e.place, e.date, e.eid);
     });
   }
+}
+
+window.addEventListener('load', _ => {
+  let hash = window.location.hash.substr(1);
+
+  if (hash == "") {
+    getListevents (addEvents);
+  } else {
+    const tb = document.querySelector('#tb-search');
+    tb.value = hash;
+    onQueryChanged(hash);
+  }
 });
 
-function onQueryChanged (txt) {
-  let evs = document.querySelectorAll ('.event');
-  let rx  = new RegExp (txt, 'i');
 
-  for (let e of evs) {
-    if (rx.test(e.innerText)) {
-      e.classList.remove ('hidden');
-    } else {
-      e.classList.add    ('hidden');
-    }
-  }
+
+
+function onQueryChanged (txt) {
+  // let evs = document.querySelectorAll ('.event');
+  // let rx  = new RegExp (txt, 'i');
+  //
+  // for (let e of evs) {
+  //   if (rx.test(e.innerText)) {
+  //     e.classList.remove ('hidden');
+  //   } else {
+  //     e.classList.add    ('hidden');
+  //   }
+  // }
+
+  if (window.queryChangedIntv !== undefined)
+    clearTimeout(queryChangedIntv);
+
+  setTimeout(_ => {
+    postSearchevents (txt, updateSearch);
+  }, 50);
+}
+
+function updateSearch (evs) {
+  const cont = document.querySelector ('#events');
+  while (cont.firstChild) cont.firstChild.remove();
+  addEvents(evs)
 }

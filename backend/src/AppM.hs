@@ -1,11 +1,13 @@
 {-# LANGUAGE UndecidableInstances #-}
 module AppM
   ( module Control.Monad.Reader
+  , module Control.Monad.State
   , module Database.Selda
   , module AppM
   )
   where
 
+import Control.Monad.State
 import Control.Monad.Reader
 import Control.Monad.Fail
 import Control.Monad.Catch hiding (Handler)
@@ -21,44 +23,43 @@ data Access = Public | Private
 
 type family AppM (a :: Access) where
   AppM Public  = SeldaT Handler
-  AppM Private = ReaderT User (AppM Public)
+  AppM Private = StateT User (AppM Public)
+
+
+-- data family AppM' (a :: Access) :: * -> *
+--
+-- newtype instance AppM' Public v = Pub (SeldaT Handler v)
+--   deriving ( Functor
+--            , Applicative
+--            , Monad
+--            , MonadIO
+--            , MonadSelda
+--            , MonadThrow
+--            , MonadCatch
+--            , MonadMask
+--            , MonadFail
+--            ) via (SeldaT Handler)
+--
+-- newtype instance AppM' Private v = Pri (ReaderT User (AppM' Public) v)
+--   deriving ( Functor
+--            , Applicative
+--            , Monad
+--            , MonadIO
+--            , MonadReader User
+--            , MonadThrow
+--            , MonadCatch
+--            , MonadMask
+--            , MonadFail
+--            ) via (ReaderT User (AppM' Public))
+--
+--
+-- nt' :: AppM' a v -> v
+-- nt' = undefined
 
 
 
-data family AppM' (a :: Access) :: * -> *
 
-newtype instance AppM' Public v = Pub (SeldaT Handler v)
-  deriving ( Functor
-           , Applicative
-           , Monad
-           , MonadIO
-           , MonadSelda
-           , MonadThrow
-           , MonadCatch
-           , MonadMask
-           , MonadFail
-           ) via (SeldaT Handler)
-
-newtype instance AppM' Private v = Pri (ReaderT User (AppM' Public) v)
-  deriving ( Functor
-           , Applicative
-           , Monad
-           , MonadIO
-           , MonadReader User
-           , MonadThrow
-           , MonadCatch
-           , MonadMask
-           , MonadFail
-           ) via (ReaderT User (AppM' Public))
-
-
-nt' :: AppM' a v -> v
-nt' = undefined
-
-
-
-
-instance MonadSelda (ReaderT User (SeldaT Handler)) where
+instance MonadSelda (StateT User (SeldaT Handler)) where
   seldaConnection = lift seldaConnection
 
 instance MonadFail (SeldaT Handler) where
@@ -97,6 +98,16 @@ app server = do
        $ server cs jwtCfg
 
 
+instance ToJSON (ID a) where
+  toJSON = toJSON . fromId
+
+instance FromJSON (ID a) where
+  parseJSON = fmap toId . parseJSON
+
+instance FromHttpApiData (ID a) where
+  parseQueryParam = fmap toId . parseQueryParam
+
+
 
 type UserID = ID User
 
@@ -107,19 +118,11 @@ data User = User
   , age      :: Int
   , pic      :: Maybe Text
   , desc     :: Text
+  , lastSeen :: UTCTime
   } deriving ( Eq, Show, Generic, ToJSON, FromJSON
              , ToJWT, FromJWT, SqlRow
              )
 
 users :: Table User
 users = table "users" [#uid :- autoPrimary]
-
-instance ToJSON (ID a) where
-  toJSON = toJSON . fromId
-
-instance FromJSON (ID a) where
-  parseJSON = fmap toId . parseJSON
-
-instance FromHttpApiData (ID a) where
-  parseQueryParam = fmap toId . parseQueryParam
 

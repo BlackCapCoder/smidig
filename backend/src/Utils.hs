@@ -80,10 +80,11 @@ toApp :: forall b. ( Backend b
                    , AuthServer (Acc b) (API b)
                    , HasServer (API' b) '[CookieSettings, JWTSettings]
                    ) => IO Application
-toApp = app @(API' b :<|> Login :<|> Raw) s'
+toApp = app @(API' b :<|> Login :<|> Logout :<|> Raw) s'
   where s  = authServer @(Acc b) @(API b) (server @b)
         s' a b = s
-            :<|> login a b
+            :<|> login  a b
+            :<|> logout a
             :<|> serveDirectoryWebApp "../frontend"
 
 

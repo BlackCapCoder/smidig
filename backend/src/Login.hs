@@ -9,6 +9,9 @@ import Database.Selda
 import Data.Maybe
 import Control.Monad.Trans
 import Control.Monad.Reader
+import Control.Monad.State
+import Debug.Trace
+import Data.Time.Clock
 
 import AppM
 
@@ -38,8 +41,19 @@ unlock server auth
       )
       server
 
+
 unPrivate :: User -> AppM Private a -> AppM Public a
-unPrivate = flip runReaderT
+unPrivate = runS
+  where runR s m   = runReaderT m s
+        runS usr m = fmap fst $ runStateT (updateLastSeen >> m) usr
+
+
+updateLastSeen = do
+  myid <- gets uid
+  now  <- liftIO getCurrentTime
+  update_ users (\u -> u ! #uid .== literal myid) $ flip with
+    [ #lastSeen := literal now ]
+  pure ()
 
 
 type SetCookie' =
@@ -73,9 +87,11 @@ login :: CookieSettings -> JWTSettings -> ServerT Login (AppM Public)
 login cs jwts cr = cookieAuth cs jwts cr
 
 
-type Logout = "logout" :> GetNoContent '[] NoContent
+type Logout =
+  "logout"
+    :> GetNoContent '[JSON] SetCookie'
 
-logout :: ServerT Logout (AppM Public)
-logout = do 
-  lift $ throwAll err301 { errHeaders = [("Location", "/")] }
-  pure NoContent
+logout :: CookieSettings -> ServerT Logout (AppM Public)
+logout cs = do
+  pure . clearSession cs $ NoContent
+  -- lift $ throwAll err301 { errHeaders = [("Location", "/")] }

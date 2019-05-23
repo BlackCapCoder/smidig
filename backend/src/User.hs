@@ -4,6 +4,9 @@ module User where
 import Utils
 import AppM
 import Event
+import Login (SetCookie')
+import Notifications
+import Data.Time.Clock
 
 
 instance Backend User where
@@ -25,9 +28,10 @@ instance Backend User where
 
             if | not $ null us -> pure $ Left "There is already a user with that name!"
                | otherwise -> do
-                  uid <- insertWithPK users
-                    [User def username password age Nothing ""]
-                  return $ Right uid
+                 now <- liftIO getCurrentTime
+                 uid <- insertWithPK users
+                   [User def username password age Nothing "" now]
+                 return $ Right uid
 
 
 data LoggedUser
@@ -36,7 +40,8 @@ instance Backend LoggedUser where
   type API LoggedUser
        = "myfavorites" :> Get '[JSON] [Favorite]
     :<|> "addFavorite" :> (EventID) ~> FavoriteID
-    :<|> "setUserInfo" :> User ~> NoContent
+    -- :<|> "setUserInfo" :> ReqBody '[JSON] SetUserInfo :> Post '[JSON] SetCookie'
+    :<|> "setUserInfo" :> ReqBody '[JSON] SetUserInfo :> Post '[JSON] Bool
     :<|> "myfriends"   :> Get '[JSON] [Friend]
     :<|> "befriend"    :> UserID ~> NoContent
     :<|> "listfriends" :> UserID ~> [UserID]
@@ -74,29 +79,45 @@ listFriends uid = do
        then user2 f
        else user1 f
 
-setUserInfo usr = do
-  myid <- asks AppM.uid
-  True <- pure $ AppM.uid usr == myid
-  1 <- update users (\u -> u ! #uid .== literal myid) $
+setUserInfo SetUserInfo{..} = do
+  myid <- gets AppM.uid
+
+  n <- update users (\u -> u ! #uid .== literal myid) $
     flip with
-      [ #username := literal (AppM.username usr)
-      , #password := literal (AppM.password usr)
-      , #age      := literal (AppM.age      usr)
-      , #pic      := literal (AppM.pic      usr)
-      , #desc     := literal (AppM.desc     usr)
+      [ #username := literal username
+      -- , #password := literal (AppM.password usr)
+      , #age      := literal age
+      -- , #pic      := literal (AppM.pic      usr)
+      , #desc     := literal desc
       ]
 
-  pure NoContent
+  when (n >= 1) do
+    modify \u -> (u :: User)
+      { username = username
+      , age      = age
+      , desc     = desc
+      }
+
+  -- TODO: Set cookie
+  pure $ n >= 1
+  -- pure undefined
+
+data SetUserInfo = SetUserInfo
+  { username :: Text
+  , age      :: Int
+  , desc     :: Text
+  }
+  deriving (Generic, FromJSON)
 
 myfavorites = do
-  myid <- asks AppM.uid
+  myid <- gets AppM.uid
   query do
     f <- select favorites
     restrict $ f ! #uid .== literal myid
     pure f
 
 addFavorite eid = do
-  myid <- asks AppM.uid
+  myid <- gets AppM.uid
 
   -- Does the event exist?
   [_] <- query do
@@ -114,7 +135,7 @@ addFavorite eid = do
     [ Favorite def eid myid ]
 
 myFriends = do
-  myid <- asks AppM.uid
+  myid <- gets AppM.uid
   query do
     f <- select friends
     restrict $ f ! #user1 .== literal myid
@@ -122,7 +143,7 @@ myFriends = do
     pure f
 
 befriend uid = do
-  myid <- asks AppM.uid
+  myid <- gets AppM.uid
 
   -- You can't become friends with yourself
   False <- pure $ myid == uid
@@ -144,17 +165,15 @@ befriend uid = do
     [] <- query do
       f <- select friends
       restrict $ f ! #user1 .== literal myid
-            .|| f ! #user2 .== literal myid
+             .|| f ! #user2 .== literal myid
       restrict $ f ! #user1 .== literal uid
-            .|| f ! #user2 .== literal uid
+             .|| f ! #user2 .== literal uid
       pure f
 
     insert friends
       [ Friend myid uid False ]
 
-    -- TODO: Send notification to friendee
-
-  liftIO $ putStrLn "befriended!"
+    notify uid FriendReq myid
 
   pure NoContent
 
@@ -203,5 +222,5 @@ instance Backend WhoAmI where
   type Acc WhoAmI = Private
   type API WhoAmI = "whoami" :> Get '[JSON] User
 
-  server = ask
+  server = get
 

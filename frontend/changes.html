@@ -6,7 +6,7 @@
       <span>Navn: </span>
     </td>
     <td>
-      <input type="text" id="nameChange" placeholder="Gammelt navn"/><br>
+      <input type="text" id="username" placeholder="navn"/><br>
     </td>
   </tr>
   <tr>
@@ -14,66 +14,66 @@
       <span>Alder: </span>
     </td>
     <td>
-      <select id="ageChange">
-        <option>1970</option>
-        <option>1971</option>
-        <option>1972</option>
-        <option>1973</option>
-        <option>1974</option>
-        <option>1975</option>
-        <option>1976</option>
-        <option>1977</option>
-        <option>1978</option>
-        <option>1979</option>
-        <option>1980</option>
-        <option>1981</option>
-        <option>1982</option>
-        <option>1983</option>
-        <option>1984</option>
-        <option>1985</option>
-        <option>1986</option>
-        <option>1987</option>
-        <option>1988</option>
-        <option>1989</option>
-        <option>1990</option>
-        <option>1991</option>
-        <option>1992</option>
-        <option>1993</option>
-        <option>1994</option>
-        <option>1995</option>
-        <option>1996</option>
-        <option>1997</option>
-        <option>1998</option>
-        <option>1999</option>
-        <option>2000</option>
-        <option>2001</option>
+      <select id="age"></select>
     </td>
   </tr>
   <tr>
     <td>
-    <span>Beskrivelse</span>
+      <span>Beskrivelse</span>
     </td>
     <td>
-      <textarea id="descChange" rows="3" cols="20" placeholder="Gammel beskrivelse"></textarea>
+      <textarea id="desc" rows="3" cols="20" placeholder="beskrivelse"></textarea>
     </td>
   </tr>
   <tr>
     <td>
-      <button id="submitChange" onclick="submitChanges()">Bekreft endringer</button>
+      <button id="btnSubmit" onclick="submitChanges()">Bekreft endringer</button>
+    </td>
+  </tr>
 </table>
 
 <script>
-  /*   GET name FROM users WHERE uid = profile page id
-       GET age FROM users WHERE uid = profile page id
-       GET desc FROM users WHERE uid = profile page id
-       SET name FROM users WHERE uid = profile page id (something something sudo code something something)
-       SET age FROM users WHERE uid = profile page id (something something sudo code something something)
-       SET desc FROM users WHERE uid = profile page id (something something sudo code something something)
-  */
+
+  window.addEventListener('load', _ => {
+    const elemAge   = document.querySelector("#age");
+    const elemName  = document.querySelector("#username");
+    const elemDesc  = document.querySelector("#desc");
+    const minAge    = 18;
+    const maxAge    = 50;
+    let thisYear    = (new Date).getFullYear();
+    thisYear = maxAge + minAge; // TODO: Use year instead of age
+
+    for (let y = thisYear - maxAge; y < thisYear - minAge; y++) {
+      const el = document.createElement('option');
+      el.innerText = y;
+      el.value     = y;
+      elemAge.appendChild (el);
+    }
+
+    getWhoami (usr => {
+      elemName.value        = usr.username;
+      elemAge.selectedIndex = usr.age - minAge;
+      elemDesc.value        = usr.desc;
+      console.log(usr)
+    });
+  });
+
   function submitChanges() {
-    window.location = "profile#" + uid;
-    const nameChange = document.querySelector('#username').value
-        , ageChange  = document.querySelector('#age').value
-        , descChange = document.querySelector('#desc').value
+    const username   = document.querySelector('#username').value
+        , age        = Number(document.querySelector('#age').selectedOptions[0].value)
+        , desc       = document.querySelector('#desc').value
+
+    postSetUserInfo(
+      { username: username
+      , age:      age
+      , desc:     desc
+      }, e => {
+        if (!e) return onError();
+        window.history.back();
+    }, onError);
+  }
+
+  function onError () {
+    alert("Something went wrong!");
   }
 </script>
