@@ -4,8 +4,8 @@
 <h1 class="grad">Meldinger</h1>
 
 <div class="tabs">
-  <button id="mychat" onclick='changeTab(1)'>Mine</button>
-  <button onclick='changeTab(2)'>grupper</button>
+  <button onclick='changeTab(1)'>Meldinger</button>
+  <button onclick='changeTab(2)'>Gruppechat</button>
   <button onclick='changeTab(3)'>Utforsk</button>
 </div>
 
@@ -14,7 +14,6 @@
     <div class="tab active">
     </div>
     <div class="tab">
-      <a href='javascript:openChat(this)'>Bowlingkveld</a>
     </div>
     <div class="tab">
       <a href='javascript:openChat(this)'>Ponyclub</a>
@@ -47,12 +46,31 @@
   document.querySelector("#chatbox").onkeypress
     = onChatBoxKeyDown;
  }
+
+/* function activeTab () {
+  const a = document.querySelector('.tab.active');
+  return Array.from(a.parentElement.children).indexOf(a)
+ }*/
+
  function addChat (chat)
  {
   let chatElem = document.createElement('a')
-  chatElem.innerText = "chat #" + chat.cid
+  var tabNr = new activeTab();
+
+//  console.log(tabNr);
+  if(tabNr == 1)
+    {
+      chatElem.innerText = "Samtale #" + chat.cid;
+ /* document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem);
+    }
+  else if(tabNr == 2)
+    {
+      chatElem.innerText = "Gruppesamtale #" + chat.cid;
+      
+  document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem);
+    }*/
   chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
-  document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem)
+  document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem);
  }
 
  function onChatClicked (cid) {
@@ -62,6 +80,7 @@
 
  function openChat (messages) {
   for (let msg of messages) {
+    idlastmessage = msg.mid
     getUser(msg.sender, usr => {
       addChatMsgElem(usr.username, msg.content);
     });
@@ -81,7 +100,10 @@
   cont.appendChild(el);
  }
 
- setInterval(postChatRead(activeChat), 3000);
+ setInterval(_ => {
+  console.log("hei");
+    postReadChatSince([activeChat, idlastmessage], openChat)
+ }, 3000);
 
  function onChatBoxKeyDown (e) {
    if (window.activeChat === undefined) {
@@ -91,9 +113,10 @@
    const msg = document.querySelector("#chatbox").value;
    if (msg.length === 0) return;
 
-   postPutChat([activeChat, msg], _ => {
+   postPutChat([activeChat, msg], mid => {
      document.querySelector("#chatbox").value = "";
      getWhoami(usr => {
+       idlastmessage = mid
        addChatMsgElem(usr.username, msg);
      });
    });

@@ -10,8 +10,7 @@ main .split {
 }
 
 main .split .left {
-  width: 150px;
-  background: var(--colorC);
+  width: 226px; background: var(--colorC);
 }
 
 #chat-view {

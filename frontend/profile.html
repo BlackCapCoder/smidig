@@ -9,6 +9,7 @@
       document.querySelector('#pic').setAttribute('src', u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;
+      document.querySelector('#desc').innerText = u.desc;
     });
 
     getWhoami(u => {
@@ -44,6 +45,11 @@
         });
     });
   };
+
+  function changesPressed()
+  {
+    window.location = "changes";
+  }
 
   // c/p from event.html
   function addFriendElem (u) {
@@ -81,7 +87,7 @@
   function onBefriendClicked () {
     console.log(uid)
     postBefriend (uid, e => {
-      alert ("Friend request sent!")
+      alert ("Venneforespørsel er sendt")
     })
   }
 
@@ -90,19 +96,19 @@
 
     if (s == 0) {
       btn.disabled = true;
-      btn.value    = "Friends!"
+      btn.value    = "Dere er venner"
     } else
     if (s == 1) {
       btn.disabled = false;
-      btn.value    = "Add friend"
+      btn.value    = "Legg til som venn"
     } else
     if (s == 2) {
       btn.disabled = false;
-      btn.value    = "Accept as friend"
+      btn.value    = "Aksepter venneforespørsel"
     } else
     if (s == 3) {
       btn.disabled = true;
-      btn.value    = "Friend request pending"
+      btn.value    = "Venneforespørsel er sendt"
     }
   }
 
@@ -113,7 +119,7 @@
   }
 </script>
 
-<title>Profil</title> <!-- persons navn her -->
+<title>Profil</title> <!-- persons name here -->
 
 <body>
   <table>
@@ -125,19 +131,19 @@
       <td>
         <p id="name"></p>
         <p id="age"></p>
-        <p id="self-info">something something something something something something</p>
+        <p id="desc"></p>
       </td>
     </tr>
   </table>
   </br>
   <p id="self_info">
     </p>
-  <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send Melding" />
+  <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send melding" />
   <input type="button" name="" id="find-events" value="Finn arrangementer" />
   </br></br>
   <input type="button" onclick='onBefriendClicked()' name="" id="befriend" value="Legg til som venn" />
   </br></br>
-  <input type="button" name="" id="" value="Gjør endringer" />
+  <input type="button" onClick="changesPressed()" name="" id="changes" value="Gjør endringer" />
 
   <section id="friends">
   </section>
