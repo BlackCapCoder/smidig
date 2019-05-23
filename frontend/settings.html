@@ -3,13 +3,35 @@
 <title>Instillinger</title>
 <h2>Språk</h2>
 <p>Hvis du vil bytte språk, trykk på språket du vil bytte til under:</p>
-<a id="language" href="#">Norsk</a> </br>
-<a id="language" href="#">English</a> </br>
-<a id="language" href="#">[andre]</a>
-
+  <select name="Språk" id="languages">
+  <option>Norsk (Bokmål)</option>
+  <option>Norsk (Nynorsk)</option>
+  <option>English</option>
+  <option>Deutch</option>
+  <option>Росси́я</option>
+  <option>Suomi</option>
+  <option>Svenska</option>
+  <option>Dansk</option>
+  </select>
 <h2>Slett konto</h2>
-For å deaktivere kontoen <button type="submit" onclick="deactivateClicked()">Deaktiver Konto</button> </br>
-For å slette kontoen helt <button type="submit" onclick="deleteClicked()">Slett konto</button>
+<table>
+  <tr>
+    <td>
+      For å deaktivere kontoen
+    </td>
+    <td>
+      <button type="submit" onclick="deactivateClicked()">Deaktiver Konto</button>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      For å slette kontoen helt
+    </td>
+    <td>
+      <button type="submit" onclick="deleteClicked()">Slett konto</button>
+    </td>
+  </tr>
+</table>
 
 <h2>Bytt passord</h2>
 <table id="passtable">

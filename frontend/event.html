@@ -123,8 +123,8 @@
 
       function onCommentClicked () {
         const msg = document.querySelector("#comment-box").value;
-        if (msg.length < 2) return alert ("A bit short if you ask me!");
-        if (msg.length > 400) return alert ("Way too long!");
+        if (msg.length < 2) return alert ("Vennligst skriv en lenger kommentar");
+        if (msg.length > 400) return alert ("Kommentaren din er over 400 tegn");
         postAddComment([evid, msg], _ => {
           getWhoami(who => {
             addCommentElem(who.username, msg);
@@ -134,7 +134,7 @@
 
       function onAddToFavoritesClicked () {
         postAddFavorite(evid, _ => {
-          alert ("Added!");
+          alert ("Lagt til i favoritter");
         });
       }
 

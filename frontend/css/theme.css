@@ -190,6 +190,12 @@ footer {
   margin-top: 3px;
 }
 
+#plchldr {
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+}
+
 #chat-icon {
   width: 30px;
   height: calc(100% - 2px);
