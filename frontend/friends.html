@@ -40,46 +40,18 @@
   }
 
   window.onload = _ => {
-    evid  = 1;
     party = document.querySelector("#participants")
 
-    getEvent (evid, ev => {
-      date = new Date (ev.date);
-
-      document.title = ev.title;
-      document.querySelector("#title").innerText   = ev.title;
-      document.querySelector("#desc").innerText    = ev.desc;
-      document.querySelector("#time").innerText    = date.toTimeString().split(' ')[0];
-      document.querySelector("#date").innerText    = date.toLocaleDateString();
-      document.querySelector("#place").innerText   = ev.place;
-
-      getUser (ev.owner, u => {
-        document.querySelector("#creator").innerText = u.username;
-        // addPart (u);
+    getMyfriends(fs => {
+      getWhoami(me => {
+        for (let f of fs) {
+          let usr = f.user1 == me.uid ? f.user2 : f.user1;
+          if (f.accepted)
+            getUser (usr, u => {
+              addPart (u);
+            });
+        }
       });
-    });
-
-    getPictures (evid, ps => {
-      let cont = document.querySelector("#rad");
-
-      for (let p of ps) {
-        let el_div = document.createElement('div');
-        let el_pic = document.createElement('img');
-
-        el_div.classList.add('image');
-        el_pic.setAttribute('src', p.pth);
-        el_div.appendChild(el_pic);
-
-        cont.appendChild(el_div);
-      }
-    });
-
-    getParticipants (evid, ps => {
-      for (let p of ps) {
-        getUser (p.uid, u => {
-          addPart (u);
-        });
-      }
     });
   }
 </script>

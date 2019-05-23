@@ -65,13 +65,13 @@ pictures = table "pictures" []
 instance Backend Event where
   type Acc Event = Private
   type API Event
-      =  "listevents"   :> Get '[JSON] [Event]
-    :<|> "getevent"        :> QueryParam "id" EventID    :> Get  '[JSON] (Maybe Event)
-    :<|> "participants" :> QueryParam "id" EventID    :> Get  '[JSON] [Participants]
-    :<|> "pictures"     :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
-    :<|> "mkevent"      :> ReqBody '[JSON] MkEventReq :> Post '[JSON] EventID
-    :<|> "joinEvent"    :> ReqBody '[JSON] (EventID, LevelOfParticipation)    :> Post '[JSON] NoContent
-    :<|> "addComment"   :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
+      =  "listevents"    :> Get '[JSON] [Event]
+    :<|> "getevent"      :> QueryParam "id" EventID    :> Get  '[JSON] (Maybe Event)
+    :<|> "participants"  :> QueryParam "id" EventID    :> Get  '[JSON] [Participants]
+    :<|> "pictures"      :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
+    :<|> "mkevent"       :> ReqBody '[JSON] MkEventReq :> Post '[JSON] EventID
+    :<|> "joinEvent"     :> ReqBody '[JSON] (EventID, LevelOfParticipation) :> Post '[JSON] NoContent
+    :<|> "addComment"    :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
     :<|> "eventcomments" :> ReqBody '[JSON] (EventID) :> Post '[JSON] [Comments]
 
   server = listEvents
@@ -104,14 +104,10 @@ instance Backend Event where
             -- Does the event exist?
             Just _ <- get1 events #eid evid
 
-            -- Already a participant?
-            [] <- query do
-              p <- select participants
-              restrict (p ! #eid .== literal evid)
-              restrict (p ! #uid .== literal uid)
-              pure p
-
-            insert_ participants [Participants evid uid lop]
+            upsert participants
+              (\p -> p ! #eid .== literal evid .&& p ! #uid .== literal uid)
+              (flip with [ #lop := literal lop ])
+              [Participants evid uid lop]
 
             pure NoContent
 

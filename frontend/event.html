@@ -72,12 +72,21 @@
           }
         });
 
-        getParticipants (evid, ps => {
-          for (let p of ps) {
-            getUser (p.uid, u => {
-              addPart (u);
-            });
-          }
+        getWhoami (me => {
+          getParticipants (evid, ps => {
+            for (let p of ps) {
+              if (p.lop == "Going")
+                getUser (p.uid, u => {
+                  addPart (u);
+                });
+              if (p.uid == me.uid) {
+                if (p.lop == "Going")
+                  setGoing();
+                else if (p.lop == "Interested")
+                  setInterested();
+              }
+            }
+          });
         });
 
         function loadComments () {
@@ -95,15 +104,8 @@
         loadComments ();
       }
 
-      function joinEvent () {
-        function succ () {
-          alert("Du er nå satt opp på dette arrangementet, håper jeg ser deg der!")
-        }
-        function fail () {
-          alert("Noe gikk galt, prøv igjen senere");
-        }
-
-        postJoinEvent (evid, succ, fail);
+      function joinEvent (t) {
+        postJoinEvent ([evid, t]);
       }
 
       function addCommentElem (username, message) {
@@ -134,6 +136,13 @@
         postAddFavorite(evid, _ => {
           alert ("Lagt til i favoritter");
         });
+      }
+
+      function setGoing() {
+        console.log("Going")
+      }
+      function setInterested() {
+        console.log("Interested")
       }
     </script>
   </head>
@@ -174,9 +183,9 @@
     </div>
 
     <section id="button">
-      <button type="button-1" onclick='joinEvent()'>Jeg kommer!</button>
+      <button type="button-1" onclick='joinEvent("Going")'>Jeg kommer!</button>
       <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
-      <button type="button-2" onclick='alert("Takk for at du viser interess, håper på å se deg der!")'>Interessert</button>
+      <button type="button-2" onclick='joinEvent("Interested")'>Interessert</button>
       <button type="button-3" onclick='onAddToFavoritesClicked()'><img class="star-eve" src="imgs/favourit-star.png"/></button>
    </section>
 
