@@ -74,7 +74,7 @@ To run the backend
 stack exec backend-exe
 ```
 
-The website should now be available at [https://localhost:3000/login](https://localhost:3000/login)
+The website should now be available at [https://localhost:3000](https://localhost:3000)
 
 
 ## The frontend
