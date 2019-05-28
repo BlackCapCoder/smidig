@@ -4,9 +4,9 @@
 <h1 class="grad">Meldinger</h1>
 
 <div class="tabs">
-  <button onclick='changeTab(1)'>Meldinger</button>
-  <button onclick='changeTab(2)'>Gruppechat</button>
-  <button onclick='changeTab(3)'>Utforsk</button>
+  <button class="chat-button" onclick='changeTab(1)'>Meldinger</button>
+  <button class="chat-button" onclick='changeTab(2)'>Gruppesamtale</button>
+  <button class="chat-button" onclick='changeTab(3)'>Utforsk</button>
 </div>
 
 <div class="split">
@@ -14,6 +14,8 @@
     <div class="tab active">
     </div>
     <div class="tab">
+      <a href='javascript:openChat(this)'>Gruppesamtale#1</a>
+      <a href='javascript:openChat(this)'>Gruppesamtale#2</a>
     </div>
     <div class="tab">
       <a href='javascript:openChat(this)'>Ponyclub</a>

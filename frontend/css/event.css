@@ -77,3 +77,22 @@
 }
 
 .hidden { display: none; }
+
+.new-eve
+{
+  display: inline;
+  height:  1em;
+}
+
+.mk-eve-button {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
+  background: rgb(28,28,28);
+  border-radius: 5px;
+  text-align: center;
+  bottom: 20px;
+  padding: 11px 10px;
+  text-decoration: none;
+}

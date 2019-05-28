@@ -10,7 +10,9 @@ main .split {
 }
 
 main .split .left {
-  width: 226px; background: var(--colorC);
+  width: 221px; background: var(--colorC);
+  border-radius: 5px;
+
 }
 
 #chat-view {
@@ -25,6 +27,7 @@ main .split .left {
 
 #chat-input > input {
   width: 100%;
+  display: table-cell;
 }
 
 .tab:not(.active) { display: none; }
@@ -39,4 +42,20 @@ main .split .left {
 
 #chat-btn {
   display: none !important;
+}
+
+.chat-button {
+  color: white;
+  font-size: 11px;
+  font-weight: bold;
+  font-family: 'Roboto Condensed', sans-serif;
+  background: rgb(28,28,28);
+  border-radius: 5px;
+  text-align: center;
+  padding: 11px 10px;
+  text-decoration: none;
+}
+
+.chat-button:hover {
+  background: linear-gradient(45deg, var(--colorA), var(--colorB));
 }
