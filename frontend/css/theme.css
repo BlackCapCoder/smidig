@@ -119,6 +119,7 @@ footer {
   background: var(--colorB);
   right: 0;
   z-index: 99;
+  border-radius: 5px;
 }
 
 #notifications-settings {
@@ -161,6 +162,7 @@ footer {
   border-top-style: solid;
   border-top-width: 1px;
   border-color: black;
+  border-radius: 5px;
 }
 
 #logo {

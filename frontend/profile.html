@@ -1,4 +1,5 @@
-<link rel="stylesheet" href="css/bowling.css">
+<link rel="stylesheet" href="css/bowling.css"/>
+<link rel="stylesheet" href="css/profile.css"/>
 
 <script>
   uid  = window.location.hash.substr(1);
@@ -182,47 +183,13 @@
   </br>
   <p id="self_info">
     </p>
-  <input type="button" onclick="onSendMessageClicked()" name="" id="" value="Send melding" />
-  <input type="button" onclick="onFindEventsClicked()" name="" id="find-events" value="Finn arrangementer" />
+  <input class="profile-button" type="button" onclick="onSendMessageClicked()" name="" id="" value="Send melding" />
+  <input class="profile-button" type="button" onclick="onFindEventsClicked()" name="" id="find-events" value="Finn arrangementer" />
   </br></br>
-  <input type="button" onclick='onBefriendClicked()' name="" id="befriend" value="Legg til som venn" />
+  <input class="profile-button" type="button" onclick='onBefriendClicked()' name="" id="befriend" value="Legg til som venn" />
   </br></br>
-  <input type="button" onClick="changesPressed()" name="" id="btnEdit" value="Gjør endringer" />
+  <input class="profile-button" type="button" onClick="changesPressed()" name="" id="btnEdit" value="Gjør endringer" />
 
   <section id="friends">
   </section>
 </body>
-
-<style>
-  td { position: relative; }
-  #status {
-    --rad: 14px;
-    width: var(--rad);
-    height: var(--rad);
-    position: absolute;
-    right: 0; bottom: 0;
-    border-radius: 100%;
-    margin: 4px;
-  }
-  #status.online {
-    background: green;
-    box-shadow: 0 0 5px 2px rgba(0,255,0,0.4);
-  }
-  #status.offline {
-    background: red;
-    box-shadow: 0 0 5px 2px rgba(255,0,0,0.4);
-  }
-  #pic { width: 300px; }
-  #name
-  {
-  font-size: 30px; 
-  }
-  #age
-  {
-  font-size: 30px; 
-  }
-  #self-info
-  {
-    text-indent-left: 50px;
-  }
-</style>
