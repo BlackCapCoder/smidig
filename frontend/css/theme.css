@@ -122,12 +122,13 @@ footer {
   border-radius: 5px;
 }
 
-#notifications-settings {
+#notifications {
   position: fixed;
   min-width: 300px;
   background: var(--colorB);
   right: 0;
   z-index: 99;
+  min-height: 100px;
 }
 
 .hidden { display: none; }

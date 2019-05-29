@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
 <script src="js/jquery.min.js"></script>
+<script src="js/notifications.js"></script>
 <script src="api.js"></script>
 <link rel="stylesheet" href="css/theme.css" type="text/css" media="all" />
 <meta charset="UTF-8">
@@ -14,26 +15,22 @@
     <h1 id='main-title'>STEV</h1>
   </div>
   <div class="right">
-    <a id="bell-icon" href='javascript:document.querySelector("#notifications-settings").classList.toggle("hidden");'><img id="bell-icon" src="imgs/bell_icon.png"></a>
+    <a id="bell-icon" href='javascript:document.querySelector("#notifications").classList.toggle("hidden");'><img id="bell-icon" src="imgs/bell_icon.png"></a>
     <a id="user-icon" href="profile"><img id="user-icon" src="imgs/Brukerikon.png"></a> 
     <a id="btn-settings" href='javascript:document.querySelector("#menu-settings").classList.toggle("hidden");'><img id="settings" src="imgs/Innstillinger.png"></a>
-    <!-- if(new notification == true)
-         {
-            notifications-settings src="imgs/bell-icon-new.png";
-         }-->
     <div id="menu-settings" class='items hidden'>
       <li><a href='profile'>Profil</a></li>
       <li><a href='settings'>Instillinger</a></li>
       <li><a href='javascript:window.location = "login.html"'>Logg ut</a></li>
     </div>
-    <div id="notifications-settings" class='items hidden'>
-      <li><img id="plchldr" src="https://github.com/identicons/roy.png"><span> Roy har sendt deg ett venneforespørsel</span></li>
+    <div id="notifications" class='items hidden'><!--
+      <li><img id="plchldr" src="https://github.com/identicons/roy.png"><span> Roy har sendt deg en venneforespørsel</span></li>
       <li><span>Ny kommentar på event#4</span></li>
       <li><img id="plchldr" src="https://github.com/identicons/bob.png"><span> Bob har akseptert ditt venneforespørsel</span></li>
       <li><span>Nye kommentarer på event#9</span></li>
       <li><span>The cake is a lie</span></li>
       <li><span>The binding of Isaac</span></li>
-  </div>
+    !--></div>
 </header>
 
 <div class="split">

@@ -49,6 +49,7 @@ instance Backend Chat where
     :<|> "readChat" :> ChatID             ~> [ChatMessage]
     :<|> "readChatSince" :> (ChatID, ChatMessageID) ~> [ChatMessage]
     :<|> "chatWithUser"  :> (UserID) ~> ChatID
+    :<|> "joinOpenChat"  :> (ChatID) ~> ChatID
 
   server = myChats
       :<|> mkChat
@@ -56,6 +57,29 @@ instance Backend Chat where
       :<|> readChat
       :<|> readChatSince
       :<|> chatWithUser
+      :<|> joinOpenChat
+
+
+
+joinOpenChat :: ChatID -> AppM Private ChatID
+joinOpenChat chat = do
+
+  -- Does the chat exist and is open?
+  _:_ <- query do
+    c <- select chats
+    restrict $ c ! #cid      .== literal chat
+    restrict $ c ! #isPublic .== true
+    pure c
+
+  -- Already in chat?
+  q <- filter ((== chat) . chid) <$> myChats
+
+  when (null q) do
+    myid <- gets AppM.uid
+    insert_ participants
+      [ Participants chat myid ]
+
+  pure chat
 
 
 chatWithUser :: UserID -> AppM Private ChatID

@@ -58,15 +58,25 @@ function addEvents (evs) {
 }
 
 window.addEventListener('load', _ => {
-  let hash = window.location.hash.substr(1);
+  getListTags (ts => {
+    const oEl = document.querySelector('#tag-options');
+    for (let t of ts) {
+      const el = document.createElement('option');
+      el.setAttribute('data-id', t.tid);
+      el.innerText = t.name;
+      oEl.appendChild(el);
+    }
 
-  if (hash == "") {
-    getListevents (addEvents);
-  } else {
-    const tb = document.querySelector('#tb-search');
-    tb.value = hash;
-    onQueryChanged(hash);
-  }
+    let hash = window.location.hash.substr(1);
+
+    if (hash == "") {
+      getListevents (addEvents);
+    } else {
+      const tb = document.querySelector('#tb-search');
+      tb.value = hash;
+      onQueryChanged(hash);
+    }
+  });
 });
 
 
@@ -88,7 +98,7 @@ function onQueryChanged (txt) {
     clearTimeout(queryChangedIntv);
 
   setTimeout(_ => {
-    postSearchevents (txt, updateSearch);
+    postSearchevents ([txt, getSelectedTag()], updateSearch);
   }, 50);
 }
 
@@ -96,4 +106,12 @@ function updateSearch (evs) {
   const cont = document.querySelector ('#events');
   while (cont.firstChild) cont.firstChild.remove();
   addEvents(evs)
+}
+
+function getSelectedTag () {
+  const oEl = document.querySelector('#tag-options');
+  const o = oEl.selectedOptions[0];
+  const id = o.getAttribute('data-id');
+  if (id === undefined || id === null) return;
+  return Number(id);
 }

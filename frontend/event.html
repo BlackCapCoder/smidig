@@ -51,6 +51,8 @@
           document.querySelector("#date").innerText    = date.toLocaleDateString();
           document.querySelector("#place").innerText   = ev.place;
 
+          window.groupChatID = ev.cid;
+
           getUser (ev.owner, u => {
             document.querySelector("#creator").innerText = u.username;
             // addPart (u);
@@ -143,6 +145,13 @@
       }
       function setInterested() {
         console.log("Interested")
+      }
+
+      function joinGroupChat ()
+      {
+        postJoinOpenChat(groupChatID, cid => {
+          window.location = "messages#" + cid;
+        });
       }
     </script>
   </head>

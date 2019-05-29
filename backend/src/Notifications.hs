@@ -11,7 +11,7 @@ data Notification = Notification
   , uid  :: UserID
   , seen :: Bool
   , kind :: Kind
-  , key  :: Int
+  , key  :: Int -- Some ID to a table determined by kind
   }
   deriving (Eq, Generic, ToJSON, FromJSON, SqlRow)
 
@@ -20,6 +20,7 @@ notifications = table "notifications" [#nid :- autoPrimary]
 
 data Kind
   = FriendReq
+  | UnknownNotification
   deriving ( Eq, Bounded, Enum, Show, Read
            , Generic, ToJSON, FromJSON, SqlType
            )

@@ -4,25 +4,24 @@ import Utils
 import AppM
 import qualified Data.Text as T
 import Data.Char
+import qualified Data.Set as S
+import Data.Maybe
+import Chat (ChatID, chats, Chat (..))
 
 
 type EventID = ID Event
-
-data Event = Event
+data Event   = Event
   { eid   :: EventID
   , owner :: UserID
   , title :: Text
   , desc  :: Text
   , place :: Text
   , date  :: UTCTime
+  , cid   :: ChatID
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
-data MkEventReq = MkEventReq
-  { req_title :: Text
-  , req_desc  :: Text
-  , req_place :: Text
-  , req_date  :: UTCTime
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+events :: Table Event
+events = table "events" [#eid :- autoPrimary]
 
 
 data Participants = Participants
@@ -37,14 +36,21 @@ data LevelOfParticipation
            , Bounded, Enum, Read
            )
 
+participants :: Table Participants
+participants = table "participants" []
+
+
 data Pictures = Pictures
   { eid  :: EventID
   , pth  :: Text
   } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
-type CommentID = ID Comments
+pictures :: Table Pictures
+pictures = table "pictures" []
 
-data Comments = Comments
+
+type CommentID = ID Comments
+data Comments  = Comments
   { cid     :: CommentID
   , eid     :: EventID
   , owner   :: UserID
@@ -54,20 +60,46 @@ data Comments = Comments
 comments :: Table Comments
 comments = table "comments" [#cid :- autoPrimary]
 
-events :: Table Event
-events = table "events" [#eid :- autoPrimary]
 
-participants :: Table Participants
-participants = table "participants" []
+type TagID = ID Tags
+data Tags  = Tags
+  { tid  :: TagID
+  , name :: Text
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
 
-pictures :: Table Pictures
-pictures = table "pictures" []
+tags :: Table Tags
+tags = table "tags" [#tid :- autoPrimary]
+
+
+data EventTags = EventTags
+  { eid :: EventID
+  , tid :: TagID
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+
+
+eventtags :: Table EventTags
+eventtags = table "eventtags" []
+
+
+-------------------------
+
+
+data MkEventReq = MkEventReq
+  { req_title :: Text
+  , req_desc  :: Text
+  , req_place :: Text
+  , req_date  :: UTCTime
+  , req_tags  :: S.Set TagID
+  } deriving (Eq, Show, Generic, ToJSON, FromJSON)
+
+type TagSearch = Maybe TagID
 
 
 instance Backend Event where
   type Acc Event = Private
   type API Event
       =  "listevents"    :> Get '[JSON] [Event]
+    :<|> "listTags"      :> Get '[JSON] [Tags]
     :<|> "getevent"      :> QueryParam "id" EventID    :> Get  '[JSON] (Maybe Event)
     :<|> "participants"  :> QueryParam "id" EventID    :> Get  '[JSON] [Participants]
     :<|> "pictures"      :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
@@ -75,9 +107,11 @@ instance Backend Event where
     :<|> "joinEvent"     :> ReqBody '[JSON] (EventID, LevelOfParticipation) :> Post '[JSON] NoContent
     :<|> "addComment"    :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
     :<|> "eventcomments" :> ReqBody '[JSON] (EventID) :> Post '[JSON] [Comments]
-    :<|> "searchevents"  :> ReqBody '[JSON] Text :> Post '[JSON] [Event]
+    :<|> "searchevents"  :> ReqBody '[JSON] (Text, TagSearch) :> Post '[JSON] [Event]
+    :<|> "eventTags"     :> EventID ~> [Tags]
 
   server = listEvents
+      :<|> listTags
       :<|> getEvent
       :<|> getParticipants
       :<|> getPictures
@@ -85,47 +119,65 @@ instance Backend Event where
       :<|> joinEvent
       :<|> postComment
       :<|> getcomments
-      :<|> searchevents
+      :<|> searchEventsWithTag
+      :<|> getEventTags
 
-    where listEvents      = query $ select events
-          getEvent        = getByIDM events        #eid
-          getParticipants = getByID  participants  #eid
-          getPictures     = getByID  pictures      #eid
-          mkEvent MkEventReq {..} = do
-            ownerID <- gets AppM.uid
-            evid    <- insertWithPK events
-              [Event def ownerID req_title req_desc req_place req_date]
-            liftIO $ print evid
 
-            insert_ participants
-              [Participants evid ownerID Going]
+listEvents      = query $ select events
+listTags        = query $ select tags
+getEvent        = getByIDM events        #eid
+getParticipants = getByID  participants  #eid
+getPictures     = getByID  pictures      #eid
+mkEvent MkEventReq {..} = do
+  ownerID <- gets AppM.uid
 
-            pure evid
+  cid <- insertWithPK chats
+    [Chat def True]
 
-          joinEvent (evid, lop) = do
-            uid <- gets AppM.uid
+  evid <- insertWithPK events
+    [Event def ownerID req_title req_desc req_place req_date cid]
 
-            -- Does the event exist?
-            Just _ <- get1 events #eid evid
+  insert_ participants
+    [Participants evid ownerID Going]
 
-            upsert participants
-              (\p -> p ! #eid .== literal evid .&& p ! #uid .== literal uid)
-              (flip with [ #lop := literal lop ])
-              [Participants evid uid lop]
+  ts <- fmap catMaybes . forM (S.toList req_tags) $ get1 tags #tid
+  insert_ eventtags $ EventTags evid <$> ts
 
-            pure NoContent
+  pure evid
 
-          postComment (eid, txt) = do
-            ownerID <- gets AppM.uid
-            cid <- insertWithPK comments
-              [ Comments def eid ownerID txt ]
-            pure cid
+joinEvent (evid, lop) = do
+  uid <- gets AppM.uid
 
-          getcomments (eid) = query do
-            e <- select comments
-            restrict $ e ! #eid .== literal eid
-            pure e
+  -- Does the event exist?
+  Just _ <- get1 events #eid evid
 
+  upsert participants
+    (\p -> p ! #eid .== literal evid .&& p ! #uid .== literal uid)
+    (flip with [ #lop := literal lop ])
+    [Participants evid uid lop]
+
+  pure NoContent
+
+postComment (eid, txt) = do
+  ownerID <- gets AppM.uid
+  cid <- insertWithPK comments
+    [ Comments def eid ownerID txt ]
+  pure cid
+
+getcomments (eid) = query do
+  e <- select comments
+  restrict $ e ! #eid .== literal eid
+  pure e
+
+getEventTags eid = query do
+  t <- select eventtags
+  restrict $ t ! #eid .== literal eid
+  g <- select tags
+  restrict $ g ! #tid .== t ! #tid
+  pure g
+
+
+--------------
 
 
 
@@ -143,24 +195,32 @@ parseQuery str = fromMaybe (ByText $ "%" <> str <> "%") byUser where
     pure . ByUser . toId . read $ T.unpack d
 
 
-searchevents :: Text -> AppM Private [Event]
-searchevents (parseQuery->q) = liftIO (print q) >> case q of
-  ByUser uid -> eventsByOwner uid
+searchEventsWithTag :: (Text, TagSearch) -> AppM Private [Event]
+searchEventsWithTag (q, Nothing) = searchevents q $ select events
+searchEventsWithTag (q, Just ts) = searchevents q $ do
+  t <- select eventtags
+  restrict $ t ! #tid .== literal ts
+  e <- select events
+  restrict $ e ! #eid .== t ! #eid
+  pure e
+
+
+searchevents (parseQuery->q) events = case q of
+  ByUser uid -> eventsByOwner events uid
   ByText txt -> query do
-    e <- select events
+    e <- events
     restrict $ e ! #desc  `like` literal txt
            .|| e ! #desc  `like` literal txt
            .|| e ! #place `like` literal txt
     pure e
 
-
-
-eventsByOwner :: UserID -> AppM Private [Event]
-eventsByOwner uid = query do
-  e <- select events
+eventsByOwner events uid = query do
+  e <- events
   restrict $ e ! #owner .== literal uid
   pure e
 
+
+-----------
 
 
 get1 table sel needle = listToMaybe <$> query do

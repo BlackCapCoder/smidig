@@ -33,10 +33,11 @@
       checkFriendship();
 
       postListfriends(uid, fs => {
-        for (let f of fs)
+        for (let f of fs) {
           getUser (f, usr => {
             addFriendElem (usr);
           });
+        }
       });
     }
 

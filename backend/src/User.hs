@@ -73,6 +73,7 @@ listFriends uid = do
     f <- select friends
     restrict $ f ! #user1 .== literal uid
            .|| f ! #user2 .== literal uid
+    restrict $ f ! #accepted .== true
     pure f
   pure $ flip fmap fs \f ->
     if user1 f == uid

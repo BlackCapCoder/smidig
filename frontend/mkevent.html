@@ -32,14 +32,9 @@
   <tr>
     <td><span>Kategori</span></td>
     <td>
-      <select name="Kategori" id="tag">
-        <option>Sport</option>
-        <option>Spill</option>
-        <option>Musikk</option>
-        <option>Fest</option>
-        <option>Ponnier</option>
-      </select>
-      <button>+</button> <!-- is this really needed, considering users can't add tags, or would this be for multi-tags in future -->
+      <select name="Kategori" id="tags"></select>
+      <button onclick="onAddTagClicked()">+</button>
+      <div id="added-tags"></div>
     </td>
   </tr>
 </table>

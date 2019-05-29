@@ -49,10 +49,10 @@ unPrivate = runS
 
 
 updateLastSeen = do
-  myid <- gets uid
-  now  <- liftIO getCurrentTime
-  update_ users (\u -> u ! #uid .== literal myid) $ flip with
-    [ #lastSeen := literal now ]
+  -- myid <- gets uid
+  -- now  <- liftIO getCurrentTime
+  -- update_ users (\u -> u ! #uid .== literal myid) $ flip with
+  --   [ #lastSeen := literal now ]
   pure ()
 
 

@@ -7,13 +7,8 @@
 <div class="wrapper">
   <div class="center-wrapper">
     <div id="toolbar">
-      <select name="tag-select" id="tag-options">
+      <select name="tag-select" id="tag-options" onChange="onQueryChanged(document.querySelector('#tb-search').value);">
         <option>Kategori søk</option>
-        <option>Sport</option>
-        <option>Spill</option>
-        <option>Musikk</option>
-        <option>Fest</option>
-        <option>Annet</option>
       </select>
       <input type="text" id="tb-search" placeholder='søk' oninput="onQueryChanged(this.value)"/>
       <a class="mk-eve-button" href="javascript:window.location = 'mkevent';">Opprett event <img class="new-eve" src="imgs/plus_sign_two.png" /></a>

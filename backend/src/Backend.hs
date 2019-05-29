@@ -33,6 +33,8 @@ tables =
   , SomeTable favorites
   , SomeTable friends
   , SomeTable notifications
+  , SomeTable tags
+  , SomeTable eventtags
   ]
 
 

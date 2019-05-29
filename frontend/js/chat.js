@@ -3,15 +3,10 @@ function changeTab (ix) {
   document.querySelector('.tab:nth-child('+ix+')').classList.add('active');
 }
 
-function openChat (el) {
-
-}
-
 window.addEventListener('load', loadChats)
 
 function loadChats () {
   getMyChats(chats => {
-    console.log(chats)
     for (c of chats) {
       addChat(c);
     }
@@ -34,18 +29,30 @@ function activeTab () {
 function addChat (chat)
 {
   let chatElem = document.createElement('a')
-  var tabNr    = activeTab();
 
-  if (tabNr == 0) {
-    chatElem.innerText = "Samtale #" + chat.cid;
+  chatElem.innerText = "Samtale #" + chat.cid;
+  chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
+
+  let tab = undefined;
+
+  if (chat.isPublic) {
+    tab = document.querySelector(".split .tab:nth-child(2)");
+  } else {
+    tab = document.querySelector(".split .tab:nth-child(1)");
   }
 
-  chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
-  document.querySelector(".split .tab:nth-child(1)").appendChild(chatElem);
+  if (tab === undefined) return;
+
+  tab.appendChild(chatElem);
 }
 
 function onChatClicked (cid) {
+  if (window.activeChat === cid) return;
   window.activeChat = cid;
+
+  const cont = document.querySelector('#chat');
+  cont.innerHTML = '';
+
   postReadChat(cid, openChat);
 }
 
@@ -73,7 +80,11 @@ function addChatMsgElem (username, m) {
 
 setInterval(_ => {
   if (window.activeChat === undefined) return;
-  postReadChatSince([activeChat, idlastmessage], openChat)
+  if (window.idlastmessage === undefined) {
+    readChat(activeChat, openChat);
+  } else {
+    postReadChatSince([activeChat, idlastmessage], openChat)
+  }
 }, 3000);
 
 function onChatBoxKeyDown (e) {

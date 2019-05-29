@@ -15,6 +15,7 @@ function submit () {
       , req_desc:  desc
       , req_place: place
       , req_date:  date + 'T' + time + 'Z'
+      , req_tags:  getSelectedTags()
       }, succ, err);
 }
 
@@ -81,6 +82,16 @@ function populateCalendar () {
 
 window.onload = _ => {
   populateCalendar ();
+
+  getListTags (ts => {
+    const oEl = document.querySelector('#tags');
+    for (let t of ts) {
+      const el = document.createElement('option');
+      el.setAttribute('data-id', t.tid);
+      el.innerText = t.name;
+      oEl.appendChild(el);
+    }
+  });
 };
 
 function calPrev () {
@@ -104,3 +115,25 @@ function calendarDropdown () {
   document.querySelector ('#calendar').classList.toggle('hidden');
 }
 
+function onAddTagClicked () {
+  const oEl = document.querySelector('#tags');
+  const sEl = document.querySelector('#added-tags');
+
+  for (let o of oEl.selectedOptions) {
+    oEl.removeChild(o);
+    sEl.appendChild(o);
+  }
+}
+
+function getSelectedTags () {
+  const res = [];
+
+  const sEl = document.querySelector('#added-tags');
+  for (let o of sEl.children) {
+    const id = o.getAttribute('data-id');
+    if (id === undefined || id === null) continue;
+    res.push(Number(id));
+  }
+
+  return res;
+}
