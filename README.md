@@ -73,6 +73,7 @@ To run the backend
 ```bash
 stack exec backend-exe
 ```
+If you get the error "No executable found", do stack build again as it's not compiled.
 
 The website should now be available at [https://localhost:3000](https://localhost:3000)
 
