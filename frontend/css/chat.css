@@ -10,7 +10,7 @@ main .split {
 }
 
 main .split .left {
-  width: 161px; background: var(--colorC);
+  width: 164px; background: var(--colorC);
   border-radius: 5px;
 
 }
