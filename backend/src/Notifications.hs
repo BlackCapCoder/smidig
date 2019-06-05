@@ -21,6 +21,7 @@ notifications = table "notifications" [#nid :- autoPrimary]
 data Kind
   = FriendReq
   | UnknownNotification
+  | GroupInvitation
   deriving ( Eq, Bounded, Enum, Show, Read
            , Generic, ToJSON, FromJSON, SqlType
            )

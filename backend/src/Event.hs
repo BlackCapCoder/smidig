@@ -2,6 +2,7 @@ module Event where
 
 import Utils
 import AppM
+import Tags
 import qualified Data.Text as T
 import Data.Char
 import qualified Data.Set as S
@@ -61,16 +62,6 @@ comments :: Table Comments
 comments = table "comments" [#cid :- autoPrimary]
 
 
-type TagID = ID Tags
-data Tags  = Tags
-  { tid  :: TagID
-  , name :: Text
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
-
-tags :: Table Tags
-tags = table "tags" [#tid :- autoPrimary]
-
-
 data EventTags = EventTags
   { eid :: EventID
   , tid :: TagID
@@ -104,6 +95,7 @@ instance Backend Event where
     :<|> "participants"  :> QueryParam "id" EventID    :> Get  '[JSON] [Participants]
     :<|> "pictures"      :> QueryParam "id" EventID    :> Get  '[JSON] [Pictures]
     :<|> "mkevent"       :> ReqBody '[JSON] MkEventReq :> Post '[JSON] EventID
+    :<|> "rmevent"       :> EventID ~> Bool
     :<|> "joinEvent"     :> ReqBody '[JSON] (EventID, LevelOfParticipation) :> Post '[JSON] NoContent
     :<|> "addComment"    :> ReqBody '[JSON] (EventID, Text) :> Post '[JSON] CommentID
     :<|> "eventcomments" :> ReqBody '[JSON] (EventID) :> Post '[JSON] [Comments]
@@ -116,6 +108,7 @@ instance Backend Event where
       :<|> getParticipants
       :<|> getPictures
       :<|> mkEvent
+      :<|> rmEvent
       :<|> joinEvent
       :<|> postComment
       :<|> getcomments
@@ -144,6 +137,21 @@ mkEvent MkEventReq {..} = do
   insert_ eventtags $ EventTags evid <$> ts
 
   pure evid
+
+rmEvent :: EventID -> AppM Private Bool
+rmEvent eid = do
+  myId <- getID
+  es <- query . from #eid $ suchThat (select events)
+          \e -> e ! #eid   .== literal eid
+            .&& e ! #owner .== literal myId
+
+  forM_ es $ \e -> do
+    -- TODO: Delete chat
+    deleteFrom_ participants \p  -> p  ! #eid .== literal e
+    deleteFrom_ events       \e' -> e' ! #eid .== literal e
+
+  pure . not $ null es
+
 
 joinEvent (evid, lop) = do
   uid <- gets AppM.uid
@@ -219,11 +227,3 @@ eventsByOwner events uid = query do
   restrict $ e ! #owner .== literal uid
   pure e
 
-
------------
-
-
-get1 table sel needle = listToMaybe <$> query do
-  x <- sel `from` select table
-  restrict $ x .== literal needle
-  pure x

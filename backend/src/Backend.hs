@@ -12,6 +12,9 @@ import Login
 import Event as E
 import Chat  as C
 import Notifications
+import Tags
+import TagsBE
+import Group
 
 import AppM hiding (app)
 
@@ -35,6 +38,9 @@ tables =
   , SomeTable notifications
   , SomeTable tags
   , SomeTable eventtags
+  , SomeTable groups
+  , SomeTable grouptags
+  , SomeTable groupMembers
   ]
 
 
@@ -45,6 +51,7 @@ type REST = Flatten (:<|>)
   , Event
   , Chat
   , Notification
+  , Tags
   , WhoAmI
   , JsApi "api.js" Public
       ( API User

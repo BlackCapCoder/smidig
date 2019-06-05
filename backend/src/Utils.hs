@@ -40,6 +40,11 @@ getByID t sel (Just id)
 getByIDM t sel
   = fmap listToMaybe . getByID t sel
 
+get1 table sel needle = listToMaybe <$> query do
+  x <- sel `from` select table
+  restrict $ x .== literal needle
+  pure x
+
 
 instance MonadIO (Tagged t) where
   liftIO = Tagged . unsafePerformIO

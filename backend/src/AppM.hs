@@ -126,3 +126,4 @@ data User = User
 users :: Table User
 users = table "users" [#uid :- autoPrimary]
 
+getID = gets uid
