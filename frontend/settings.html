@@ -2,7 +2,6 @@
 <meta charset="utf-8">
 <title>Instillinger</title>
 <h2>Språk</h2>
-<p>Hvis du vil bytte språk, trykk på språket du vil bytte til under:</p>
   <select name="Språk" id="languages">
   <option>Norsk (Bokmål)</option>
   <option>Norsk (Nynorsk)</option>
@@ -17,7 +16,7 @@
 <table>
   <tr>
     <td>
-      For å deaktivere kontoen
+      Deaktiverer kontoen. <!--som kan aktiveres igjen.-->
     </td>
     <td>
       <button type="submit" onclick="deactivateClicked()">Deaktiver Konto</button>
@@ -25,7 +24,7 @@
   </tr>
   <tr>
     <td>
-      For å slette kontoen helt
+      Slett hele kontoen.
     </td>
     <td>
       <button type="submit" onclick="deleteClicked()">Slett konto</button>
@@ -36,11 +35,11 @@
 <h2>Bytt passord</h2>
 <table id="passtable">
   <tr>
-    <td><span>Skriv gammelt passord her</span></td>
+    <td><span>Gammelt passord</span></td>
     <td><input type="password" class="changepass" id="oldone"></td>
   </tr>
   <tr>
-    <td><span>Skriv nytt passord her</span></td>
+    <td><span>Nytt passord</span></td>
     <td><input type="password" class="changepass" id="newone"></td>
   </tr>
   <tr>
@@ -48,7 +47,7 @@
     <td><input type="password" class="changepass" id="newtwo"></td>
   </tr>
   <tr>
-  <td><button type="submit" onclick="passClicked()">Bytt</button>
+  <td><button type="submit" onclick="passClicked()">Ende passord</button>
 </table>
 
 

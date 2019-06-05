@@ -116,7 +116,7 @@ footer {
 #menu-settings {
   position: fixed;
   min-width: 300px;
-  background: var(--colorB);
+  background: var(--colorC);
   right: 0;
   z-index: 99;
   border-radius: 5px;
@@ -261,11 +261,21 @@ header > .left {
 header > .middle {
   flex: 1;
   text-align: center;
-  widht: 100%;
+  width: 100%;
 }
 header > .right {
   /* flex: 0; */
   width: 98px;
   display: inline-block;
   padding-right: 10px;
+}
+
+header{
+  background-image: linear-gradient(to right, rgb(118,61,161) 10%, rgb(209, 148, 255));
+  background-image: cover;
+}
+
+#noisologo {
+  height: calc(100% + 5px);
+  margin-top: 0px;
 }
