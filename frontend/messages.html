@@ -1,23 +1,28 @@
+<script>document.querySelector('.item.chat').classList.add('active');</script>
+<title>Meldinger</title>
+
 <link rel="stylesheet" href="css/chat.css" type="text/css" media="all" />
 <script src="js/chat.js" charset="utf-8"></script>
-<title>Meldinger</title>
-<h1 class="grad">Meldinger</h1>
-
-<div class="tabs">
-  <button class="chat-button" onclick='changeTab(1)'>Meldinger</button>
-  <button class="chat-button" onclick='changeTab(2)'>Gruppesamtaler</button>
-</div>
+<h1 class="page-title">Meldinger</h1>
 
 <div class="split">
   <div class="left">
-    <div class="tab active"></div>
-    <div class="tab"></div>
+    <div class="tab-buttons">
+      <!-- TODO active in javascript -->
+      <button class="chat-button active" onclick='changeTab(1)'>Samtaler</button>
+      <button class="chat-button" onclick='changeTab(2)'>Gruppesamtaler</button>
+    </div>
+    <div class="tab-pages">
+      <div class="tab active"></div>
+      <div class="tab"></div>
+    </div>
   </div>
   <div class="right" id="chat-view">
-    <div id="chat">
-    </div>
+    <h2  id='chat-title'></h2>
+    <div id="chat"></div>
     <div id="chat-input">
-      <input type="text" placeholder='Skriv melding her' id="chatbox" /> <button>Send</button>
+      <input type="text" placeholder='Skriv melding her' id="chatbox" />
+      <button>Send</button>
     </div>
   </div>
 </div>

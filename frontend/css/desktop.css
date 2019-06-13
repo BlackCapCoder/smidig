@@ -1,4 +1,58 @@
-.icon, h2 {
+h1 { margin-bottom: 30px; }
+
+main .icon, main h2 {
   display: inline;
-  height: 1em;
+  height: 0.8em;
+  font-size: 26px;
+  vertical-align: middle;
+}
+main .icon { margin-left: 8px; }
+
+.flavor-text {
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 50px;
+  color: #222;
+}
+
+.favorite {
+  padding: 7px;
+  background: var(--purple-light);
+  width: 260px;
+  display: block;
+  text-decoration: none;
+  text-align: center;
+  color: black;
+  padding-bottom: 12px;
+}
+.favorite * { pointer-events: none; }
+#fav-box {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  cursor: pointer;
+}
+#fav-box.edit:hover {
+  cursor: crosshair;
+}
+.favorite p {
+  margin: 0 0;
+}
+
+.fav-thumb {
+  width: 100%;
+  min-height: 180px;
+  display: block;
+  background: indigo;
+  margin-bottom: 8px;
+}
+
+.fav-title {
+  font-size: 20px;
+  color: black;
+}
+.fav-sub {
+  padding-top: 3px;
+  font-size: 14px;
+  color: black;
 }

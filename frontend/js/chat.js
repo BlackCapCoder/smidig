@@ -1,9 +1,16 @@
 function changeTab (ix) {
   document.querySelector('.tab.active').classList.remove('active');
+  document.querySelector('.chat-button.active').classList.remove('active');
   document.querySelector('.tab:nth-child('+ix+')').classList.add('active');
+  document.querySelector('.chat-button:nth-child('+ix+')').classList.add('active');
 }
 
-window.addEventListener('load', loadChats)
+window.addEventListener('load', () => {
+  getWhoami(u => {
+    window.myid = u.uid;
+    loadChats();
+  })
+});
 
 function loadChats () {
   getMyChats(chats => {
@@ -26,32 +33,69 @@ function activeTab () {
   return Array.from(a.parentElement.children).indexOf(a)
 }
 
-function addChat (chat)
-{
-  let chatElem = document.createElement('a')
+function addChat (chat) {
+  postChatParticipants(chat.cid, ps => {
+    ps = ps.filter (u => u.uid != myid);
 
-  chatElem.innerText = "Samtale #" + chat.cid;
-  chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
+    let tab = undefined;
+    let contactName = "";
 
-  let tab = undefined;
+    if (ps.length == 1) {
+      tab = document.querySelector(".split .tab:nth-child(1)");
+      getUser (ps[0].uid, u => addChatWithContact(chat, tab, u));
+      return;
+    } else {
+      tab = document.querySelector(".split .tab:nth-child(2)");
+      contactName = "Samtale #" + chat.cid;
+    }
 
-  if (chat.isPublic) {
-    tab = document.querySelector(".split .tab:nth-child(2)");
-  } else {
-    tab = document.querySelector(".split .tab:nth-child(1)");
-  }
+    let chatElem = document.createElement('a')
+    chatElem.classList.add('chat-contact')
+    chatElem.innerText = contactName;
+    chatElem.href="javascript:onChatClicked(" + chat.cid + ")";
+
+    if (tab === undefined) return;
+
+    tab.appendChild(chatElem);
+  });
+}
+
+function addChatWithContact (chat, tab, contact) {
+  let cont = document.createElement('a')
+  let pic  = document.createElement('img')
+  let name = document.createElement('span')
+
+  cont.classList.add ('contact');
+  cont.setAttribute('data-id', chat.cid)
+  cont.href      = "javascript:onChatClicked(" + chat.cid + ")";
+  name.innerText = contact.username;
+  pic.onerror = el => el.srcElement.src = "icons/Brukerikon-black.png";
+  pic.src        = contact.pic;
+  name.classList.add('contact-title');
+
+  cont.appendChild(pic);
+  cont.appendChild(name);
 
   if (tab === undefined) return;
 
-  tab.appendChild(chatElem);
+  tab.appendChild(cont);
 }
 
 function onChatClicked (cid) {
   if (window.activeChat === cid) return;
   window.activeChat = cid;
 
-  const cont = document.querySelector('#chat');
   cont.innerHTML = '';
+
+  function waitforit () {
+    const contact = document.querySelector('.contact[data-id="'+cid+'"]');
+    if (contact !== null)
+      document.querySelector('#chat-title').innerText
+        = contact.innerText;
+    else
+      setTimeout(waitforit, 50);
+  }
+  waitforit();
 
   postReadChat(cid, openChat);
 }
@@ -67,10 +111,11 @@ function openChat (messages) {
 
 function addChatMsgElem (username, m) {
   const cont = document.querySelector('#chat');
-  let el = document.createElement('div');
+  let el     = document.createElement('div');
+  let msg    = document.createElement('span');
+  let usr    = document.createElement('span');
+
   el.classList.add("message");
-  let msg = document.createElement('span');
-  let usr = document.createElement('span');
   usr.innerText = username + ": ";
   msg.innerText = m;
   el.appendChild(usr);

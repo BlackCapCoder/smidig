@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Condensed&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+:root {
+  --font-text:    "Roboto Condensed";
+  --font-gui:     'Open Sans', sans-serif;
+  --purple-dark:  rgb(118, 061, 161);
+  --purple-light: rgb(209, 148, 255);
+}
+
+body, h1,h2,h3,h4,h5,h6 {
+  font-family: var(--font-text);
+}
+h1,h2,h3,h4,h5,h6 {
+  font-weight: 500;
+}
+
+
+.slogan {
+  display: flex;
+  justify-content: center;
+  font-family: var(--font-text);
+  padding-top: 25px;
+  font-size: 26px;
+  text-shadow: 0 0 1px rgba(0,0,0,0.3);
+}
+.slogan .italic {
+  font-style: italic;
+}
+.slogan .line {
+  background: rgba(0,0,0,0.8);
+  width: 90px;
+  height: 1px;
+  align-self: center;
+}
+.slogan .text {
+  padding: 0 30px;
+}
+
+
+footer {
+  width: 100vw;
+  text-align: center;
+  font-size: 26px;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 1px rgba(0,0,0,0.3);
+  font-family: var(--font-text);
+}
+
+
+.hidden {
+  display: none;
+}
+
+
+.person-cont {
+  display: flex;
+  flex-wrap: wrap;
+}
+.person {
+  display: flex;
+  width: 350px;
+  --circle-size:   13px;
+  --circle-offset: 9px
+}
+.person > .left {
+  margin-right: 15px;
+  position: relative;
+}
+.person > .left > .profile {
+  width:  160px;
+  height: 160px;
+  border-radius: 100%;
+  background: white;
+  border: 1px solid #333;
+}
+.person > .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 25px;
+  font-family: var(--font-text);
+  flex: 1;
+}
+.person > .right > .subtext {
+  font-size: 17px;
+  font-style: italic;
+  text-shadow: 0 0 1px rgba(0,0,0,0.4);
+}
+
+.person.online  > .left::after { border-color: lime; }
+.person.offline > .left::after { border-color: red; }
+.person > .left::after {
+  content: '';
+  border-radius: 100%;
+  position: absolute;
+  border: var(--circle-size) solid;
+  right: 0; bottom: 0;
+  margin: var(--circle-offset);
+}
+
+
+.page-title {
+  font-family: var(--font-text);
+  text-transform: uppercase;
+  font-size: 42px;
+  font-weight: bold;
+  text-shadow: 0 0 1px black;
+}
+
+button[onclick] {
+  cursor: pointer;
+}

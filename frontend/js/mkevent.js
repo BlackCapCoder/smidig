@@ -4,6 +4,7 @@ function err () { alert ("Something went wrong"); }
 
 function submit () {
   let title = document.querySelector("#title").value
+    , sub   = document.querySelector("#subtitle").value
     , desc  = document.querySelector("#desc").value
     , place = document.querySelector("#place").value
     , date  = document.querySelector("#date").value
@@ -12,6 +13,7 @@ function submit () {
 
   postMkevent (
       { req_title: title
+      , req_sub:   sub
       , req_desc:  desc
       , req_place: place
       , req_date:  date + 'T' + time + 'Z'

@@ -6,22 +6,28 @@ import Data.Set (Set)
 import qualified Data.Set as S
 import Data.Foldable
 
+#define KitchenSink Eq, Show, Generic, ToJSON, FromJSON
+#define Row (KitchenSink, SqlRow)
+
 
 type ChatID = ID Chat
 
 data Chat = Chat
   { cid      :: ChatID
   , isPublic :: Bool
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+  } deriving Row
 
 chats :: Table Chat
 chats = table "chats" [#cid :- autoPrimary]
+
+-- cid is ambigious
+chid = cid :: Chat -> ChatID
 
 
 data Participants = Participants
   { cid :: ChatID
   , uid :: UserID
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+  } deriving Row
 
 participants :: Table Participants
 participants = table "chatparticipants" []
@@ -34,7 +40,7 @@ data ChatMessage = ChatMessage
   , cid     :: ChatID
   , sender  :: UserID
   , content :: Text
-  } deriving (Eq, Show, Generic, ToJSON, FromJSON, SqlRow)
+  } deriving Row
 
 chatMessages :: Table ChatMessage
 chatMessages = table "chatmessages" [#mid :- autoPrimary]
@@ -43,13 +49,14 @@ chatMessages = table "chatmessages" [#mid :- autoPrimary]
 instance Backend Chat where
   type Acc Chat = Private
   type API Chat
-       = "myChats"  :> Get '[JSON] [Chat]
-    :<|> "mkChat"   :> (Bool, Set UserID) ~> ChatID
-    :<|> "putChat"  :> (ChatID, Text)     ~> ChatMessageID
-    :<|> "readChat" :> ChatID             ~> [ChatMessage]
+       = "myChats"       :> Get '[JSON] [Chat]
+    :<|> "mkChat"        :> (Bool, Set UserID) ~> ChatID
+    :<|> "putChat"       :> (ChatID, Text)     ~> ChatMessageID
+    :<|> "readChat"      :> ChatID             ~> [ChatMessage]
     :<|> "readChatSince" :> (ChatID, ChatMessageID) ~> [ChatMessage]
     :<|> "chatWithUser"  :> (UserID) ~> ChatID
     :<|> "joinOpenChat"  :> (ChatID) ~> ChatID
+    :<|> "chatParticipants" :> (ChatID) ~> [Participants]
 
   server = myChats
       :<|> mkChat
@@ -58,81 +65,74 @@ instance Backend Chat where
       :<|> readChatSince
       :<|> chatWithUser
       :<|> joinOpenChat
+      :<|> chatParticipants
 
-
+chatParticipants :: ChatID -> AppM Private [Participants]
+chatParticipants = getByID' participants #cid
 
 joinOpenChat :: ChatID -> AppM Private ChatID
 joinOpenChat chat = do
 
   -- Does the chat exist and is open?
-  _:_ <- query do
-    c <- select chats
-    restrict $ c ! #cid      .== literal chat
-    restrict $ c ! #isPublic .== true
-    pure c
+  _:_ <- query $ chats `having` and'
+    [ (! #isPublic)
+    , #cid ?= chat ]
 
   -- Already in chat?
   q <- filter ((== chat) . chid) <$> myChats
 
   when (null q) do
-    myid <- gets AppM.uid
+    myid <- getID
     insert_ participants
       [ Participants chat myid ]
 
   pure chat
 
 
+-- TODO: Use aggregate, this is ugly!
 chatWithUser :: UserID -> AppM Private ChatID
-chatWithUser uid = do
+chatWithUser uid
+  = maybe new old . listToMaybe =<< do
+      myChats >>= filterM \(chid->cid) ->
+        not . null <$> query do
+          participants `having` and'
+            [ #cid ?= cid
+            , #uid ?= uid ]
+  where
+    old = pure . chid
+    new = mkChat (False, S.fromList [uid])
 
-  -- TODO: Use aggregate
-  cs <- myChats >>= filterM \c -> do
-    (==1) . length <$> query do
-      p <- select participants
-      restrict $ p ! #cid .== literal (chid c)
-             .&& p ! #uid .== literal uid
-      pure p
-
-  if | null cs   -> mkChat (False, S.fromList [uid])
-     | [c] <- cs -> pure $ chid c
-
-
-chid = cid :: Chat -> ChatID
 
 readChatSince :: (ChatID, ChatMessageID) -> AppM Private [ChatMessage]
-readChatSince (chat, since) = filter f <$> readChat chat
-  where f msg = mid msg > since
+readChatSince (chat, since)
+  = filter p <$> readChat chat where
+      p msg = mid msg > since
 
 readChat :: ChatID -> AppM Private [ChatMessage]
-readChat chat = do
-  [c] <- filter ((chat ==) . chid) <$> myChats
-  getByID' chatMessages #cid $ chid c
+readChat
+  = getByID' chatMessages #cid
 
 putChat :: (ChatID, Text) -> AppM Private ChatMessageID
 putChat (chat, msg) = do
-  myID <- gets AppM.uid
+  myID <- getID
   _:_  <- query do
-    c <- select chats
-    restrict $ c ! #cid .== literal chat
-    p <- select participants
-    restrict $ p ! #cid .== c ! #cid .&& p ! #uid .== literal myID
+    c <- chats        `having` #cid ?= chat
+    p <- participants `having` #uid ?= myID
+    restrict $ p ! #cid .== c ! #cid
     pure p
 
-  mid <- insertWithPK chatMessages
+  insertWithPK chatMessages
     [ ChatMessage def chat myID msg ]
-
-  pure mid
 
 mkChat :: (Bool, Set UserID) -> AppM Private ChatID
 mkChat (isPub, uids') = do
-  myID <- gets AppM.uid
+  myID <- getID
   let uids = S.delete myID uids'
   False <- pure $ null uids
 
   us <- query $ distinct do
-    u <- select users
-    restrict $ (u ! #uid) `isIn` (literal <$> S.toList uids)
-    pure $ u ! #uid
+    from #uid (select users) `suchThat` \u ->
+      u `isIn` (literal <$> S.toList uids)
 
   False <- pure $ null us
 
@@ -147,10 +147,9 @@ mkChat (isPub, uids') = do
 
 myChats :: AppM Private [Chat]
 myChats = do
-  myID <- gets AppM.uid
+  myID <- getID
   query do
-    p <- select participants
-    restrict $ p ! #uid .== literal myID
+    p <- participants `having` #uid ?= myID
     c <- select chats
     restrict $ c ! #cid .== p ! #cid
     pure c

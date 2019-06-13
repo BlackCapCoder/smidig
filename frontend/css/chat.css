@@ -10,19 +10,24 @@ main .split {
 }
 
 main .split .left {
-  width: 164px; background: var(--colorC);
-  border-radius: 5px;
-
+  width: 300px;
 }
 
 #chat-view {
   flex: 1;
   display: flex;
   flex-direction: column;
+  border: 1px solid var(--purple-light);
+  border-left: none;
 }
 
 #chat {
   flex: 1;
+  padding: 10px;
+  overflow-y: scroll;
+}
+#chat::-webkit-scrollbar {
+  display: none;
 }
 
 #chat-input > input {
@@ -33,7 +38,6 @@ main .split .left {
 .tab:not(.active) { display: none; }
 
 .tab {
-  padding: 5px;
 }
 .tab > a {
   display: block;
@@ -46,16 +50,82 @@ main .split .left {
 
 .chat-button {
   color: white;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: bold;
-  font-family: 'Roboto Condensed', sans-serif;
-  background: rgb(28,28,28);
-  border-radius: 5px;
+  font-family: var(--font-gui);
+  background: #333;
   text-align: center;
   padding: 11px 10px;
   text-decoration: none;
+  border: 1px solid #000;
+  flex: 1;
+  display: block;
 }
 
 .chat-button:hover {
-  background: linear-gradient(45deg, var(--colorA), var(--colorB));
+  /* background: linear-gradient(45deg, var(--colorA), var(--colorB)); */
+}
+
+.chat-button.active {
+  background: var(--purple-light);
+  color: black;
+  border: 1px solid var(--purple-dark);
+}
+
+.tab-buttons {
+  display: flex;
+}
+
+.tab-pages {
+  min-height: 500px;
+  border: 2px solid var(--purple-light);
+  border-top: none;
+}
+
+#chat-title {
+  margin: 0;
+  padding: 10px 7px;
+}
+
+#chat-input {
+  border: 2px solid var(--purple-dark);
+  margin: 10px;
+  display: flex;
+  padding: 6px;
+}
+
+#chat-input > button {
+  background: #333;
+  color: white;
+  border: none; outline: none;
+  padding: 2px 15px;
+  font-family: var(--font-gui);
+  font-weight: bold;
+  font-size: 13px;
+}
+
+#chat-input > input {
+  border: none;
+  outline: none;
+  padding-left: 5px;
+}
+
+.tab .contact:hover {
+  background: rgba(0,0,0,0.1);
+}
+.contact {
+  padding: 10px;
+}
+.contact > * {
+  vertical-align: middle;
+}
+.contact img {
+  height: 50px;
+  border-radius: 100%;
+  margin-right: 10px;
+  border: 1px solid rgba(0,0,0,0.7);
+}
+.contact span {
+  color: black;
+  font-size: 19px;
 }

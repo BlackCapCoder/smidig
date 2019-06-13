@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="css/bowling.css"/>
 <link rel="stylesheet" href="css/profile.css"/>
 
 <script>
@@ -22,12 +21,18 @@
       });
     }
 
+    if (isMe) {
+      document.querySelector('h1.page-title').classList.remove('hidden');
+    } else {
+      document.querySelector('#send-message').classList.remove('hidden');
+      document.querySelector('#find-events').classList.remove('hidden');
+    }
+
     function onGotUser (u) {
       document.querySelector('#pic').setAttribute('src', u.pic);
       document.querySelector('#name').innerText = u.username;
       document.querySelector('#age').innerText = u.age;
-      document.querySelector('#desc').innerText = u.desc;
-      document.querySelector('#btnEdit').disabled = !isMe;
+      document.querySelector('#user-info').innerText = u.desc;
 
       checkOnline(u);
       checkFriendship();
@@ -50,6 +55,20 @@
       now  = new Date();
       then = new Date(usr.lastSeen);
       setOnlineStatus (now - then <= 15 * 60 * 1000);
+    }
+
+    function setOnlineStatus (b) {
+      const stEl = document.querySelector('#status');
+
+      stEl.classList.remove('hidden');
+
+      if (b) {
+        stEl.classList.remove('offline');
+        stEl.classList.add('online');
+      } else {
+        stEl.classList.remove('online');
+        stEl.classList.add('offline');
+      }
     }
 
 
@@ -75,20 +94,6 @@
     }
   };
 
-  function setOnlineStatus (b) {
-    const stEl = document.querySelector('#status');
-
-    stEl.classList.remove('hidden');
-
-    if (b) {
-      stEl.classList.remove('offline');
-      stEl.classList.add('online');
-    } else {
-      stEl.classList.remove('online');
-      stEl.classList.add('offline');
-    }
-  }
-
   function changesPressed()
   {
     window.location = "changes";
@@ -111,12 +116,19 @@
     name.classList.add ('name');
     age.classList.add  ('age');
 
+    if (new Date() - new Date(u.lastSeen) <= 15 * 60 * 1000) {
+      cont.classList.add('online');
+    } else {
+      cont.classList.add('offline');
+    }
+
     cont.appendChild(lft);
     cont.appendChild(rgt);
     lft.appendChild(pic);
     rgt.appendChild(name);
     rgt.appendChild(age);
 
+    pic.onerror = el => el.srcElement.src = "icons/Brukerikon-black.png";
     pic.setAttribute('src', u.pic);
     name.innerText = u.username;
     age.innerText = u.age;
@@ -131,27 +143,33 @@
     console.log(uid)
     postBefriend (uid, e => {
       alert ("Venneforespørsel er sendt")
+      checkFriendship();
     })
   }
 
   function setFriendButton (s) {
-    const btn = document.querySelector('#befriend');
+    const btn = window.b = document.querySelector('#befriend');
+    const txt = btn.querySelector('span');
+    console.log(btn)
+    console.log(s)
 
     if (s == 0) {
-      btn.disabled = true;
-      btn.value    = "Dere er venner"
+      btn.classList.add('hidden');
+      txt.innerText = "Dere er venner"
     } else
     if (s == 1) {
-      btn.disabled = false;
-      btn.value    = "Legg til som venn"
+      btn.classList.remove('hidden');
+      txt.innerText = "Legg til som venn"
     } else
     if (s == 2) {
-      btn.disabled = false;
-      btn.value    = "Aksepter venneforespørsel"
+      btn.classList.remove('hidden');
+      txt.innerText = "Aksepter venneforespørsel"
     } else
     if (s == 3) {
+      btn.classList.remove('hidden');
+      btn.classList.add('dis');
       btn.disabled = true;
-      btn.value    = "Venneforespørsel er sendt"
+      txt.innerText = "Venneforespørsel er sendt"
     }
   }
 
@@ -167,25 +185,36 @@
 
 <title>Profil</title> <!-- persons name here -->
 
-<body>
-  <table>
-    <tr>
-      <td>
-        <img id="pic"/>
-        <div id="status" class="hidden"></div>
-      </td>
-      <td>
-        <p id="name"></p>
-        <p id="age"></p>
-        <p id="desc"></p>
-      </td>
-    </tr>
-  </table>
-  </br>
-  <p id="self_info">
-    </p>
-  <input class="profile-button" type="button" onClick="changesPressed()" name="" id="btnEdit" value="Endre profil" />
+<h1 class='page-title hidden'>Min Profil<a href='javascript:changesPressed()'><img class="icon" src="imgs/Blyant.png" /></a></h1>
 
-  <section id="friends">
-  </section>
-</body>
+<table>
+  <tr>
+    <td>
+      <img id="pic"/>
+      <div id="status" class="hidden"></div>
+    </td>
+    <td>
+      <p id="name"></p>
+      <p id="age"></p>
+      <p id="desc"></p>
+    </td>
+  </tr>
+</table>
+
+<div id="controls">
+  <button id="befriend" class="hidden" onclick='onBefriendClicked()'>
+    <img src="icons/Brukerikon-black.png" />
+    <span>Bli Venner</span>
+  </button>
+  <button id="send-message" class="hidden" onclick='onSendMessageClicked()'>
+    <img src="icons/gruppesamtale.png"/>
+    <span>Send melling</span>
+  </button>
+  <button id="find-events" class="hidden" onclick='onFindEventsClicked()'>
+    <img src="icons/search.png"/>
+    <span>Finn arrangement</span>
+  </button>
+</div>
+
+<section id="user-info"></section>
+<section class='person-cont' id="friends"></section>

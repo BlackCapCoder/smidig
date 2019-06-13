@@ -1,33 +1,68 @@
-<img id="banner" src="bowling.png" alt="banner" />
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<title>STEV - Av studenter for studenter</title>
 
-<title>Logg inn</title>
+<div id="banner" alt="banner">
+  <img id="logo" alt="logo" src="imgs2/logo-white-text.png"/>
+</div>
 
-<div class="split">
-  <div class="left">
-    <h1>Lorem</h1>
-    <p>Ikke latin</p>
+<div class="slogan">
+  <div class="line">
   </div>
-
-  <div class="right">
-    <table id='login-form'>
-      <tr>
-        <td><span>Username</span></td>
-        <td><input type="text" id="username" value='jon'></td>
-      </tr>
-      <tr>
-        <td><span>Password</span></td>
-        <td><input type="password" id="password" value=''></td>
-      </tr>
-    </table>
-    <button onclick="loginPressed()">Login</button>
-    <br>
-    <br>
-    <button onclick="newUserPressed()">Ny bruker</button>
+  <div class="text">
+    <span class='italic'>Av</span> <span>studenter</span> <span class='italic'>for</span> <span>studenter</span>
+  </div>
+  <div class="line">
   </div>
 </div>
 
+
+<main class="split">
+  <div class="left">
+    <h1>Hva er STEV?</h1>
+    <p class="text">
+STEV er en nettside for studenter som ønsker å finne ting som skjer i
+nærområdet. STEV er en nettside utviklet av studenter i samarbeid med No
+Isolation som jobber mot å forebygge ensomhet.
+
+Denne nettsiden er dermed utviklet for at studenter enkelt skal finne
+arrangementer og foreninger i nærområdet som de kan delta på. Her kan dere
+finne andre studenter med samme interesser og bli kjent med hverandre på kryss
+og tvers av skoler og studieretninger.
+
+Dette skal være et hjelpemiddel til å finne arrangement og foreninger både til
+skolebruk og fritid.
+    </p>
+  </div>
+
+  <div class="right login">
+    <div class='login-root-wrapper'>
+      <h2>Logg inn</h2>
+      <table id='login-form'>
+        <tr class='space'>
+          <td class='small'><span  class='gui'>Brukernavn</span></td>
+          <td><div class='input-wrapper'><input tabindex='0' class='tb' type="text" id="username" value='Geir'></div></td>
+        </tr>
+        <tr>
+          <td class='small'><span  class='gui'>Passord</span></td>
+          <td><div class='input-wrapper'><input class='tb' type="password" id="password" value=''></div></td>
+        </tr>
+      </table>
+      <p class='register'>Har du ikke bruker? Registrer deg <a href="register.html">her</a> !</p>
+      <div class='login-wrapper'>
+        <button onclick="loginPressed()">Logg inn</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>STEV - No Isolation</footer>
+
+
 <script src="js/jquery.min.js"></script>
 <script src="api.js"></script>
+<link rel="stylesheet" href="css/common.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/frontpage.css" type="text/css" media="all" />
 
 <script>
 
@@ -48,24 +83,24 @@
   }
 
   function err (res) {
-    alert("Check your internet connection");
+    alert("Feil brukernavn eller passord");
     console.log(res);
   }
 
-  function newUserPressed ()
-  {
-    window.location = "register.html";
+  const tbusn = document.querySelector('#username');
+  const tbpsw = document.querySelector('#password');
+
+  function tbkdown (ev) {
+    if (ev.which !== 13) return;
+
+    if (ev.srcElement.id == 'username') {
+      tbpsw.focus();
+    } else {
+      loginPressed();
+    }
   }
+
+  tbusn.onkeydown = tbkdown;
+  tbpsw.onkeydown = tbkdown;
+
 </script>
-
-<style>
-  .split { display: flex; }
-
-  #banner {
-    width: 100%;
-    height: 150px;
-    background: red;
-    margin-bottom: 20px;
-  }
-</style>
-

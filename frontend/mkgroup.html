@@ -1,0 +1,46 @@
+<script>document.querySelector('.item.groups').classList.add('active');</script>
+
+<script src="js/mkgroup.js" charset="utf-8"></script>
+<title>Opprett Forening</title>
+<h1 class="page-title">Opprett Forening</h1>
+
+<table>
+  <tr>
+    <td>
+      <span>Tittel</span>
+    </td>
+    <td><input type="text" id="title"></td>
+  </tr>
+  <tr>
+    <td><span>Undertittel</span></td>
+    <td>
+      <input type='text' id="subtitle"></input>
+    </td>
+  </tr>
+  <tr>
+    <td><span>Beskrivelse</span></td>
+    <td>
+      <textarea id="desc" rows="3" cols="17"></textarea>
+    </td>
+  </tr>
+  <tr>
+    <td><span>Sted</span></td>
+    <td><input type="text" id="place"></td>
+  </tr>
+  <tr>
+    <td><span>Kategori</span></td>
+    <td>
+      <select name="Kategori" id="tags"></select>
+      <button onclick="onAddTagClicked()">+</button>
+      <div id="added-tags"></div>
+    </td>
+  </tr>
+  <tr>
+    <td><span>Åpen for alle</span></td>
+    <td>
+      <input type="checkbox" id="public" />
+    </td>
+  </tr>
+</table>
+
+<input type="button" value="Opprett" onclick="submit()" />

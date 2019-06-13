@@ -123,3 +123,4 @@ default-extensions:
 - DerivingVia
 - AllowAmbiguousTypes
 - BlockArguments
+- CPP

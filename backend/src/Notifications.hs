@@ -3,6 +3,9 @@ module Notifications where
 import Utils
 import AppM
 
+#define KitchenSink Eq, Show, Generic, ToJSON, FromJSON
+#define Row (KitchenSink, SqlRow)
+
 
 type NotificationID = ID Notification
 
@@ -13,18 +16,24 @@ data Notification = Notification
   , kind :: Kind
   , key  :: Int -- Some ID to a table determined by kind
   }
-  deriving (Eq, Generic, ToJSON, FromJSON, SqlRow)
-
-notifications :: Table Notification
-notifications = table "notifications" [#nid :- autoPrimary]
+  deriving Row
 
 data Kind
   = FriendReq
   | UnknownNotification
   | GroupInvitation
-  deriving ( Eq, Bounded, Enum, Show, Read
-           , Generic, ToJSON, FromJSON, SqlType
-           )
+  deriving (KitchenSink, Bounded, Enum, Read, SqlType)
+
+notifications :: Table Notification
+notifications = table "notifications" [#nid :- autoPrimary]
+
+rmNotification :: NotificationID -> AppM Private ()
+rmNotification nid = do
+  myid <- getID
+  deleteFrom_ notifications $ and'
+    [ #nid ?= nid
+    , #uid ?= myid
+    ]
 
 
 notify :: UserID -> Kind -> ID a -> AppM Private ()
@@ -41,13 +50,6 @@ instance Backend Notification where
 
   server = getNotifications
 
-
 getNotifications :: AppM Private [Notification]
-getNotifications = do
-  myid <- gets AppM.uid
-
-  query do
-    n <- select notifications
-    restrict $ n ! #uid .== literal myid
-    pure n
+  = query . having notifications . is #uid =<< getID
 

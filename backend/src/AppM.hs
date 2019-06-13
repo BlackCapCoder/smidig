@@ -26,39 +26,6 @@ type family AppM (a :: Access) where
   AppM Private = StateT User (AppM Public)
 
 
--- data family AppM' (a :: Access) :: * -> *
---
--- newtype instance AppM' Public v = Pub (SeldaT Handler v)
---   deriving ( Functor
---            , Applicative
---            , Monad
---            , MonadIO
---            , MonadSelda
---            , MonadThrow
---            , MonadCatch
---            , MonadMask
---            , MonadFail
---            ) via (SeldaT Handler)
---
--- newtype instance AppM' Private v = Pri (ReaderT User (AppM' Public) v)
---   deriving ( Functor
---            , Applicative
---            , Monad
---            , MonadIO
---            , MonadReader User
---            , MonadThrow
---            , MonadCatch
---            , MonadMask
---            , MonadFail
---            ) via (ReaderT User (AppM' Public))
---
---
--- nt' :: AppM' a v -> v
--- nt' = undefined
-
-
-
-
 instance MonadSelda (StateT User (SeldaT Handler)) where
   seldaConnection = lift seldaConnection
 
@@ -71,32 +38,39 @@ database = withSQLite "db.sqlite"
 
 nt = database :: AppM Public a -> Handler a
 
+
+-- Type application might have been a mistake..
+
 appWithContext
   :: forall api ctx
    . HasServer api ctx
   => Context ctx
   -> ServerT api (AppM Public)
   -> Application
-appWithContext x = serveWithContext api x . hoistServerWithContext api ctx nt
-  where api = Proxy @api
-        ctx = Proxy @ctx
+appWithContext cfg
+    = serveWithContext api cfg
+    . hoistServerWithContext api ctx nt
+  where
+    api = Proxy @api
+    ctx = Proxy @ctx
 
 app :: forall api
-       . HasServer api [CookieSettings, JWTSettings]
-      => (CookieSettings -> JWTSettings -> ServerT api (AppM Public))
-      -> IO Application
+     . HasServer api [CookieSettings, JWTSettings]
+    => (CookieSettings -> JWTSettings -> ServerT api (AppM Public))
+    -> IO Application
 app server = do
   key <- generateKey
-  let jwtCfg = let x = defaultJWTSettings key in x
+
+  let jwtCfg = defaultJWTSettings key
       cs     = defaultCookieSettings {cookieXsrfSetting=Nothing}
       cfg    = cs :. jwtCfg :. EmptyContext
-      api    = Proxy @api
-      ctx    = Proxy :: Proxy '[CookieSettings, JWTSettings]
 
-  pure $ serveWithContext api cfg
-       $ hoistServerWithContext api ctx nt
+  pure . appWithContext @api @[CookieSettings, JWTSettings] cfg
        $ server cs jwtCfg
 
+
+
+-- User is defined here to avoid circular dependency
 
 instance ToJSON (ID a) where
   toJSON = toJSON . fromId
@@ -127,3 +101,37 @@ users :: Table User
 users = table "users" [#uid :- autoPrimary]
 
 getID = gets uid
+
+
+
+-- This would save me a bunch of type level programming
+
+-- data family AppM' (a :: Access) :: * -> *
+--
+-- newtype instance AppM' Public v = Pub (SeldaT Handler v)
+--   deriving ( Functor
+--            , Applicative
+--            , Monad
+--            , MonadIO
+--            , MonadSelda
+--            , MonadThrow
+--            , MonadCatch
+--            , MonadMask
+--            , MonadFail
+--            ) via (SeldaT Handler)
+--
+-- newtype instance AppM' Private v = Pri (ReaderT User (AppM' Public) v)
+--   deriving ( Functor
+--            , Applicative
+--            , Monad
+--            , MonadIO
+--            , MonadReader User
+--            , MonadThrow
+--            , MonadCatch
+--            , MonadMask
+--            , MonadFail
+--            ) via (ReaderT User (AppM' Public))
+--
+--
+-- nt' :: AppM' a v -> v
+-- nt' = undefined

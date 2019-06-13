@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -fno-warn-partial-type-signatures #-}
 {-# LANGUAGE AllowAmbiguousTypes, PolyKinds, UndecidableInstances #-}
 module Utils
   ( module Utils
@@ -7,6 +8,7 @@ module Utils
   , module Data.Aeson
   , module Control.Monad
   , module Data.Maybe
+  , module Data.Function
   ) where
 
 import Servant
@@ -20,34 +22,61 @@ import Servant.Server.StaticFiles
 
 import Control.Monad
 import Data.Maybe
+import Data.Function
 import AppM
 import Login
+
 
 
 type family Flatten f (a :: [k]) :: k where
   Flatten _ '[x]      = x
   Flatten f (x ': xs) = x `f` Flatten f xs
 
+type Concat xs = Flatten (:<|>) xs
 
-getByID' t sel id = query do
-  x <- select t
-  restrict (x ! sel .== literal id)
-  return x
+type a ~> b = ReqBody '[JSON] a :> Post '[JSON] b
 
-getByID t sel (Just id)
-  = getByID' t sel id
+
+(?=) = is
+and' = foldl (liftM2 (.&&)) (const true)
+or'  = foldl (liftM2 (.||)) (const false)
+
+maybeM = maybe $ pure mzero
+
+
+infixr 7 `having`
+having t = suchThat $ select t
+
+
+getByKey t sel
+  = having t . is sel
+
+getByID t
+  = maybeM . getByID' t
 
 getByIDM t sel
-  = fmap listToMaybe . getByID t sel
+  = maybeM $ fmap listToMaybe . getByID' t sel
 
-get1 table sel needle = listToMaybe <$> query do
-  x <- sel `from` select table
-  restrict $ x .== literal needle
-  pure x
+getByID' t sel
+  = query . getByKey t sel
+
+get1 tb sel
+  = fmap listToMaybe
+  . query
+  . from sel
+  . getByKey tb sel
 
 
+-- Should be safe..?
+-- Used for the Raw endpoint in File.hs
 instance MonadIO (Tagged t) where
   liftIO = Tagged . unsafePerformIO
+
+
+
+--------------
+
+-- I really ought to make AppM a newtype..
 
 
 type family FixAPI acc api where
@@ -77,6 +106,7 @@ instance ( Backend a, Backend b
          ) => Backend (a :<|> b) where
   type API (a :<|> b) = API' a :<|> API' b
   type Acc (a :<|> b) = Public
+
   server = a :<|> b
     where a = authServer @(Acc a) @(API a) $ server @a
           b = authServer @(Acc b) @(API b) $ server @b
@@ -92,5 +122,3 @@ toApp = app @(API' b :<|> Login :<|> Logout :<|> Raw) s'
             :<|> logout a
             :<|> serveDirectoryWebApp "../frontend"
 
-
-type a ~> b = ReqBody '[JSON] a :> Post '[JSON] b

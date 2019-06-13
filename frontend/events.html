@@ -1,19 +1,30 @@
+<script>document.querySelector('.item.events').classList.add('active');</script>
+
 <script src="js/events.js" charset="utf-8"></script>
 <link rel="stylesheet" href="css/event.css" type="text/css" media="all" />
 <title>Arrangementer</title>
 
-<h1 class="grad">Arrangement</h1>
+<div id='title-wrap'>
+  <h1 class="page-title">Arrangement</h1>
+  <div id="toolbar">
+    <select name="tag-select" id="tag-options" onChange="onQueryChanged(document.querySelector('#tb-search').value);" style="color:white; background-color:black; border-radius:5px;">
+      <option>Kategori</option>
+    </select>
+    <div class='search-wrapper'>
+      <input type="text" id="tb-search" placeholder='Søk' oninput="onQueryChanged(this.value)"/>
+      <img id="tb-icon" src="icons/search.png" alt="search" />
+    </div>
+    <a class="mk-eve-button" href="mkevent"><span>Opprett arrangement</span><img class="new-eve" src="imgs/plus_sign_two.png" /></a>
+  </div>
+</div>
+
+<div id='tabs'>
+     <button class='tab-button' onclick='onChangeTab(1)'>Mine arrangement</button><!--
+  --><button class='tab-button active' onclick='onChangeTab(2)'>Alle arrangement</button>
+</div>
 
 <div class="wrapper">
   <div class="center-wrapper">
-    <div id="toolbar">
-     <select name="tag-select" id="tag-options" onChange="onQueryChanged(document.querySelector('#tb-search').value);" style="color:white; background-color:black; border-radius:5px;">
-        <option>Kategori</option>
-      </select>
-      <input type="text" id="tb-search" placeholder='Søk' oninput="onQueryChanged(this.value)"/>
-      <a class="mk-eve-button" href="javascript:window.location = 'mkevent';">Opprett arrangement<img class="new-eve" src="imgs/plus_sign_two.png" /></a>
-    </div>
-
     <div id="events"></div>
   </div>
 </div>

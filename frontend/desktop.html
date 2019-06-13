@@ -1,37 +1,72 @@
+<script>document.querySelector('.item.desktop').classList.add('active');</script>
+
 <link rel="stylesheet" href="css/desktop.css" type="text/css" media="all" />
 <title>Skrivebord</title>
-<h1 class="grad">Skrivebord</h1>
-</br>
+<h1 class="page-title">Skrivebord</h1>
 <h2>Favoritter</h2>
-<img class="icon" src="imgs/Blyant.png" />
+<img class="icon" src="imgs/Blyant.png" onclick='onEditClicked()' />
+<p class='flavor-text'>Her kan du legge til snarveier til dine favoritt arrangmenter, foreninger eller samtaler</p>
 
 <div id="fav-box">
 </div>
 
 <script>
+
   window.addEventListener("load", _ => {
     getMyfavorites(fs => {
       for (let f of fs)
         getGetevent(f.eid, ev => {
-          addFavElem(ev);
+          addFavElem(ev, f);
         });
     });
   });
 
-  function addFavElem (ev) {
+  function addFavElem (ev, favobj) {
     const cont = document.querySelector("#fav-box");
-    let fav = document.createElement("a");
+    let fav = document.createElement("div");
     fav.classList.add("favorite");
-    let title = document.createElement("span");
+    fav.setAttribute('data-favid', favobj.fid);
+    fav.onclick = e => onBoxClicked ("event", ev.eid, e);
+
+    let title = document.createElement("p");
+    title.classList.add('fav-title');
     title.innerText = ev.title;
-    fav.href = "event#" + ev.eid;
+
+    let sub = document.createElement("p");
+    sub.classList.add('fav-sub');
+    console.log(ev);
+    sub.innerText = ev.subtitle;
+
+    let pic = document.createElement("img");
+    pic.classList.add('fav-thumb');
+
+    fav.appendChild(pic);
     fav.appendChild(title);
+    fav.appendChild(sub);
     cont.appendChild(fav);
+  }
+
+  function onBoxClicked (kind, id, e) {
+    const cont = document.querySelector("#fav-box");
+    if (cont.classList.contains('edit'))
+      deleteBox(kind, id, e);
+    else
+      boxAction(kind, id, e);
+  }
+
+  function onEditClicked () {
+    const cont = document.querySelector("#fav-box");
+    cont.classList.toggle('edit');
+  }
+
+  function deleteBox (kind, id, e) {
+    const fid = Number(e.srcElement.getAttribute('data-favid'));
+    console.log(fid);
+    postRemoveFavorite(fid);
+    e.srcElement.parentElement.removeChild(e.srcElement);
+  }
+  function boxAction (kind, id, e) {
+    if (kind === "event") return window.location = "event#" + id;
   }
 </script>
 
-<style type="text/css" media="all">
-  #fav-box span {
-    color: black;
-  }
-</style>

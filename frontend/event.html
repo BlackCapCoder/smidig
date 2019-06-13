@@ -1,3 +1,5 @@
+<script>document.querySelector('.item.events').classList.add('active');</script>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +13,6 @@
           , rgt  = document.createElement('div')
           , pic  = document.createElement('img')
           , name = document.createElement('span')
-          , age  = document.createElement('span')
           ;
 
         cont.classList.add ('person');
@@ -19,17 +20,21 @@
         rgt.classList.add  ('right');
         pic.classList.add  ('profile');
         name.classList.add ('name');
-        age.classList.add  ('age');
+
+        if (new Date() - new Date(u.lastSeen) <= 15 * 60 * 1000) {
+          cont.classList.add('online');
+        } else {
+          cont.classList.add('offline');
+        }
 
         cont.appendChild(lft);
         cont.appendChild(rgt);
         lft.appendChild(pic);
         rgt.appendChild(name);
-        rgt.appendChild(age);
 
+        pic.onerror = el => el.srcElement.src = "icons/Brukerikon-black.png";
         pic.setAttribute('src', u.pic);
         name.innerText = u.username;
-        age.innerText = u.age;
 
         lft.setAttribute('href', 'profile#' + u.uid);
 
@@ -43,16 +48,19 @@
 
         getGetevent (evid, ev => {
           date = new Date (ev.date);
+          const dt = new Date (ev.date);
 
           document.title = ev.title;
           document.querySelector("#title").innerText   = ev.title;
+          document.querySelector("#flavor-text").innerText   = dt.getUTCDay() + '. ' + `Januar Februar Mars April Mai Juni Juli August September Oktober November Desember`.split` `[dt.getUTCMonth()]
+              + ' - ' + 'Kl ' + dt.getUTCHours() + ':' + dt.getUTCMinutes()
+              + ' - ' + ev.place
+              ;
           document.querySelector("#desc").innerText    = ev.desc;
-          document.querySelector("#time").innerText    = date.toTimeString().split(' ')[0];
-          document.querySelector("#date").innerText    = date.toLocaleDateString();
-          document.querySelector("#place").innerText   = ev.place;
 
           window.groupChatID = ev.cid;
 
+          return;
           getUser (ev.owner, u => {
             document.querySelector("#creator").innerText = u.username;
             // addPart (u);
@@ -116,8 +124,10 @@
         el.classList.add("comment");
         let msg = document.createElement('span');
         let usr = document.createElement('span');
-        usr.innerText = username + " said: ";
+        usr.innerText = username;
         msg.innerText = message;
+        usr.classList.add('comment-author');
+        msg.classList.add('comment-text');
         el.appendChild(usr);
         el.appendChild(msg);
         cont.appendChild(el);
@@ -158,63 +168,51 @@
 
   <body>
     <img id="top-img" src="imgs/Banner1.png">
-
     <div id="info-wrapper">
       <div id="info">
         <h1 id='title'></h1>
-        <table>
-          <tr>
-            <td><span>Laget av</span></td>
-            <td><span id='creator'></span></td>
-          </tr>
-          <tr>
-            <td><span>Tid</span></td>
-            <td><span id='time'></span></td>
-          </tr>
-          <tr>
-            <td><span>Sted</span></td>
-            <td><span id='place'></span></td>
-          </tr>
-          <tr>
-            <td><span>Dato</span></td>
-            <td><span id='date'></span></td>
-          </tr>
-          <tr>
-            <td><span>Kategori</span></td>
-            <td><span id="tag"></td>
-          </tr>
-        </table>
+        <span id='flavor-text'></span>
+      </div>
+      <div class="controls">
+
+        <a class="icon-control" href='javascript:onAddToFavoritesClicked()' >
+          <span>Legg til favorit</span>
+          <img src="icons/Favoritt.png"/>
+        </a>
+
+        <a class="icon-control" href='javascript:joinGroupChat()'>
+          <span>Gruppesamtale</span>
+          <img src="icons/gruppesamtale.png"/>
+        </a>
+
       </div>
     </div>
 
     <div id="desc-wrapper">
+      <h2>Beskrivelse</h2>
       <span id='desc'></span>
     </div>
 
     <section id="button">
       <button type="button-1" onclick='joinEvent("Going")'>Jeg kommer!</button>
-      <!-- <button type="button&#45;2">Oversikt på deltakere</button> -->
       <button type="button-2" onclick='joinEvent("Interested")'>Interessert</button>
-      <button type="button-3" onclick='onAddToFavoritesClicked()'><img class="star-eve" src="imgs/favourit-star.png"/></button>
-      <button type="button-4" onclick='joinGroupChat()'>Bli med i gruppesamtalen</button>
    </section>
 
+    <h2>Deltagere</h2>
     <div class="parti-wrapper">
-      <h2>Skriv en kommentar</h2>
-      <section id="participants">
+      <section id="participants" class="person-cont">
       </section>
     </div>
 
-    <section id="comment-section">
-      <textarea id="comment-box" rows="8" cols="40" placeholder="Skriv din kommentar her"></textarea>
+    <div class="spacer-wrapper"><div class="spacer"></div></div>
+    <h2>Innlegg</h2>
+
+    <section id="comment-section"></section>
+
+    <section id='comment-entry'>
+      <textarea id="comment-box" rows="8" cols="60" placeholder="Skriv innlegg"></textarea>
       </br>
       <button type="submit" onclick='onCommentClicked();'>Legg til kommentar</button>
     </section>
-
-    <div id="row-wrapper">
-      <div id="rad">
-      </div>
-    </div>
-
   </body>
 </html>

@@ -58,30 +58,12 @@
     var secondInput = document.getElementById("newtwo").value;
     var oldInput    = document.getElementById("oldone").value;
 
-    if (firstInput === secondInput && firstInput !== "" && secondInput !== "" && oldInput !== "")
+    if (firstInput === secondInput)
     {
-      window.alert("Passord er byttet");
-     // const password == document.querySelector('#password').value uncomment when correct
-    }
-    else if (oldInput === "" && firstInput === "" && secondInput === "")
-    {
-      window.alert("Alle felter er tomme");
-    }
-    else if (firstInput === "" && secondInput === "")
-    {
-      window.alert("Begge input feltene er tomme");
-    }
-    else if (oldInput === "")
-    {
-      window.alert("Input felt for gammelt passord er tom");
-    }
-    else if (firstInput === "") 
-    {
-      window.alert("Input felt en er tom");
-    }
-    else if (secondInput === "")
-    {
-      window.alert("Input felt to er tom");
+      postChangePassword(
+      { oldPass: oldInput
+      , newPass: firstInput
+      }, b => { window.alert(b ? "Passord er byttet" : "Feil passord"); })
     }
     else
     {

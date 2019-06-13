@@ -28,11 +28,11 @@ instance MimeRender HTML BL.ByteString where
 
 
 -- Single file
-data File (pth :: Symbol) (name :: Symbol) (acc :: Access)
+data File (acc :: Access) (pth :: Symbol) (name :: Symbol)
 
-instance (KnownSymbol pth, MonadIO (AppM acc)) => Backend (File pth n acc) where
-  type Acc (File pth n acc) = acc
-  type API (File pth n acc) = n :> Get '[HTML] BL.ByteString
+instance (KnownSymbol pth, MonadIO (AppM acc)) => Backend (File acc pth n) where
+  type Acc (File acc pth n) = acc
+  type API (File acc pth n) = n :> Get '[HTML] BL.ByteString
   server = liftIO do
     (p1,p2) <- BL.span (/=37) <$> BL.readFile "../frontend/theme.html"
     c <- BL.readFile . symbolVal $ Proxy @pth

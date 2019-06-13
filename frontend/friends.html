@@ -1,11 +1,8 @@
-<h1 class="grad">Venner</h1>
+<script>document.querySelector('.item.friends').classList.add('active');</script>
+
 <title>Venner</title>
-<!-- Copy pasted from event.html -->
-<link rel="stylesheet" href="css/bowling.css">
-<div class="parti-wrapper">
-  <section id="participants">
-  </section>
-</div>
+<h1 class="page-title">Venner</h1>
+<section class='person-cont' id="friends-list"></section>
 
 <script>
   function addPart (u) {
@@ -15,14 +12,20 @@
       , pic  = document.createElement('img')
       , name = document.createElement('span')
       , age  = document.createElement('span')
+      , onl  = document.createElement('div')
       ;
 
     cont.classList.add ('person');
     lft.classList.add  ('left');
     rgt.classList.add  ('right');
     pic.classList.add  ('profile');
-    name.classList.add ('name');
-    age.classList.add  ('age');
+    age.classList.add  ('subtext');
+
+    if (new Date() - new Date(u.lastSeen) <= 15 * 60 * 1000) {
+      cont.classList.add('online');
+    } else {
+      cont.classList.add('offline');
+    }
 
     cont.appendChild(lft);
     cont.appendChild(rgt);
@@ -30,17 +33,17 @@
     rgt.appendChild(name);
     rgt.appendChild(age);
 
+    pic.onerror = el => el.srcElement.src = "icons/Brukerikon-black.png";
     pic.setAttribute('src', u.pic);
     name.innerText = u.username;
-    age.innerText = u.age;
+    age.innerText  = u.age;
 
     lft.setAttribute('href', 'profile#' + u.uid);
-
     party.appendChild(cont);
   }
 
   window.onload = _ => {
-    party = document.querySelector("#participants")
+    party = document.querySelector("#friends-list")
 
     getMyfriends(fs => {
       getWhoami(me => {
@@ -55,3 +58,4 @@
     });
   }
 </script>
+

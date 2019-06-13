@@ -1,0 +1,198 @@
+<script>document.querySelector('.item.groups').classList.add('active');</script>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/bowling.css">
+
+    <script>
+      function addPart (u) {
+        let cont = document.createElement('div')
+          , lft  = document.createElement('a')
+          , rgt  = document.createElement('div')
+          , pic  = document.createElement('img')
+          , name = document.createElement('span')
+          ;
+
+        cont.classList.add ('person');
+        lft.classList.add  ('left');
+        rgt.classList.add  ('right');
+        pic.classList.add  ('profile');
+        name.classList.add ('name');
+
+        if (new Date() - new Date(u.lastSeen) <= 15 * 60 * 1000) {
+          cont.classList.add('online');
+        } else {
+          cont.classList.add('offline');
+        }
+
+        cont.appendChild(lft);
+        cont.appendChild(rgt);
+        lft.appendChild(pic);
+        rgt.appendChild(name);
+
+        pic.onerror = el => el.srcElement.src = "icons/Brukerikon-black.png";
+        pic.setAttribute('src', u.pic);
+        name.innerText = u.username;
+
+        lft.setAttribute('href', 'profile#' + u.uid);
+
+        party.appendChild(cont);
+      }
+
+      window.onload = _ => {
+        let hash = window.location.hash.substr (1);
+        evid  = Number (hash);
+        party = document.querySelector("#participants")
+
+        getGroup (evid, ev => {
+          document.title = ev.title;
+          document.querySelector("#title").innerText   = ev.title;
+          document.querySelector("#flavor-text").innerText = ev.subtitle;
+          document.querySelector("#desc").innerText    = ev.desc;
+
+          window.groupChatID = ev.cid;
+
+          // getUser (ev.owner, u => {
+          //   document.querySelector("#creator").innerText = u.username;
+          // });
+        });
+
+        getPictures (evid, ps => {
+          let cont = document.querySelector("#rad");
+
+          for (let p of ps) {
+            let el_div = document.createElement('div');
+            let el_pic = document.createElement('img');
+
+            el_div.classList.add('image');
+            el_pic.setAttribute('src', p.pth);
+            el_div.appendChild(el_pic);
+
+            cont.appendChild(el_div);
+          }
+        });
+
+        getWhoami (me => {
+          getGroupMembers (evid, ps => {
+            for (let p of ps) {
+              getUser (p.uid, u => {
+                addPart (u);
+              });
+            }
+          });
+        });
+
+        function loadComments () {
+          postGroupComments (evid, cs => {
+            const cont = document.querySelector('#comment-section');
+
+            for (let c of cs) {
+              getUser(c.owner, u => {
+                addCommentElem(u.username, c.content);
+              });
+            }
+          });
+        };
+
+        loadComments ();
+      }
+
+      function joinEvent (t) {
+        postJoinEvent ([evid, t]);
+      }
+
+      function addCommentElem (username, message) {
+        const cont = document.querySelector('#comment-section');
+        let el = document.createElement('div');
+        el.classList.add("comment");
+        let msg = document.createElement('span');
+        let usr = document.createElement('span');
+        usr.innerText = username;
+        msg.innerText = message;
+        usr.classList.add('comment-author');
+        msg.classList.add('comment-text');
+        el.appendChild(usr);
+        el.appendChild(msg);
+        cont.appendChild(el);
+      }
+
+      function onCommentClicked () {
+        const msg = document.querySelector("#comment-box").value;
+        if (msg.length < 2) return alert ("Vennligst skriv en lenger kommentar");
+        if (msg.length > 400) return alert ("Kommentaren din er over 400 tegn");
+        postAddGroupComment([evid, msg], _ => {
+          getWhoami(who => {
+            addCommentElem(who.username, msg);
+          });
+        });
+      }
+
+      function onAddToFavoritesClicked () {
+        postAddFavorite(evid, _ => {
+          alert ("Lagt til i favoritter");
+        });
+      }
+
+      function setGoing() {
+        console.log("Going")
+      }
+      function setInterested() {
+        console.log("Interested")
+      }
+
+      function joinGroupChat ()
+      {
+        postJoinOpenChat(groupChatID, cid => {
+          window.location = "messages#" + cid;
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <img id="top-img" src="imgs/Banner1.png">
+    <div id="info-wrapper">
+      <div id="info">
+        <h1 id='title'></h1>
+        <span id='flavor-text'></span>
+      </div>
+      <div class="controls">
+
+        <a class="icon-control" href='javascript:onAddToFavoritesClicked()' >
+          <span>Legg til favorit</span>
+          <img src="icons/Favoritt.png"/>
+        </a>
+
+        <a class="icon-control" href='javascript:joinGroupChat()'>
+          <span>Gruppesamtale</span>
+          <img src="icons/gruppesamtale.png"/>
+        </a>
+
+      </div>
+    </div>
+
+    <div id="desc-wrapper">
+      <h2>Beskrivelse</h2>
+      <span id='desc'></span>
+    </div>
+
+    <h2>Medlemmer</h2>
+    <div class="parti-wrapper">
+      <section id="participants" class="person-cont">
+      </section>
+    </div>
+
+    <div class="spacer-wrapper"><div class="spacer"></div></div>
+    <h2>Innlegg</h2>
+
+    <section id="comment-section"></section>
+
+    <section id='comment-entry'>
+      <textarea id="comment-box" rows="8" cols="60" placeholder="Skriv innlegg"></textarea>
+      </br>
+      <button type="submit" onclick='onCommentClicked();'>Legg til kommentar</button>
+    </section>
+  </body>
+</html>

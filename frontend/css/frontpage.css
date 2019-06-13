@@ -1,0 +1,116 @@
+body
+{
+  margin: 0;
+  font-family: var(--font-text);
+}
+
+.slogan {
+  width: 100vw;
+}
+
+#banner
+{
+  width: 100%;
+  height: 370px;
+  background: url("../imgs2/Forside.jpg");
+  background-size: cover;
+  background-position-y: 35%;
+}
+
+#logo
+{
+  height: 55px;
+  padding:12px 0 0 30px;
+}
+
+
+.split {
+  display: flex;
+  justify-content: space-between;
+}
+.split .right { flex: 0.45; }
+.split .left  { flex: 0.55; }
+
+main {
+  margin: 0 65px;
+  margin-top: 20px;
+}
+
+main h1 {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+main .text {
+  line-height: 1.5em;
+  font-size: 16px;
+}
+
+.login {
+  margin: 0 70px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.login h2 {
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  text-shadow: 0 0 1px rgba(0,0,0,0.3);
+  margin-top: 0;
+}
+.login-root-wrapper {
+  background: rgba(0,0,0,0.1);
+  border: 1px solid rgba(0,0,0,0.15);
+  padding: 15px 30px;
+  border-radius: 2px;
+}
+
+#login-form {
+  width: 100%;
+}
+.login .small {
+  width: min-content;
+}
+
+.login .gui {
+  font-size: 18px;
+  display: inline-block;
+  text-shadow: 0 0 1px rgba(0,0,0,0.5);
+}
+.login .tb {
+  font-size: 20px;
+  flex: 1;
+  padding: 9px 15px;
+  border: 2px solid rgba(0,0,0,0.3);
+}
+.login tr.space .tb { margin-bottom: 15px; }
+.login tr.space .gui { transform: translateY(-6px); }
+
+.login .register {
+  font-size: 17px;
+  text-align: center;
+  text-shadow: 0 0 1px rgba(0,0,0,0.3);
+}
+
+.login .register a {
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+  font-style: italic;
+}
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.login button {
+  background: #555;
+  color: white;
+  padding: 10px 20px;
+  font-weight: bold;
+  border-radius: 3px;
+  border: none;
+}
+.login .input-wrapper { display: flex; }
