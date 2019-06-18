@@ -24,7 +24,7 @@ main .split .left {
 #chat {
   flex: 1;
   padding: 10px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 #chat::-webkit-scrollbar {
   display: none;
@@ -129,3 +129,101 @@ main .split .left {
   color: black;
   font-size: 19px;
 }
+
+#chat-wrapper {
+  flex: 1;
+  height: 0;
+  position: relative;
+}
+#chat {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  min-height: 100%;
+}
+.message {
+  display: flex;
+  margin-bottom: 10px;
+  position: relative;
+  --arr-size: 15px;
+}
+.message.mine {
+  flex-direction: row-reverse;
+}
+.msg-pic {
+  height: 50px;
+  border-radius: 100%;
+  border: 1px solid rgba(0,0,0,0.7);
+}
+.message .left {
+  width: unset !important;
+}
+.message .right .content {
+  border-radius: 15px;
+  border: 4px solid var(--purple-dark);
+  position: relative;
+  padding: 10px;
+  width: 50%;
+}
+.message.not-mine .right .content { margin-left: 20px; }
+.message.mine .right .content { margin-right: 20px; }
+.message.mine .right .content {
+  align-self: flex-end;
+}
+
+.message.not-mine .right .content::before {
+  content: '';
+  width: 0; 
+  height: 0; 
+  border-top: var(--arr-size) solid transparent;
+  border-bottom: var(--arr-size) solid transparent;
+  border-right: var(--arr-size) solid var(--purple-dark);
+  position: absolute;
+  left: calc(0px - var(--arr-size));
+  top: 50%;
+  transform: translateY(-50%);
+}
+.message.not-mine .right .content::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-top: var(--arr-size) solid transparent;
+  border-bottom: var(--arr-size) solid transparent;
+  border-right: var(--arr-size) solid white;
+  position: absolute;
+  left: calc(6px - var(--arr-size));
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.message.mine .right .content::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: var(--arr-size) solid transparent;
+  border-bottom: var(--arr-size) solid transparent;
+  border-left: var(--arr-size) solid var(--purple-dark);
+  right: calc(0px - var(--arr-size));
+}
+.message.mine .right .content::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: var(--arr-size) solid transparent;
+  border-bottom: var(--arr-size) solid transparent;
+  border-left: var(--arr-size) solid white;
+  right: calc(6px - var(--arr-size));
+}
+
+.message .left, .message .right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.message .right { flex: 1; }

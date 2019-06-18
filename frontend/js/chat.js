@@ -40,7 +40,8 @@ function addChat (chat) {
     let tab = undefined;
     let contactName = "";
 
-    if (ps.length == 1) {
+    // if (ps.length == 1) {
+    if (!chat.isPublic) { // TODO: p2p is defined as public
       tab = document.querySelector(".split .tab:nth-child(1)");
       getUser (ps[0].uid, u => addChatWithContact(chat, tab, u));
       return;
@@ -85,7 +86,7 @@ function onChatClicked (cid) {
   if (window.activeChat === cid) return;
   window.activeChat = cid;
 
-  cont.innerHTML = '';
+  document.querySelector("#chat").innerHTML = '';
 
   function waitforit () {
     const contact = document.querySelector('.contact[data-id="'+cid+'"]');
@@ -104,22 +105,46 @@ function openChat (messages) {
   for (let msg of messages) {
     idlastmessage = msg.mid;
     getUser(msg.sender, usr => {
-      addChatMsgElem (usr.username, msg.content);
+      addChatMsgElem (usr, msg);
     });
   }
 }
 
-function addChatMsgElem (username, m) {
-  const cont = document.querySelector('#chat');
-  let el     = document.createElement('div');
-  let msg    = document.createElement('span');
-  let usr    = document.createElement('span');
+function addChatMsgElem (usrObj, msgObj) {
+  const username = usrObj.username;
+  const m        = msgObj.content
+  const cont     = document.querySelector('#chat');
+  let el         = document.createElement('div');
+  let msg        = document.createElement('span');
+
+  let lft = document.createElement('div');
+  let lftwrap = document.createElement('div');
+  let rgt = document.createElement('div');
+
+  lft.classList.add('left');
+  lft.classList.add('wrapper');
+  rgt.classList.add('right');
+
+  let pic = document.createElement('img');
+  pic.src = usrObj.pic;
+  pic.onerror = el => el.srcElement.src = "icons/Brukerikon-black.png";
+  pic.classList.add('msg-pic')
+  el.appendChild(pic);
 
   el.classList.add("message");
-  usr.innerText = username + ": ";
+  el.classList.add(usrObj.uid == myid ? 'mine' : 'not-mine');
+  el.setAttribute('style', 'order: ' + msgObj.mid + ';');
+
+  el.appendChild(lft);
+  el.appendChild(rgt);
+
+  msg.classList.add('content')
   msg.innerText = m;
-  el.appendChild(usr);
-  el.appendChild(msg);
+
+  lft.appendChild(lftwrap);
+  lftwrap.appendChild(pic);
+  rgt.appendChild(msg);
+
   cont.appendChild(el);
 }
 
@@ -144,7 +169,7 @@ function onChatBoxKeyDown (e) {
     document.querySelector("#chatbox").value = "";
     getWhoami(usr => {
       idlastmessage = mid
-      addChatMsgElem(usr.username, msg);
+      addChatMsgElem(usr, { mid: mid, content: msg });
     });
   });
 }
